@@ -11,7 +11,7 @@ public final class MessageSender {
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;
-    private static final MessageSender DEFAULT_SENDER = new MessageSender("", "", "");
+    private static final MessageSender DEFAULT_SENDER = new MessageSender("", "", "§c");
 
     private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
 
@@ -26,6 +26,8 @@ public final class MessageSender {
     }
 
     public static MessageSender create(Plugin plugin, String prefix, char[] messageColor, char[] errorColor) {
+        if(plugin == null) return DEFAULT_SENDER;
+
         StringBuilder builder = new StringBuilder("§r");
         for (char aChar : messageColor) {
             builder.append("§").append(aChar);

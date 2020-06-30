@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * Compact localizer class.
  * Easy to use and fully automatic setup and updating of locales.
  * Requires to have at least one default locale and one fallback locale in the resources.
- * Use the {@link de.eldoria.bigdoorsopener.localization.Localizer#Localizer(Plugin, String, String, String, Locale, String...)} constructor for initial setup.
+ * Use the {@link  #Localizer(Plugin, String, String, String, Locale, String...)} constructor for initial setup.
  * This will create missing files and updates existing files.
  * You can change the currently used locale every time via {@link #setLocale(String)}.
  * The localizer also allows to use locales which are not included in the ressources folder.
@@ -272,6 +272,8 @@ public class Localizer {
         if (matcher.find()) {
             return new Locale(matcher.group(1), matcher.group(2));
         }
+        String[] s = filename.split("_", 2);
+        if (s.length == 2 && localesPrefix.equalsIgnoreCase(s[0])) return new Locale(s[1]);
         return null;
     }
 }

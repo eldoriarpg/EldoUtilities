@@ -30,10 +30,14 @@ public final class UpdateChecker implements Listener {
     }
 
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, boolean sendLoginNotify) {
-        performAndNotifyUpdateCheck(plugin, spigotId, sendLoginNotify, plugin.getDescription().getName());
+        if (sendLoginNotify) {
+            performAndNotifyUpdateCheck(plugin, spigotId, plugin.getDescription().getName());
+        } else {
+            performAndNotifyUpdateCheck(plugin, spigotId, null);
+        }
     }
 
-    public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, boolean sendLoginNotify, String notifyPermission) {
+    public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, String notifyPermission) {
         boolean updateAvailable = false;
 
         HttpURLConnection con;
@@ -67,7 +71,7 @@ public final class UpdateChecker implements Listener {
             plugin.getLogger().warning("Newest version: " + newestVersion + "! Current version: " + plugin.getDescription().getVersion() + "!");
             plugin.getLogger().warning("Download new version here: " + plugin.getDescription().getWebsite());
 
-            if (sendLoginNotify) {
+            if (notifyPermission != null) {
                 Bukkit.getPluginManager().registerEvents(new UpdateChecker(plugin, newestVersion, notifyPermission), plugin);
             }
         }
