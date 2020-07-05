@@ -1,10 +1,11 @@
 package de.eldoria.eldoutilities.utils;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 public final class Parser {
-    private Parser(){
+    private Parser() {
         throw new UnsupportedOperationException("This is a utility class!");
     }
 
@@ -22,6 +23,20 @@ public final class Parser {
         } catch (NumberFormatException e) {
             return OptionalDouble.empty();
         }
+    }
+
+    public static Optional<Boolean> parseBoolean(String s) {
+        return parseBoolean(s, "true", "false");
+    }
+
+    public static Optional<Boolean> parseBoolean(String s, String trueValue, String falseValue) {
+        if (s.equalsIgnoreCase(trueValue)) {
+            return Optional.of(true);
+        }
+        if (s.equalsIgnoreCase(falseValue)) {
+            return Optional.of(false);
+        }
+        return Optional.empty();
     }
 
     /**
