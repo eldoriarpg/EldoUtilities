@@ -18,11 +18,12 @@ import java.net.URL;
 public final class UpdateChecker implements Listener {
     private final Plugin plugin;
     private final String newestVersion;
-    private String permission;
+    private final String permission;
 
     private UpdateChecker(Plugin plugin, String newestVersion, String permission) {
         this.plugin = plugin;
         this.newestVersion = newestVersion;
+        this.permission = permission;
     }
 
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId) {
