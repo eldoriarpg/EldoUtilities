@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.messages;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -8,14 +9,16 @@ import java.util.Map;
 
 public final class MessageSender {
 
+    private final Plugin plugin;
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;
-    private static final MessageSender DEFAULT_SENDER = new MessageSender("", "", "§c");
+    private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
 
     private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
 
-    private MessageSender(String prefix, String defaultMessageColor, String defaultErrorColor) {
+    private MessageSender(Plugin plugin, String prefix, String defaultMessageColor, String defaultErrorColor) {
+        this.plugin = plugin;
         this.prefix = prefix;
         this.defaultMessageColor = defaultMessageColor;
         this.defaultErrorColor = defaultErrorColor;
@@ -26,7 +29,7 @@ public final class MessageSender {
     }
 
     public static MessageSender create(Plugin plugin, String prefix, char[] messageColor, char[] errorColor) {
-        if(plugin == null) return DEFAULT_SENDER;
+        if (plugin == null) return DEFAULT_SENDER;
 
         StringBuilder builder = new StringBuilder("§r");
         for (char aChar : messageColor) {
@@ -43,7 +46,7 @@ public final class MessageSender {
 
         PLUGIN_SENDER.compute(plugin.getDescription().getName(),
                 (k, v) -> (v == null)
-                        ? new MessageSender(prefix, defMessageColor, defErrorColor)
+                        ? new MessageSender(plugin, prefix, defMessageColor, defErrorColor)
                         : v.update(prefix, defMessageColor, defErrorColor));
         return PLUGIN_SENDER.get(plugin.getDescription().getName());
     }
@@ -67,7 +70,12 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendMessage(Player player, String message) {
-        player.sendMessage(prefix + defaultMessageColor + message.replaceAll("§r", defaultMessageColor));
+        String s = message.replaceAll("§r", defaultMessageColor);
+        if (player == null) {
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + s);
+            return;
+        }
+        player.sendMessage(prefix + defaultMessageColor + s);
     }
 
     /**
@@ -77,6 +85,11 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendError(Player player, String message) {
-        player.sendMessage(prefix + defaultMessageColor + message.replaceAll("§r", defaultErrorColor));
+        String s = message.replaceAll("§r", defaultErrorColor);
+        if (player == null) {
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + s);
+            return;
+        }
+        player.sendMessage(prefix + defaultMessageColor + s);
     }
 }
