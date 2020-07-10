@@ -3,7 +3,11 @@ package de.eldoria.eldoutilities.utils;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class ArgumentUtils {
+public final class ArgumentUtils {
+    private ArgumentUtils() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
+
     /**
      * Get a string value or a default value when the index does not exists.
      *
@@ -12,7 +16,7 @@ public class ArgumentUtils {
      * @param defaultValue default value which will be returned when the index does not exists.
      * @return string at index or default value if the index does not exists.
      */
-    public String getOrDefault(String[] arguments, int index, String defaultValue) {
+    public static String getOrDefault(String[] arguments, int index, String defaultValue) {
         String arg = get(arguments, index);
         return arg == null ? defaultValue : arg;
     }
@@ -24,7 +28,7 @@ public class ArgumentUtils {
      * @param index     index of the requested parameter
      * @return string or null if the index does not exists
      */
-    public String get(String[] arguments, int index) {
+    public static String get(String[] arguments, int index) {
         if (arguments.length > index) return arguments[index];
         return null;
     }
@@ -39,7 +43,7 @@ public class ArgumentUtils {
      * @param <T>       type of optional return value
      * @return the string of the index after the parse function was applied or a empty optional when the index was not found.
      */
-    public <T> Optional<T> get(String[] arguments, int index, Function<String, T> parse) {
+    public static <T> Optional<T> get(String[] arguments, int index, Function<String, T> parse) {
         if (arguments.length > index) {
             parse.apply(arguments[index]);
         }
@@ -57,7 +61,7 @@ public class ArgumentUtils {
      * @param <T>          type of the returned parameter.
      * @return parsed string value at index or default value if the index does not exists
      */
-    public <T> T getOptionalParameter(String[] arguments, int index, T defaultValue, Function<String, T> parse) {
+    public static <T> T getOptionalParameter(String[] arguments, int index, T defaultValue, Function<String, T> parse) {
         String arg = get(arguments, index);
         if (arg == null) return defaultValue;
         return parse.apply(arg);
