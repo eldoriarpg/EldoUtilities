@@ -18,6 +18,10 @@ public final class SerializationUtil {
         return new Builder();
     }
 
+    public static Builder newBuilder(Map<String, Object> map) {
+        return new Builder(map);
+    }
+
     public static <T, U> BiFunction<T, U, String> keyToString() {
         return (k, v) -> k.toString();
     }
@@ -35,7 +39,15 @@ public final class SerializationUtil {
     }
 
     public static final class Builder {
-        private final Map<String, Object> serialized = new LinkedHashMap<>();
+        private final Map<String, Object> serialized;
+
+        public Builder() {
+            serialized = new LinkedHashMap<>();
+        }
+
+        public Builder(Map<String, Object> map) {
+            serialized = new LinkedHashMap<>(map);
+        }
 
         public Builder add(String key, Object value) {
             this.serialized.put(key, value);
