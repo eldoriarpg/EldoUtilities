@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -143,17 +142,36 @@ public class Localizer {
         // Create the property files if they do not exists.
         for (String includedLocale : includedLocales) {
             String filename = localesPrefix + "_" + includedLocale + ".properties";
-            try (InputStream inputStream = plugin.getResource(filename)) {
-                File localeFile = Paths.get(messages.toString(), filename).toFile();
-                if (localeFile.exists() || inputStream == null) {
-                    continue;
-                }
-                Files.copy(inputStream, localeFile.toPath());
-                plugin.getLogger().info("Created default locale " + filename);
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.WARNING, "Failed to create default message file " + filename, e);
-                return;
+
+            File localeFile = Paths.get(messages.toString(), filename).toFile();
+            if (localeFile.exists()) {
+                continue;
             }
+
+            StringBuilder builder = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(ClassLoader.getSystemClassLoader().getResource(filename).getFile()),
+                    StandardCharsets.UTF_8))) {
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    builder.append(line).append("\n");
+                    line = bufferedReader.readLine();
+                }
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.WARNING, "Could not load resource " + filename + ".", e);
+            } catch (NullPointerException e) {
+                plugin.getLogger().log(Level.WARNING, "Locale " + includedLocale + " could not be loaded but should exists.", e);
+                continue;
+            }
+
+            try (OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(localeFile), StandardCharsets.UTF_8)) {
+                outputStream.write(builder.toString());
+
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.WARNING, "Failed to create default message file " + localeFile.getName() + ".", e);
+                continue;
+            }
+            plugin.getLogger().info("Created default locale " + filename);
         }
 
         List<File> localeFiles = new ArrayList<>();
@@ -251,7 +269,7 @@ public class Localizer {
                     outputStream.write("# File automatically updated at "
                             + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "\n");
                     for (Map.Entry<String, String> entry : treemap.entrySet()) {
-                        plugin.getLogger().info("Writing:" + entry.getKey() + "=" + entry.getValue().replace("\n", "\\n"));
+                        plugin.getLogger().info("Writing: " + entry.getKey() + "=" + entry.getValue().replace("\n", "\\n"));
                         outputStream.write(entry.getKey() + "=" + entry.getValue().replace("\n", "\\n") + "\n");
                     }
 
