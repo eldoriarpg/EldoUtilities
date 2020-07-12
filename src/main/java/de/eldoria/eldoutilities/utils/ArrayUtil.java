@@ -82,7 +82,7 @@ public final class ArrayUtil {
      * @return list of strings which starts with the provided value
      */
     public static Stream<String> startingWithInArray(String value, String[] array) {
-        return Arrays.stream(array).filter(e -> e.startsWith(value));
+        return Arrays.stream(array).filter(e -> e.toLowerCase().startsWith(value.toLowerCase()));
     }
 
     /**
