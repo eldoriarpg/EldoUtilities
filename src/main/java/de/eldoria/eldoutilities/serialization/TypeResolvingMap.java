@@ -30,6 +30,11 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
         return (T) get(key);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getValueOrDefault(String key, T defaultValue) {
+        return (T) getOrDefault(key, defaultValue);
+    }
+
     public <T> T getValue(String key, Function<String, T> valueConverter) {
         return valueConverter.apply(getValue(key));
     }
