@@ -1,3 +1,0 @@
-version: ${project.version}
-name: ${project.name}
-description: ${project.description}

@@ -150,8 +150,7 @@ public class Localizer {
 
             StringBuilder builder = new StringBuilder();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(ClassLoader.getSystemClassLoader().getResource(filename).getFile()),
-                    StandardCharsets.UTF_8))) {
+                    plugin.getResource(filename), StandardCharsets.UTF_8))) {
                 String line = bufferedReader.readLine();
                 while (line != null) {
                     builder.append(line).append("\n");
@@ -260,6 +259,7 @@ public class Localizer {
                 }
                 // Add the property with the value if it exists in a internal file.
                 treemap.put(currKey, value);
+                plugin.getLogger().info("Added: " + currKey + "=" + value.replace("\n", "\\n"));
                 updated = true;
             }
 
@@ -269,15 +269,12 @@ public class Localizer {
                     outputStream.write("# File automatically updated at "
                             + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now()) + "\n");
                     for (Map.Entry<String, String> entry : treemap.entrySet()) {
-                        plugin.getLogger().info("Writing: " + entry.getKey() + "=" + entry.getValue().replace("\n", "\\n"));
                         outputStream.write(entry.getKey() + "=" + entry.getValue().replace("\n", "\\n") + "\n");
                     }
-
                 } catch (IOException e) {
                     plugin.getLogger().log(Level.WARNING, "Could not update locale " + file.getName() + ".", e);
                     continue;
                 }
-
                 plugin.getLogger().info("Updated locale " + file.getName() + ". Please check you translation.");
             } else {
                 plugin.getLogger().info("Locale " + file.getName() + " is up to date.");
