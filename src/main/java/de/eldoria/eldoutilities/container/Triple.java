@@ -10,4 +10,8 @@ public class Triple<A, B, C> {
         this.second = second;
         this.third = third;
     }
+
+    public static <X, Y, Z> Triple<X, Y, Z> of(X x, Y y, Z z) {
+        return new Triple<>(x, y, z);
+    }
 }

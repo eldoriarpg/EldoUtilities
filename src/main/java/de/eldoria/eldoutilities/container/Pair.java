@@ -14,4 +14,9 @@ public class Pair<A, B> {
         this.first = first;
         this.second = second;
     }
+
+    public static <X, Y> Pair<X, Y> of(X x, Y y) {
+        return new Pair<>(x, y);
+    }
+
 }
