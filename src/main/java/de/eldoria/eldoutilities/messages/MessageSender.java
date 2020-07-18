@@ -90,6 +90,6 @@ public final class MessageSender {
             Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + s);
             return;
         }
-        player.sendMessage(prefix + defaultMessageColor + s);
+        player.sendMessage(prefix + defaultErrorColor + s);
     }
 }
