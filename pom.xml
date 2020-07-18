@@ -6,7 +6,7 @@
 
     <groupId>de.eldoria</groupId>
     <artifactId>EldoUtilities</artifactId>
-    <version>v1.0.11</version>
+    <version>v1.0.12</version>
     <packaging>jar</packaging>
     <name>Eldo Utilities</name>
     <url>https://github.com/eldoriarpg/EldoUtilities/wiki</url>
@@ -71,6 +71,12 @@
             <artifactId>annotations</artifactId>
             <version>16.0.1</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
