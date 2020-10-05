@@ -2,13 +2,15 @@ package de.eldoria.eldoutilities.crossversion;
 
 import de.eldoria.eldoutilities.container.Triple;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Enum to determine and work with multiple versions.
+ */
 public enum ServerVersion {
     MC_UNKOWN(Triple.of(0, 0, 0)),
     MC_1_0(Triple.of(1, 0, 0)),
@@ -33,23 +35,21 @@ public enum ServerVersion {
     MC_1_19(Triple.of(1, 19, 0)),
     MC_1_20(Triple.of(1, 20, 0));
 
-    private final Triple<Integer, Integer, Integer> version;
-
-    ServerVersion(Triple<Integer, Integer, Integer> version) {
-        this.version = version;
-    }
-
     /**
      * Contains the current version of the server.
      */
     public static final ServerVersion CURRENT_VERSION;
+    private static final Pattern VERSION_PATTERN;
+    private final Triple<Integer, Integer, Integer> version;
 
     static {
         VERSION_PATTERN = Pattern.compile("^([0-9]{1,3})\\.([0-9]{1,3})(?:\\.([0-9]{0,3}))?");
-        CURRENT_VERSION = getVersion();
+        CURRENT_VERSION = Bukkit.getServer() != null ? getVersion() : MC_UNKOWN;
     }
 
-    private static final Pattern VERSION_PATTERN;
+    ServerVersion(Triple<Integer, Integer, Integer> version) {
+        this.version = version;
+    }
 
     /**
      * Get the version of the server.
@@ -109,8 +109,31 @@ public enum ServerVersion {
         Integer oldestMinor = oldest.version.second;
         Integer newestMinor = newest.version.second;
         if (currentMajor < oldestMajor || currentMajor > newestMajor) return false;
-        if (currentMinor < oldestMinor || currentMinor > newestMinor) return false;
-        return true;
+        return currentMinor >= oldestMinor && currentMinor <= newestMinor;
+    }
+
+    /**
+     * Get versions between two versions.
+     *
+     * @param oldest oldest version (inclusive)
+     * @param newest newest version (exclusive)
+     * @return array of versions
+     */
+    public static ServerVersion[] versionsBetween(ServerVersion oldest, ServerVersion newest) {
+        return Arrays.stream(values()).filter(v -> v.between(oldest, newest)).toArray(ServerVersion[]::new);
+    }
+
+    /**
+     * This method will check if the current version is between the oldest and newest version.
+     * Will abort enable of plugin when called on enable.
+     *
+     * @param oldest oldest version (inclusive)
+     * @param newest newest version (inclusive)
+     * @throws UnsupportedVersionException when the server version is not between the oldest and newest version.
+     */
+    public static void forceVersion(ServerVersion oldest, ServerVersion newest) {
+        if (CURRENT_VERSION.between(oldest, newest)) return;
+        throw new UnsupportedVersionException();
     }
 
     /**
@@ -124,11 +147,12 @@ public enum ServerVersion {
         return between(oldest, newest, this);
     }
 
+    /**
+     * Get the minor version as a string separated by '.'. E.g. 1.15
+     *
+     * @return version as string
+     */
     public String version() {
         return this.version.first + "." + this.version.second;
-    }
-
-    public static ServerVersion[] versionsBetween(ServerVersion oldest, ServerVersion newest) {
-        return Arrays.stream(values()).filter(v -> v.between(oldest, newest)).toArray(ServerVersion[]::new);
     }
 }
