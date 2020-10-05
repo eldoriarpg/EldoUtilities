@@ -1,6 +1,8 @@
 package de.eldoria.eldoutilities.messages;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -64,6 +66,19 @@ public final class MessageSender {
     }
 
     /**
+     * Send a message to a sender
+     *
+     * @param sender  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendMessage(CommandSender sender, String message) {
+        if (!(sender instanceof Player)) {
+            sendMessage(null, message);
+            return;
+        }
+        sendMessage((Player) sender, message);
+    }
+    /**
      * Send a message to a player
      *
      * @param player  receiver of the message
@@ -78,6 +93,19 @@ public final class MessageSender {
         player.sendMessage(prefix + defaultMessageColor + s);
     }
 
+    /**
+     * Sends a error to a sender
+     *
+     * @param sender  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendError(CommandSender sender, String message) {
+        if (!(sender instanceof Player)) {
+            sendError(null, message);
+            return;
+        }
+        sendError((Player) sender, message);
+    }
     /**
      * Sends a error to a player
      *

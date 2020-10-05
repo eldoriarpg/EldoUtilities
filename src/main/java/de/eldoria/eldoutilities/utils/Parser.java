@@ -9,6 +9,12 @@ public final class Parser {
         throw new UnsupportedOperationException("This is a utility class!");
     }
 
+    /**
+     * Parse a string to a int.
+     *
+     * @param s string to parse
+     * @return optional integer with integer when the parsing was successful.
+     */
     public static OptionalInt parseInt(String s) {
         try {
             return OptionalInt.of(Integer.parseInt(s));
@@ -17,18 +23,38 @@ public final class Parser {
         }
     }
 
+    /**
+     * Parse a string to a double.
+     *
+     * @param s string to parse
+     * @return optional double with double when the parsing was successful.
+     */
     public static OptionalDouble parseDouble(String s) {
         try {
-            return OptionalDouble.of(Double.parseDouble(s));
+            return OptionalDouble.of(Double.parseDouble(s.replace(",", ".")));
         } catch (NumberFormatException e) {
             return OptionalDouble.empty();
         }
     }
 
+    /**
+     * Parse a string to a boolean
+     *
+     * @param s string to parse
+     * @return optional boolean with boolean when the parsing was successful.
+     */
     public static Optional<Boolean> parseBoolean(String s) {
         return parseBoolean(s, "true", "false");
     }
 
+    /**
+     * Parse a string to a boolean
+     *
+     * @param s          string to parse
+     * @param trueValue  true value as string
+     * @param falseValue false value as string
+     * @return optional boolean with boolean when the parsing was successful.
+     */
     public static Optional<Boolean> parseBoolean(String s, String trueValue, String falseValue) {
         if (s.equalsIgnoreCase(trueValue)) {
             return Optional.of(true);
@@ -60,6 +86,12 @@ public final class Parser {
         return OptionalInt.of(hourTicks + minTicks);
     }
 
+    /**
+     * Parses ticks to a time with format H24:mm.
+     *
+     * @param ticks ticks to parse
+     * @return ticks as time
+     */
     public static String parseTicksToTime(long ticks) {
         long time = ticks % 24000;
         int hours = ((int) Math.floor(time / 1000d) + 6) % 24;

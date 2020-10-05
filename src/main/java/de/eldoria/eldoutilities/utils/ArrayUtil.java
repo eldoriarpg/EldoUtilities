@@ -19,7 +19,7 @@ public final class ArrayUtil {
      * @param contains pattern to check against
      * @return matcher instance wich matches the string
      */
-    public Matcher findInArray(String[] strings, Pattern contains) {
+    public  static Matcher findInArray(String[] strings, Pattern contains) {
         for (String string : strings) {
             Matcher matcher = contains.matcher(string);
             if (matcher.find()) return matcher;
@@ -34,7 +34,7 @@ public final class ArrayUtil {
      * @param values  one or more value to check agains
      * @return true if a match was found
      */
-    public boolean arrayContains(String[] strings, String... values) {
+    public static boolean arrayContains(String[] strings, String... values) {
         for (String string : strings) {
             for (String contain : values) {
                 if (string.equalsIgnoreCase(contain)) return true;
@@ -50,7 +50,7 @@ public final class ArrayUtil {
      * @param values one or more value to check agains
      * @return true if a match was found
      */
-    public boolean arrayContains(char[] chars, char... values) {
+    public static boolean arrayContains(char[] chars, char... values) {
         for (char character : chars) {
             for (char contain : values) {
                 if (character == contain) return true;
@@ -66,7 +66,7 @@ public final class ArrayUtil {
      * @param arrays arrays to combine
      * @return one array
      */
-    public String[] combineArrays(String[] array, String[]... arrays) {
+    public static String[] combineArrays(String[] array, String[]... arrays) {
         String[] result = array;
         for (String[] arr : arrays) {
             result = ObjectArrays.concat(arr, result, String.class);
