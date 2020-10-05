@@ -1,5 +1,4 @@
-[![](https://jitci.com/gh/eldoriarpg/EldoUtilities/svg)](https://jitci.com/gh/eldoriarpg/EldoUtilities)
-
+[![](https://jitpack.io/v/de.eldoria/EldoUtilities.svg)](https://jitpack.io/#de.eldoria/EldoUtilities)
 ```
         <repository>
             <id>jitpack.io</id>
