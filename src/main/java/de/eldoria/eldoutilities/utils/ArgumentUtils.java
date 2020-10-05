@@ -1,5 +1,11 @@
 package de.eldoria.eldoutilities.utils;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -65,5 +71,56 @@ public final class ArgumentUtils {
         String arg = get(arguments, index);
         if (arg == null) return defaultValue;
         return parse.apply(arg);
+    }
+
+    public static <T> T getDefaultFromPlayerOrArg(String[] args, int index, CommandSender sender,
+                                                  Function<Player, T> playerFunction, Function<String, T> argFunction) {
+        T result = null;
+        if (sender instanceof Player) {
+            result = playerFunction.apply((Player) sender);
+        }
+
+        if (args.length > index) {
+            result = argFunction.apply(args[index]);
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a range of a string array as string.
+     *
+     * @param delimiter delimiter for string join
+     * @param source    source array
+     * @param from      start index (included). Use negative counts to count from the last index.
+     * @param to        end index (excluded). Use negative counts to count from the last index.
+     * @return range as string
+     */
+    public static String getRangeAsString(String delimiter, String[] source, int from, int to) {
+        int finalTo = to;
+        if (to < 1) {
+            finalTo = source.length + to;
+        }
+        int finalFrom = from;
+        if (from < 0) {
+            finalFrom = source.length + from;
+        }
+
+        if (finalFrom > finalTo || finalFrom < 0 || finalTo > source.length) {
+            return "";
+        }
+
+        return String.join(delimiter, Arrays.copyOfRange(source, finalFrom, finalTo)).trim();
+    }
+
+    /**
+     * Get a array as sublist from 'from' to array.length().
+     *
+     * @param strings arguments
+     * @param from    start index included
+     * @return string array delimited with ' '
+     */
+    public static String getRangeAsString(String[] strings, int from) {
+        return getRangeAsString(" ", strings, from, 0);
     }
 }
