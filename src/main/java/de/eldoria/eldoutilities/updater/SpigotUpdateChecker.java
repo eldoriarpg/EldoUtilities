@@ -15,12 +15,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public final class UpdateChecker implements Listener {
+/**
+ * This class contains a simple to use update checker based on spigot api.
+ */
+public final class SpigotUpdateChecker implements Listener {
     private final Plugin plugin;
     private final String newestVersion;
     private final String permission;
 
-    private UpdateChecker(Plugin plugin, String newestVersion, String permission) {
+    private SpigotUpdateChecker(Plugin plugin, String newestVersion, String permission) {
         this.plugin = plugin;
         this.newestVersion = newestVersion;
         this.permission = permission;
@@ -93,7 +96,7 @@ public final class UpdateChecker implements Listener {
             plugin.getLogger().warning("Download new version here: " + plugin.getDescription().getWebsite());
 
             if (notifyPermission != null) {
-                Bukkit.getPluginManager().registerEvents(new UpdateChecker(plugin, newestVersion, notifyPermission), plugin);
+                Bukkit.getPluginManager().registerEvents(new SpigotUpdateChecker(plugin, newestVersion, notifyPermission), plugin);
             }
         }
     }
