@@ -18,6 +18,7 @@ public class BiFunctionBuilder<A, B, R> {
      *
      * @param function function to execute
      * @param version  versions which should use this function
+     *
      * @return builder instance with function applied for versions
      */
     public BiFunctionBuilder<A, B, R> addVersionFunctionBetween(BiFunction<A, B, R> function, ServerVersion... version) {
@@ -33,6 +34,7 @@ public class BiFunctionBuilder<A, B, R> {
      * @param oldest   oldest version (inclusive)
      * @param newest   newest version (inclusive)
      * @param function function to execute
+     *
      * @return builder instance with function applied for versions
      */
     public BiFunctionBuilder<A, B, R> addVersionFunctionBetween(ServerVersion oldest, ServerVersion newest, BiFunction<A, B, R> function) {

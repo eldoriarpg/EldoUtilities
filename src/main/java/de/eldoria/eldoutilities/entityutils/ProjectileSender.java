@@ -82,6 +82,7 @@ public class ProjectileSender {
      * Get the sender as {@link EntityType}.
      *
      * @return entity type of sender
+     *
      * @throws NullPointerException When {@link #isEntity()} is false
      */
     public EntityType getEntityType() throws NullPointerException {
@@ -92,6 +93,7 @@ public class ProjectileSender {
      * Get the sender as {@link Material}.
      *
      * @return material of sender
+     *
      * @throws NullPointerException When {@link #isEntity()} is false
      */
     public Material getBlockType() throws NullPointerException {

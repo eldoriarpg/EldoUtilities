@@ -2,35 +2,80 @@ package de.eldoria.eldoutilities.messages;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class MessageSender {
 
-    private final Plugin plugin;
+    private static final MessageSender DEFAULT_SENDER = new MessageSender("", "", "§c");
+    private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;
-    private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
 
-    private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
-
-    private MessageSender(Plugin plugin, String prefix, String defaultMessageColor, String defaultErrorColor) {
-        this.plugin = plugin;
+    private MessageSender(String prefix, String defaultMessageColor, String defaultErrorColor) {
         this.prefix = prefix;
         this.defaultMessageColor = defaultMessageColor;
         this.defaultErrorColor = defaultErrorColor;
     }
 
-    public static MessageSender create(Plugin plugin, String prefix, char defaultMessageColor, char defaultErrorColor) {
-        return create(plugin, prefix, new char[] {defaultMessageColor}, new char[] {defaultErrorColor});
+    /**
+     * Creates a new message sender for the plugin
+     *
+     * @param plugin       plugin to create the message sender for
+     * @param prefix       plugin prefix with color code
+     * @param messageColor default message color
+     * @param errorColor   default error color
+     *
+     * @return message sender instance or default sender if plugin is null
+     */
+    public static MessageSender create(Class<? extends Plugin> plugin, String prefix, char messageColor, char errorColor) {
+        return create(plugin, prefix, new char[] {messageColor}, new char[] {errorColor});
     }
 
+    /**
+     * Creates a new message sender for the plugin
+     *
+     * @param plugin       plugin to create the message sender for
+     * @param prefix       plugin prefix with color code
+     * @param messageColor default message color
+     * @param errorColor   default error color
+     *
+     * @return message sender instance or default sender if plugin is null
+     */
+    public static MessageSender create(Plugin plugin, String prefix, char messageColor, char errorColor) {
+        return create(plugin.getClass(), prefix, new char[] {messageColor}, new char[] {errorColor});
+    }
+
+    /**
+     * Creates a new message sender for the plugin
+     *
+     * @param plugin       plugin to create the message sender for
+     * @param prefix       plugin prefix with color code
+     * @param messageColor default message color
+     * @param errorColor   default error color
+     *
+     * @return message sender instance or default sender if plugin is null
+     */
     public static MessageSender create(Plugin plugin, String prefix, char[] messageColor, char[] errorColor) {
+        return create(plugin.getClass(), prefix, messageColor, errorColor);
+    }
+
+    /**
+     * Creates a new message sender for the plugin
+     *
+     * @param plugin       plugin to create the message sender for
+     * @param prefix       plugin prefix with color code
+     * @param messageColor default message color
+     * @param errorColor   default error color
+     *
+     * @return message sender instance or default sender if plugin is null
+     */
+    public static MessageSender create(Class<? extends Plugin> plugin, String prefix, char[] messageColor, char[] errorColor) {
         if (plugin == null) return DEFAULT_SENDER;
 
         StringBuilder builder = new StringBuilder("§r");
@@ -46,11 +91,23 @@ public final class MessageSender {
         }
         String defErrorColor = builder.toString();
 
-        PLUGIN_SENDER.compute(plugin.getDescription().getName(),
+        PLUGIN_SENDER.compute(plugin.getName(),
                 (k, v) -> (v == null)
-                        ? new MessageSender(plugin, prefix, defMessageColor, defErrorColor)
+                        ? new MessageSender(prefix, defMessageColor, defErrorColor)
                         : v.update(prefix, defMessageColor, defErrorColor));
-        return PLUGIN_SENDER.get(plugin.getDescription().getName());
+        return PLUGIN_SENDER.get(plugin.getName());
+    }
+
+    /**
+     * Get the message sender created for this plugin.
+     *
+     * @param plugin plugin
+     *
+     * @return message sender of plugin or default sender if plugin is null
+     */
+    public static MessageSender get(@Nullable Plugin plugin) {
+        return plugin == null ? DEFAULT_SENDER
+                : PLUGIN_SENDER.getOrDefault(plugin.getDescription().getName(), DEFAULT_SENDER);
     }
 
     private MessageSender update(String prefix, String defaultMessageColor, String defaultErrorColor) {
@@ -58,11 +115,6 @@ public final class MessageSender {
         this.defaultMessageColor = defaultMessageColor;
         this.defaultErrorColor = defaultErrorColor;
         return this;
-    }
-
-    public static MessageSender get(Plugin plugin) {
-        return plugin == null ? DEFAULT_SENDER
-                : PLUGIN_SENDER.getOrDefault(plugin.getDescription().getName(), DEFAULT_SENDER);
     }
 
     /**
@@ -78,6 +130,7 @@ public final class MessageSender {
         }
         sendMessage((Player) sender, message);
     }
+
     /**
      * Send a message to a player
      *
@@ -106,6 +159,7 @@ public final class MessageSender {
         }
         sendError((Player) sender, message);
     }
+
     /**
      * Sends a error to a player
      *

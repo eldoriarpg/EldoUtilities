@@ -4,6 +4,9 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
+/**
+ * This class contains methods to parse strings to primitve types and other things.
+ */
 public final class Parser {
     private Parser() {
         throw new UnsupportedOperationException("This is a utility class!");
@@ -13,6 +16,7 @@ public final class Parser {
      * Parse a string to a int.
      *
      * @param s string to parse
+     *
      * @return optional integer with integer when the parsing was successful.
      */
     public static OptionalInt parseInt(String s) {
@@ -27,6 +31,7 @@ public final class Parser {
      * Parse a string to a double.
      *
      * @param s string to parse
+     *
      * @return optional double with double when the parsing was successful.
      */
     public static OptionalDouble parseDouble(String s) {
@@ -41,6 +46,7 @@ public final class Parser {
      * Parse a string to a boolean
      *
      * @param s string to parse
+     *
      * @return optional boolean with boolean when the parsing was successful.
      */
     public static Optional<Boolean> parseBoolean(String s) {
@@ -53,6 +59,7 @@ public final class Parser {
      * @param s          string to parse
      * @param trueValue  true value as string
      * @param falseValue false value as string
+     *
      * @return optional boolean with boolean when the parsing was successful.
      */
     public static Optional<Boolean> parseBoolean(String s, String trueValue, String falseValue) {
@@ -69,6 +76,7 @@ public final class Parser {
      * Parses a time in format H24:mm to ticks.
      *
      * @param s string to parse
+     *
      * @return time as ticks or null if value could not be parsed.
      */
     public static OptionalInt parseTimeToTicks(String s) {
@@ -90,6 +98,7 @@ public final class Parser {
      * Parses ticks to a time with format H24:mm.
      *
      * @param ticks ticks to parse
+     *
      * @return ticks as time
      */
     public static String parseTicksToTime(long ticks) {

@@ -18,7 +18,9 @@ public class BiVersionFunction<A, B, R> {
      *
      * @param a first parameter of the function.
      * @param b second parameter of the function
+     *
      * @return value of the function
+     *
      * @throws UnsupportedVersionException when no function is defined for the server version.
      */
     public R apply(A a, B b) {

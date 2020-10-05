@@ -18,6 +18,7 @@ public class TriFunctionBuilder<A, B, C, R> {
      *
      * @param function function to execute
      * @param version  versions which should use this function
+     *
      * @return builder instance with function applied for versions
      */
     public TriFunctionBuilder<A, B, C, R> addVersionFunction(TriFunction<A, B, C, R> function, ServerVersion... version) {
@@ -33,6 +34,7 @@ public class TriFunctionBuilder<A, B, C, R> {
      * @param oldest   oldest version (inclusive)
      * @param newest   newest version (inclusive)
      * @param function function to execute
+     *
      * @return builder instance with function applied for versions
      */
     public TriFunctionBuilder<A, B, C, R> addVersionFunctionBetween(ServerVersion oldest, ServerVersion newest, TriFunction<A, B, C, R> function) {

@@ -18,6 +18,7 @@ public class QuadFunctionBuilder<A, B, C, D, R> {
      *
      * @param function function to execute
      * @param version  versions which should use this function
+     *
      * @return builder instance with function applied for versions
      */
     public QuadFunctionBuilder<A, B, C, D, R> addVersionFunction(QuadFunction<A, B, C, D, R> function, ServerVersion... version) {
@@ -33,6 +34,7 @@ public class QuadFunctionBuilder<A, B, C, D, R> {
      * @param oldest   oldest version (inclusive)
      * @param newest   newest version (inclusive)
      * @param function function to execute
+     *
      * @return builder instance with function applied for versions
      */
     public QuadFunctionBuilder<A, B, C, D, R> addVersionFunctionBetween(ServerVersion oldest, ServerVersion newest, QuadFunction<A, B, C, D, R> function) {

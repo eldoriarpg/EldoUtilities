@@ -11,11 +11,12 @@ public final class ProjectileUtil {
     }
 
     /**
-     * Check of a entity is a projectile.
-     * If the entity is a projectile try to finde the projectile sender.
+     * Check if a entity is a projectile. If the entity is a projectile try to find the projectile sender.
      *
      * @param entity entity
-     * @return A {@link ProjectileSender} which is empty if the entity is not a projectile or will hold a block or entity.
+     *
+     * @return A {@link ProjectileSender} which is empty if the entity is not a projectile or will hold a block or
+     * entity.
      */
     public static ProjectileSender getProjectileSource(Entity entity) {
         // Check if the item is a projectile. If not this is not necessary

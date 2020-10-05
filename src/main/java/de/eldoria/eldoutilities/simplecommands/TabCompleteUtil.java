@@ -27,6 +27,7 @@ public final class TabCompleteUtil {
      *
      * @param value  current value
      * @param inputs possible values
+     *
      * @return list of strings
      */
     public static List<String> complete(String value, String... inputs) {
@@ -38,6 +39,7 @@ public final class TabCompleteUtil {
      *
      * @param value  current value
      * @param inputs possible values
+     *
      * @return list of strings
      */
     public static List<String> complete(String value, Stream<String> inputs) {
@@ -52,6 +54,7 @@ public final class TabCompleteUtil {
      *
      * @param value  current value
      * @param inputs possible values
+     *
      * @return list of strings
      */
     public static List<String> complete(String value, Collection<String> inputs) {
@@ -65,6 +68,7 @@ public final class TabCompleteUtil {
      * @param inputs  possible values
      * @param mapping mapping of stream objects to string
      * @param <T>     type of stream
+     *
      * @return list of strings
      */
     public static <T> List<String> complete(String value, Stream<T> inputs, Function<T, String> mapping) {
@@ -78,6 +82,7 @@ public final class TabCompleteUtil {
      * @param inputs  possible values
      * @param mapping mapping of collection objects to string
      * @param <T>     type of collection
+     *
      * @return list of strings
      */
     public static <T> List<String> complete(String value, Collection<T> inputs, Function<T, String> mapping) {
@@ -88,6 +93,7 @@ public final class TabCompleteUtil {
      * Complete a boolean
      *
      * @param value current value
+     *
      * @return list of strings
      */
     public static List<String> completeBoolean(String value) {
@@ -98,6 +104,7 @@ public final class TabCompleteUtil {
      * Complete a world
      *
      * @param value current value
+     *
      * @return list of strings
      */
     public static List<String> completeWorlds(String value) {
@@ -108,6 +115,7 @@ public final class TabCompleteUtil {
      * Complete a player
      *
      * @param value current value
+     *
      * @return null as this will enable minecraft to standard completion which is nearly always a player
      */
     @Nullable
@@ -122,6 +130,7 @@ public final class TabCompleteUtil {
      * @param value current value
      * @param clazz enum clazz
      * @param <T>   type of enum
+     *
      * @return list of strings
      */
     public static <T extends Enum<T>> List<String> complete(String value, Class<T> clazz) {
@@ -136,6 +145,7 @@ public final class TabCompleteUtil {
      * @param lowerCase will make values lower case if true
      * @param strip     will strip underscores if true
      * @param <T>       type of enum
+     *
      * @return list of strings
      */
     public static <T extends Enum<T>> List<String> complete(String value, Class<T> clazz, boolean lowerCase, boolean strip) {
@@ -151,6 +161,7 @@ public final class TabCompleteUtil {
      *
      * @param value   value to check
      * @param command command which should contain value
+     *
      * @return true if command contains value
      */
     public static boolean isCommand(String value, String... command) {
@@ -158,13 +169,14 @@ public final class TabCompleteUtil {
     }
 
     /**
-     * Checks if the input is a number and inside the range.
-     * Requires {@code error.invalidRange (%MAX%, %MIN%)} and {@code error.invalidNumber} key in locale file
+     * Checks if the input is a number and inside the range. Requires {@code error.invalidRange (%MAX%, %MIN%)} and
+     * {@code error.invalidNumber} key in locale file
      *
      * @param value current value
      * @param min   min value
      * @param max   max value
      * @param loc   localizer instance
+     *
      * @return list with range advise or error
      */
     public static List<String> completeDouble(String value, double min, double max, Localizer loc) {
@@ -182,13 +194,14 @@ public final class TabCompleteUtil {
     }
 
     /**
-     * Checks if the input is a number and inside the range.
-     * Requires {@code error.invalidRange (%MAX%, %MIN%)} and {@code error.invalidNumber} key in locale file
+     * Checks if the input is a number and inside the range. Requires {@code error.invalidRange (%MAX%, %MIN%)} and
+     * {@code error.invalidNumber} key in locale file
      *
      * @param value current value
      * @param min   min value
      * @param max   max value
      * @param loc   localizer instance
+     *
      * @return list with range advise or error
      */
     public static List<String> completeInt(String value, int min, int max, Localizer loc) {
@@ -206,13 +219,14 @@ public final class TabCompleteUtil {
     }
 
     /**
-     * Checks if a string is smaller then the current input.
-     * Requires {@code error.invalidLength, %MAX%} key in locale file
+     * Checks if a string is smaller then the current input. Requires {@code error.invalidLength, %MAX%} key in locale
+     * file
      *
      * @param value           value to check
      * @param maxLength       max length of string
      * @param defaultComplete default completion output
      * @param loc             localizer instance
+     *
      * @return list of string with length 1
      */
     public static List<String> completeFreeInput(String value, int maxLength, String defaultComplete, Localizer loc) {

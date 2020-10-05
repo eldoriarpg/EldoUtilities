@@ -18,6 +18,7 @@ public class FunctionBuilder<A, R> {
      *
      * @param function function to execute
      * @param version  versions which should use this function
+     *
      * @return builder instance with function applied for versions
      */
     public FunctionBuilder<A, R> addVersionFunction(Function<A, R> function, ServerVersion... version) {
@@ -33,6 +34,7 @@ public class FunctionBuilder<A, R> {
      * @param oldest   oldest version (inclusive)
      * @param newest   newest version (inclusive)
      * @param function function to execute
+     *
      * @return builder instance with function applied for versions
      */
     public FunctionBuilder<A, R> addVersionFunctionBetween(ServerVersion oldest, ServerVersion newest, Function<A, R> function) {

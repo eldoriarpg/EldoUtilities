@@ -19,7 +19,9 @@ public class TriVersionFunction<A, B, C, R> {
      * @param a first parameter of the function.
      * @param b second parameter of the function
      * @param c third parameter of the function
+     *
      * @return value of the function
+     *
      * @throws UnsupportedVersionException when no function is defined for the server version.
      */
     public R apply(A a, B b, C c) {

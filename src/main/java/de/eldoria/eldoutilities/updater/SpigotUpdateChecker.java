@@ -30,7 +30,8 @@ public final class SpigotUpdateChecker implements Listener {
     }
 
     /**
-     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     * Perform a update check which will notify the server owner with a console message when a new version is
+     * available.
      *
      * @param plugin   plugin instance
      * @param spigotId id of the plugin on spigot
@@ -40,7 +41,8 @@ public final class SpigotUpdateChecker implements Listener {
     }
 
     /**
-     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     * Perform a update check which will notify the server owner with a console message when a new version is
+     * available.
      *
      * @param plugin          plugin instance
      * @param spigotId        id of the plugin on spigot
@@ -55,11 +57,13 @@ public final class SpigotUpdateChecker implements Listener {
     }
 
     /**
-     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     * Perform a update check which will notify the server owner with a console message when a new version is
+     * available.
      *
-     * @param plugin          plugin instance
-     * @param spigotId        id of the plugin on spigot
-     * @param notifyPermission enter the permission which a user should have to get a notification. null to disable login notification.
+     * @param plugin           plugin instance
+     * @param spigotId         id of the plugin on spigot
+     * @param notifyPermission enter the permission which a user should have to get a notification. null to disable
+     *                         login notification.
      */
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, String notifyPermission) {
         boolean updateAvailable = false;

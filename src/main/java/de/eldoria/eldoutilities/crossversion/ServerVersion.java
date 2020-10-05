@@ -99,6 +99,7 @@ public enum ServerVersion {
      * @param oldest  oldest allowed version
      * @param newest  newest allowed version
      * @param current current version
+     *
      * @return true when the version is between oldest and newest version or equal to the oldest or newest.
      */
     public static boolean between(ServerVersion oldest, ServerVersion newest, ServerVersion current) {
@@ -117,6 +118,7 @@ public enum ServerVersion {
      *
      * @param oldest oldest version (inclusive)
      * @param newest newest version (exclusive)
+     *
      * @return array of versions
      */
     public static ServerVersion[] versionsBetween(ServerVersion oldest, ServerVersion newest) {
@@ -124,11 +126,12 @@ public enum ServerVersion {
     }
 
     /**
-     * This method will check if the current version is between the oldest and newest version.
-     * Will abort enable of plugin when called on enable.
+     * This method will check if the current version is between the oldest and newest version. Will abort enable of
+     * plugin when called on enable.
      *
      * @param oldest oldest version (inclusive)
      * @param newest newest version (inclusive)
+     *
      * @throws UnsupportedVersionException when the server version is not between the oldest and newest version.
      */
     public static void forceVersion(ServerVersion oldest, ServerVersion newest) {
@@ -141,6 +144,7 @@ public enum ServerVersion {
      *
      * @param oldest oldest allowed version
      * @param newest newest allowed version
+     *
      * @return true when the version is between oldest and newest version or equal to the oldest or newest.
      */
     public boolean between(ServerVersion oldest, ServerVersion newest) {

@@ -17,7 +17,9 @@ public class VersionFunction<A, R> {
      * Execute the function for the current version.
      *
      * @param a first parameter of the function.
+     *
      * @return value of the function
+     *
      * @throws UnsupportedVersionException when no function is defined for the server version.
      */
     public R apply(A a) {

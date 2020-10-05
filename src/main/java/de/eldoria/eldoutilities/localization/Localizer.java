@@ -32,30 +32,37 @@ import java.util.stream.Stream;
 
 /**
  * Compact localizer class.
+ * <p>
  * Easy to use and fully automatic setup and updating of locales.
- * Requires to have at least one default locale and one fallback locale in the resources.
- * Use the {@link  #Localizer(Plugin, String, String, String, Locale, String...)} constructor for initial setup.
- * This will create missing files and updates existing files.
+ * <p>
+ * Requires to have at least one default locale and one fallback locale in the resources. Use the {@link
+ * #Localizer(Plugin, String, String, String, Locale, String...)} constructor for initial setup. This will create
+ * missing files and updates existing files.
+ * <p>
  * You can change the currently used locale every time via {@link #setLocale(String)}.
+ * <p>
  * The localizer also allows to use locales which are not included in the ressources folder.
  */
 public class Localizer {
 
-    private ResourceBundle localeFile;
     private final ResourceBundle fallbackLocaleFile;
     private final Plugin plugin;
     private final String localesPath;
     private final String localesPrefix;
     private final String[] includedLocales;
     private final Pattern localePattern = Pattern.compile("([a-zA-Z]{2})_([a-zA-Z]{2})\\.properties");
+    private ResourceBundle localeFile;
 
     /**
      * Create a new localizer instance.
+     * <p>
      * This instance will create locale files, which are provided in the resources directory.
-     * After this it will updates all locale files inside the locales directory.
-     * For this the ref keys from the internal default locale file will be used.
-     * After a update check and a update if needed it will load the provided language
-     * or the fallback language if the provided language does not exists.
+     * <p>
+     * After this it will updates all locale files inside the locales directory. For this the ref keys from the internal
+     * default locale file will be used.
+     * <p>
+     * After a update check and a update if needed it will load the provided language or the fallback language if the
+     * provided language does not exists.
      *
      * @param plugin          instance of plugin
      * @param language        language which should be used if existent
@@ -76,8 +83,7 @@ public class Localizer {
     }
 
     /**
-     * Change the locale to the language.
-     * If the locale is not present the fallback locale will be used.
+     * Change the locale to the language. If the locale is not present the fallback locale will be used.
      *
      * @param language language to be used
      */
@@ -94,11 +100,12 @@ public class Localizer {
     }
 
     /**
-     * Translates a String with Placeholders.
-     * Can handle multiple messages with replacements. Add replacements in the right order.
+     * Translates a String with Placeholders. Can handle multiple messages with replacements. Add replacements in the
+     * right order.
      *
      * @param key          Key of message
      * @param replacements Replacements in the right order.
+     *
      * @return Replaced Messages
      */
     public String getMessage(String key, Replacement... replacements) {
@@ -292,6 +299,11 @@ public class Localizer {
         return null;
     }
 
+    /**
+     * Get currently registered locales.
+     *
+     * @return array of available locales.
+     */
     public String[] getIncludedLocales() {
         return includedLocales;
     }

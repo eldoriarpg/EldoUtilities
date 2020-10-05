@@ -22,14 +22,35 @@ import java.util.stream.Collectors;
 
 public abstract class EldoCommand implements TabExecutor {
     private final Map<String, TabExecutor> subCommands = new HashMap<>();
-    private String[] registeredCommands = new String[0];
-    private TabExecutor defaultCommand = null;
     private final Localizer localizer;
     private final MessageSender messageSender;
+    private String[] registeredCommands = new String[0];
+    private TabExecutor defaultCommand = null;
 
     public EldoCommand(Localizer localizer, MessageSender messageSender) {
         this.localizer = localizer;
         this.messageSender = messageSender;
+    }
+
+    /**
+     * Checks if the provided arguments are invalid.
+     *
+     * @param sender        user which executed the command.
+     * @param messageSender message sender for calling home.
+     * @param localizer     localizer for localization stuff.
+     * @param args          arguments to check
+     * @param length        min amount of arguments.
+     * @param syntax        correct syntax
+     *
+     * @return true if the arguments are invalid
+     */
+    protected static boolean argumentsInvalid(CommandSender sender, MessageSender messageSender, Localizer localizer, String[] args, int length, String syntax) {
+        if (args.length < length) {
+            messageSender.sendError(sender, localizer.getMessage("error.invalidArguments",
+                    Replacement.create("SYNTAX", syntax).addFormatting('6')));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -114,6 +135,7 @@ public abstract class EldoCommand implements TabExecutor {
      * @param args   arguments to check
      * @param length min amount of arguments.
      * @param syntax correct syntax
+     *
      * @return true if the arguments are invalid
      */
     protected boolean argumentsInvalid(CommandSender sender, String[] args, int length, String syntax) {
@@ -121,31 +143,13 @@ public abstract class EldoCommand implements TabExecutor {
     }
 
     /**
-     * Checks if the provided arguments are invalid.
-     *
-     * @param sender        user which executed the command.
-     * @param messageSender message sender for calling home.
-     * @param localizer     localizer for localization stuff.
-     * @param args          arguments to check
-     * @param length        min amount of arguments.
-     * @param syntax        correct syntax
-     * @return true if the arguments are invalid
-     */
-    protected static boolean argumentsInvalid(CommandSender sender, MessageSender messageSender, Localizer localizer, String[] args, int length, String syntax) {
-        if (args.length < length) {
-            messageSender.sendError(sender, localizer.getMessage("error.invalidArguments",
-                    Replacement.create("SYNTAX", syntax).addFormatting('6')));
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the user has at least one of the provided permissions.
-     * Will send a message to the user if a it lacks permission.
+     * Checks if the user has at least one of the provided permissions. This will send a message to the player which
+     * uses the {@code error.permission} locale key which should provide a placeholder {@code PERMISSION} for an array
+     * of required permissions, if the user lacks all of the permissions.
      *
      * @param actor       actor which wants to execute this action
      * @param permissions one or more permissions to check
+     *
      * @return true if the user has no of the required permission
      */
     protected boolean denyAccess(CommandSender actor, String... permissions) {
@@ -153,12 +157,15 @@ public abstract class EldoCommand implements TabExecutor {
     }
 
     /**
-     * Checks if the user has at least one of the provided permissions.
+     * Checks if the user has at least one of the provided permissions. This will send a message to the player which
+     * uses the {@code error.permission} locale key which should provide a placeholder {@code PERMISSION} for an array
+     * of required permissions, if the user lacks all of the permissions.
      *
      * @param actor       actor which wants to execute this action
      * @param silent      set to true if no message should be send to the player
      * @param permissions one or more permissions to check
-     * @return true if the user has no of the required permission
+     *
+     * @return true if the user has none of the required permission
      */
     protected boolean denyAccess(CommandSender actor, boolean silent, String... permissions) {
         if (actor == null) {
@@ -187,18 +194,51 @@ public abstract class EldoCommand implements TabExecutor {
         return true;
     }
 
+    /**
+     * Get the player from a sender if {@link #isPlayer(CommandSender)} returns true.
+     *
+     * @param sender sender to cast
+     *
+     * @return player or null if sender is not player
+     */
     protected Player getPlayerFromSender(CommandSender sender) {
-        return sender instanceof Player ? (Player) sender : null;
+        return isPlayer(sender) ? (Player) sender : null;
     }
 
+    /**
+     * Checks if a command sender is the console.
+     *
+     * @param sender sender to check
+     *
+     * @return true if the sender is the console
+     */
     protected boolean isConsole(CommandSender sender) {
         return (sender instanceof ConsoleCommandSender);
     }
 
+    /**
+     * Checks if a command sender is a player
+     *
+     * @param sender sender to check
+     *
+     * @return true if the sender is a player
+     */
     protected boolean isPlayer(CommandSender sender) {
         return (sender instanceof Player);
     }
 
+    /**
+     * Checks if a value value is in a invalid Range. Will send a message based on {@code error.invalidRange} locale key
+     * which should provide a placeholder for {@code MIN} and {@code MAX} which will be replaced with the corresponding
+     * values.
+     *
+     * @param sender sender of command
+     * @param value  current value
+     * @param min    min value
+     * @param max    max value
+     *
+     * @return true if the range is invalid
+     */
     protected boolean invalidRange(CommandSender sender, double value, double min, double max) {
         if (value > max || value < min) {
             messageSender.sendError(sender, localizer.getMessage("error.invalidRange",
@@ -209,8 +249,19 @@ public abstract class EldoCommand implements TabExecutor {
         return false;
     }
 
+    /**
+     * Checks if a enum value is invalid. Will send a message based on {@code error.invalidEnumValue} locale key which
+     * should provide a placeholder for {@code VALUE} which will be replaced with an array of possible inputs
+     *
+     * @param sender sender of command
+     * @param value  value of enum
+     * @param clazz  clazz of enum
+     * @param <T>    type of enum
+     *
+     * @return true if the enum is invalid
+     */
     protected <T extends Enum<T>> boolean invalidEnumValue(CommandSender sender, T value, Class<T> clazz) {
-        if(value == null){
+        if (value == null) {
             messageSender.sendError(sender, localizer.getMessage("error.invalidEnumValue",
                     Replacement.create("VALUES",
                             Arrays.stream(clazz.getEnumConstants())

@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public final class SerializationUtil {
-    private static final NamingStrategy namingStrategy = new KebabNamingStrategy();
+    private static final NamingStrategy NAMING_STRATEGY = new KebabNamingStrategy();
 
     private SerializationUtil() {
 
@@ -49,35 +49,104 @@ public final class SerializationUtil {
             serialized = new LinkedHashMap<>(map);
         }
 
+        /**
+         * Adda a key with a object.
+         *
+         * @param key   key
+         * @param value value to add
+         *
+         * @return builder with values changed
+         */
         public Builder add(String key, Object value) {
             this.serialized.put(key, value);
             return this;
         }
 
+        /**
+         * @param key      key
+         * @param value    value to add
+         * @param toString method to convert value to string
+         * @param <T>      type of value
+         *
+         * @return builder with values changed
+         */
         public <T> Builder add(String key, T value, Function<T, String> toString) {
             return add(key, toString.apply(value));
         }
 
+        /**
+         * Add a key with a enum constant name
+         *
+         * @param key       key
+         * @param enumValue enum value
+         *
+         * @return builder with values changed
+         */
         public Builder add(String key, Enum<?> enumValue) {
             return add(key, enumValue.name());
         }
 
+        /**
+         * Adds a key with a collection which will be wrapped in a list.
+         *
+         * @param key        key
+         * @param collection collection
+         *
+         * @return builder with values changed
+         */
         public Builder add(String key, Collection<?> collection) {
             this.serialized.put(key, new ArrayList<>(collection)); // serialize collection as list
             return this;
         }
 
+        /**
+         * Adds a object. The key will be computed by the current naming strategy.
+         *
+         * @param value value to add
+         *
+         * @return builder with values changed
+         */
         public Builder add(Object value) {
-            return add(namingStrategy.adapt(value.getClass()), value);
+            return add(NAMING_STRATEGY.adapt(value.getClass()), value);
         }
 
+        /**
+         * Adds a enum value. The key will be computed by the current naming strategy.
+         *
+         * @param enumValue value to add
+         *
+         * @return builder with values changed
+         */
         public Builder add(Enum<?> enumValue) {
-            return add(namingStrategy.adapt(enumValue.getClass()), enumValue);
+            return add(NAMING_STRATEGY.adapt(enumValue.getClass()), enumValue);
         }
 
+        /**
+         * Add a map to the map
+         *
+         * @param map           map to add
+         * @param keyFunction   function to map key to string
+         * @param valueFunction function to map value to object
+         * @param <K>           key type
+         * @param <V>           value type
+         *
+         * @return builder with values changed
+         */
         public <K, V> Builder add(Map<K, V> map, BiFunction<K, V, String> keyFunction,
                                   BiFunction<K, V, Object> valueFunction) {
             map.forEach((k, v) -> add(keyFunction.apply(k, v), valueFunction.apply(k, v)));
+            return this;
+        }
+
+        /**
+         * Add a map to the serialization map
+         *
+         * @param map map to add
+         *
+         * @return builder with values changed
+         */
+        public Builder add(Map<String, Object> map) {
+            map.forEach(this::add);
             return this;
         }
 

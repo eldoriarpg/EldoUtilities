@@ -1,7 +1,5 @@
 package de.eldoria.eldoutilities.utils;
 
-import java.util.Arrays;
-
 public final class TextUtil {
     private TextUtil() {
         throw new UnsupportedOperationException("This is a utility class!");
@@ -12,6 +10,7 @@ public final class TextUtil {
      *
      * @param string string to check
      * @param count  char to count
+     *
      * @return the number of occurences of the char in the string.
      */
     public static int countChars(String string, char count) {
@@ -24,13 +23,13 @@ public final class TextUtil {
 
 
     /**
-     * Trims a text to the desired length.
-     * Returns unmodified input if max chars is larger or equal string.length().
+     * Trims a text to the desired length. Returns unmodified input if max chars is larger or equal string.length().
      *
      * @param string      String to trim
      * @param endSequence end sequence which should be append at the end of the string. included in max chars.
      * @param maxChars    max char length.
      * @param keepWords   true if no word should be cut.
+     *
      * @return String with length of maxChars of shorter.
      */
     public static String cropText(String string, String endSequence, int maxChars, boolean keepWords) {

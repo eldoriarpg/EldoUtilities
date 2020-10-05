@@ -7,19 +7,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * This class containts methods to handle arrays and search.
+ */
 public final class ArrayUtil {
 
-    private ArrayUtil(){
+    private ArrayUtil() {
         throw new UnsupportedOperationException("This is a utility class!");
     }
+
     /**
      * Checks if a string in a array matches a pattern.
      *
      * @param strings  strings to check
      * @param contains pattern to check against
+     *
      * @return matcher instance wich matches the string
      */
-    public  static Matcher findInArray(String[] strings, Pattern contains) {
+    public static Matcher findInArray(String[] strings, Pattern contains) {
         for (String string : strings) {
             Matcher matcher = contains.matcher(string);
             if (matcher.find()) return matcher;
@@ -32,6 +37,7 @@ public final class ArrayUtil {
      *
      * @param strings string to check
      * @param values  one or more value to check agains
+     *
      * @return true if a match was found
      */
     public static boolean arrayContains(String[] strings, String... values) {
@@ -48,6 +54,7 @@ public final class ArrayUtil {
      *
      * @param chars  chars to check
      * @param values one or more value to check agains
+     *
      * @return true if a match was found
      */
     public static boolean arrayContains(char[] chars, char... values) {
@@ -64,6 +71,7 @@ public final class ArrayUtil {
      *
      * @param array  array to combine
      * @param arrays arrays to combine
+     *
      * @return one array
      */
     public static String[] combineArrays(String[] array, String[]... arrays) {
@@ -79,6 +87,7 @@ public final class ArrayUtil {
      *
      * @param value start to search for
      * @param array array to check
+     *
      * @return list of strings which starts with the provided value
      */
     public static Stream<String> startingWithInArray(String value, String[] array) {
@@ -90,6 +99,7 @@ public final class ArrayUtil {
      *
      * @param value value to check
      * @param array array values.
+     *
      * @return true if the value starts with any value in the array
      */
     public static boolean stringStartingWithValueInArray(String value, String[] array) {
@@ -101,6 +111,7 @@ public final class ArrayUtil {
      *
      * @param value value to check
      * @param array array values.
+     *
      * @return true if the value ends with any value in the array
      */
     public static boolean endingWithInArray(String value, String[] array) {
