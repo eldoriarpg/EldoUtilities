@@ -13,11 +13,21 @@ public class QuadVersionFunction<A, B, C, D, R> {
         this.functions = functions;
     }
 
+    /**
+     * Execute the function for the current version.
+     *
+     * @param a first parameter of the function
+     * @param b second parameter of the function
+     * @param c third parameter of the function
+     * @param d fourth parameter of the function
+     * @return value of the function
+     * @throws UnsupportedVersionException when no function is defined for the server version.
+     */
     public R apply(A a, B b, C c, D d) {
         QuadFunction<A, B, C, D, R> function = functions.get(ServerVersion.CURRENT_VERSION);
-        if(function == null){
-            throw new UnsupportedVersionException(ServerVersion.CURRENT_VERSION);
+        if (function == null) {
+            throw new UnsupportedVersionException();
         }
-        return function.apply(a,b,c,d);
+        return function.apply(a, b, c, d);
     }
 }

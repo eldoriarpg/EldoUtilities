@@ -13,10 +13,17 @@ public class VersionFunction<A, R> {
         this.functions = functions;
     }
 
+    /**
+     * Execute the function for the current version.
+     *
+     * @param a first parameter of the function.
+     * @return value of the function
+     * @throws UnsupportedVersionException when no function is defined for the server version.
+     */
     public R apply(A a) {
         Function<A, R> function = functions.get(ServerVersion.CURRENT_VERSION);
         if (function == null) {
-            throw new UnsupportedVersionException(ServerVersion.CURRENT_VERSION);
+            throw new UnsupportedVersionException();
         }
         return function.apply(a);
     }
