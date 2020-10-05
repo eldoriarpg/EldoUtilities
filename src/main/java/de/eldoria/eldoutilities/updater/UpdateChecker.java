@@ -26,10 +26,23 @@ public final class UpdateChecker implements Listener {
         this.permission = permission;
     }
 
+    /**
+     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     *
+     * @param plugin   plugin instance
+     * @param spigotId id of the plugin on spigot
+     */
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId) {
         performAndNotifyUpdateCheck(plugin, spigotId, false);
     }
 
+    /**
+     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     *
+     * @param plugin          plugin instance
+     * @param spigotId        id of the plugin on spigot
+     * @param sendLoginNotify set this to true to notify admins and operator when they join.
+     */
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, boolean sendLoginNotify) {
         if (sendLoginNotify) {
             performAndNotifyUpdateCheck(plugin, spigotId, plugin.getDescription().getName());
@@ -38,6 +51,13 @@ public final class UpdateChecker implements Listener {
         }
     }
 
+    /**
+     * Perform a update check which will notify the server owner with a console message when a new version is available.
+     *
+     * @param plugin          plugin instance
+     * @param spigotId        id of the plugin on spigot
+     * @param notifyPermission enter the permission which a user should have to get a notification. null to disable login notification.
+     */
     public static void performAndNotifyUpdateCheck(Plugin plugin, int spigotId, String notifyPermission) {
         boolean updateAvailable = false;
 
