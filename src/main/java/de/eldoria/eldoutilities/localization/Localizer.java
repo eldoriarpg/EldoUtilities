@@ -291,4 +291,8 @@ public class Localizer {
         if (s.length == 2 && localesPrefix.equalsIgnoreCase(s[0])) return new Locale(s[1]);
         return null;
     }
+
+    public String[] getIncludedLocales() {
+        return includedLocales;
+    }
 }
