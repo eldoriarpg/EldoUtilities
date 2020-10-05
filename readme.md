@@ -8,7 +8,7 @@
         <dependency>
             <groupId>de.eldoria</groupId>
             <artifactId>EldoUtilities</artifactId>
-            <version>v1.0.18</version>
+            <version>version</version>
         </dependency>
 
 ```
