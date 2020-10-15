@@ -106,8 +106,20 @@ public final class MessageSender {
      * @return message sender of plugin or default sender if plugin is null
      */
     public static MessageSender get(@Nullable Plugin plugin) {
+        if (plugin == null) return DEFAULT_SENDER;
+        return get(plugin.getClass());
+    }
+
+    /**
+     * Get the message sender created for this plugin.
+     *
+     * @param plugin plugin
+     *
+     * @return message sender of plugin or default sender if plugin is null
+     */
+    public static MessageSender get(@Nullable Class<? extends Plugin> plugin) {
         return plugin == null ? DEFAULT_SENDER
-                : PLUGIN_SENDER.getOrDefault(plugin.getDescription().getName(), DEFAULT_SENDER);
+                : PLUGIN_SENDER.getOrDefault(plugin.getName(), DEFAULT_SENDER);
     }
 
     private MessageSender update(String prefix, String defaultMessageColor, String defaultErrorColor) {
