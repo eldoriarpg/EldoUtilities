@@ -1,6 +1,8 @@
 package de.eldoria.eldoutilities;
 
+import de.eldoria.eldoutilities.utils.ObjUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,53 +19,77 @@ public final class EldoUtil {
 
     public static final class InternalLogger {
         private static final String PREFIX = "[EldoUtilities] ";
-        private static final Logger INTERNAL_LOGGER = Bukkit.getLogger();
+        private static final Logger INTERNAL_LOGGER = ObjUtil.nonNullOrElse(Bukkit.getServer(), Server::getLogger, null);
 
         private InternalLogger() {
         }
 
         public void log(Level level, String msg) {
-            INTERNAL_LOGGER.log(level, PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.log(level, PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void log(Level level, String msg, Object param1) {
-            INTERNAL_LOGGER.log(level, PREFIX + msg, param1);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.log(level, PREFIX + msg, param1);
+            }, () -> System.out.println(msg));
         }
 
         public void log(Level level, String msg, Object[] params) {
-            INTERNAL_LOGGER.log(level, PREFIX + msg, params);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.log(level, PREFIX + msg, params);
+            }, () -> System.out.println(msg));
         }
 
         public void log(Level level, String msg, Throwable thrown) {
-            INTERNAL_LOGGER.log(level, PREFIX + msg, thrown);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.log(level, PREFIX + msg, thrown);
+            }, () -> System.out.println(msg));
         }
 
         public void severe(String msg) {
-            INTERNAL_LOGGER.severe(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.severe(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void warning(String msg) {
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.warning(PREFIX + msg);
+            }, () -> System.out.println(msg));
+
             INTERNAL_LOGGER.warning(PREFIX + msg);
         }
 
         public void info(String msg) {
-            INTERNAL_LOGGER.info(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.info(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void config(String msg) {
-            INTERNAL_LOGGER.config(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.config(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void fine(String msg) {
-            INTERNAL_LOGGER.fine(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.fine(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void finer(String msg) {
-            INTERNAL_LOGGER.finer(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.finer(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
 
         public void finest(String msg) {
-            INTERNAL_LOGGER.finest(PREFIX + msg);
+            ObjUtil.nonNull(INTERNAL_LOGGER, logger -> {
+                logger.finest(PREFIX + msg);
+            }, () -> System.out.println(msg));
         }
     }
 }
