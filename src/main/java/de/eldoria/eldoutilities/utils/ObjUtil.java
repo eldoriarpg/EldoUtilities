@@ -13,7 +13,7 @@ public final class ObjUtil {
     }
 
     /**
-     * Consumes a object if object is null
+     * Consumes a object if object is not null
      *
      * @param obj     object to condume
      * @param execute consumer to handle object
@@ -23,6 +23,25 @@ public final class ObjUtil {
      */
     public static <T> boolean nonNull(T obj, Consumer<T> execute) {
         if (obj == null) return false;
+        execute.accept(obj);
+        return true;
+    }
+
+    /**
+     * Consumes a object if object is not null or executes a runnable when object is null
+     *
+     * @param obj      object to condume
+     * @param execute  consumer to handle object
+     * @param runnable runnable to run when object is null
+     * @param <T>      type of object
+     *
+     * @return true if the object was not null and the consumer was applied false if the object was null
+     */
+    public static <T> boolean nonNull(T obj, Consumer<T> execute, Runnable runnable) {
+        if (obj == null) {
+            runnable.run();
+            return false;
+        }
         execute.accept(obj);
         return true;
     }
