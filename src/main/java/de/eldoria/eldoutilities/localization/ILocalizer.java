@@ -47,5 +47,6 @@ public interface ILocalizer {
         ILocalizer localizer = new Localizer(plugin, localesPath, localesPrefix, fallbackLocale, includedLocales);
         localizer.setLocale(language);
         LOCALIZER.put(plugin.getClass(), localizer);
+        return localizer;
     }
 }

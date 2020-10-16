@@ -211,33 +211,7 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendLocalizedMessage(CommandSender sender, String message, Replacement... replacements) {
-        if (!(sender instanceof Player)) {
-            sendLocalizedMessage(null, message, replacements);
-            return;
-        }
-        sendLocalizedMessage((Player) sender, message, replacements);
-    }
-
-    /**
-     * Send a message to a player
-     * <p>
-     * The message will be localized.
-     * <p>
-     * The message can be a simple locale code in the format "code" or "code.code....".
-     * <p>
-     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
-     * and $code.more.code$}. You can write what you want between locale codes.
-     *
-     * @param player  receiver of the message
-     * @param message message with optinal color codes
-     */
-    public void sendLocalizedMessage(Player player, String message, Replacement... replacements) {
-        String locMessage = localize(message, replacements).replaceAll("§r", defaultMessageColor);
-        if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + locMessage);
-            return;
-        }
-        player.sendMessage(prefix + defaultMessageColor + locMessage);
+        sendMessage(sender, localize(message, replacements));
     }
 
     /**
@@ -254,33 +228,7 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendLocalizedError(CommandSender sender, String message, Replacement... replacements) {
-        if (!(sender instanceof Player)) {
-            sendLocalizedError(null, message, replacements);
-            return;
-        }
-        sendLocalizedError((Player) sender, message, replacements);
-    }
-
-    /**
-     * Sends a error to a player.
-     * <p>
-     * The message will be localized.
-     * <p>
-     * The message can be a simple locale code in the format "code" or "code.code....".
-     * <p>
-     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
-     * and $code.more.code$}. You can write what you want between locale codes.
-     *
-     * @param player  receiver of the message
-     * @param message message with optinal color codes
-     */
-    public void sendLocalizedError(Player player, String message, Replacement... replacements) {
-        String locMessage = localize(message, replacements).replaceAll("§r", defaultErrorColor);
-        if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + locMessage);
-            return;
-        }
-        player.sendMessage(prefix + defaultErrorColor + locMessage);
+        sendError(sender, localize(message, replacements));
     }
 
     private ILocalizer loc() {
