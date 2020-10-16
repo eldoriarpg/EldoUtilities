@@ -18,8 +18,8 @@ public abstract class Updater<T extends UpdateData> implements Listener {
     public Updater(T data) {
         this.plugin = data.getPlugin();
         this.data = data;
-        evaluate(getLatestVersion(data));
-        if (data.isAutoUpdate()) {
+        boolean newVersion = evaluate(getLatestVersion(data));
+        if (data.isAutoUpdate() && newVersion) {
             update();
         }
     }
@@ -33,16 +33,23 @@ public abstract class Updater<T extends UpdateData> implements Listener {
      * <p>
      * return the latest version or a empty optional if the version could not be checked.
      *
-     * @param data   data for plugin updates
+     * @param data data for plugin updates
      *
      * @return empty optional if the version could not be checked or the latest version.
      */
     protected abstract Optional<String> getLatestVersion(T data);
 
-    private void evaluate(Optional<String> optionalLatestVersion) {
+    /**
+     * Evaluates the result from request.
+     *
+     * @param optionalLatestVersion optional with latest version
+     *
+     * @return true if a update is available.
+     */
+    private boolean evaluate(Optional<String> optionalLatestVersion) {
         if (!optionalLatestVersion.isPresent()) {
             plugin.getLogger().info("Could not check latest version.");
-            return;
+            return false;
         }
 
         latestVersion = optionalLatestVersion.get();
@@ -50,8 +57,10 @@ public abstract class Updater<T extends UpdateData> implements Listener {
         if (!plugin.getDescription().getVersion().equalsIgnoreCase(latestVersion)) {
             logUpdateMessage();
             registerListener();
+            return true;
         } else {
             plugin.getLogger().info("§2Plugin is up to date.");
+            return false;
         }
     }
 
@@ -59,7 +68,6 @@ public abstract class Updater<T extends UpdateData> implements Listener {
      * This version should update the plugin. If not implemented set the {@link UpdateData#isAutoUpdate()} to false.
      */
     protected void update() {
-
     }
 
     private void logUpdateMessage() {
@@ -98,5 +106,9 @@ public abstract class Updater<T extends UpdateData> implements Listener {
                         + "Download new version here: §b" + description.getWebsite());
             }
         }
+    }
+
+    public T getData() {
+        return data;
     }
 }
