@@ -36,14 +36,14 @@ import java.util.stream.Stream;
  * Easy to use and fully automatic setup and updating of locales.
  * <p>
  * Requires to have at least one default locale and one fallback locale in the resources. Use the {@link
- * #Localizer(Plugin, String, String, String, Locale, String...)} constructor for initial setup. This will create
+ * #Localizer(Plugin, String, String, Locale, String...)} constructor for initial setup. This will create
  * missing files and updates existing files.
  * <p>
  * You can change the currently used locale every time via {@link #setLocale(String)}.
  * <p>
  * The localizer also allows to use locales which are not included in the ressources folder.
  */
-public class Localizer {
+public class Localizer implements ILocalizer {
 
     private final ResourceBundle fallbackLocaleFile;
     private final Plugin plugin;
@@ -65,21 +65,20 @@ public class Localizer {
      * provided language does not exists.
      *
      * @param plugin          instance of plugin
-     * @param language        language which should be used if existent
      * @param localesPath     path of the locales directory
      * @param localesPrefix   prefix of the locale files
      * @param fallbackLocale  fallbackLocale
      * @param includedLocales internal provided locales
      */
-    public Localizer(Plugin plugin, String language, String localesPath,
-                     String localesPrefix, Locale fallbackLocale, String... includedLocales) {
+    Localizer(Plugin plugin, String localesPath,
+              String localesPrefix, Locale fallbackLocale, String... includedLocales) {
         this.plugin = plugin;
         this.localesPath = localesPath;
         this.localesPrefix = localesPrefix;
         this.includedLocales = includedLocales;
         fallbackLocaleFile = ResourceBundle.getBundle(localesPrefix, fallbackLocale);
         createOrUpdateLocaleFiles();
-        setLocale(language);
+        LOCALIZER.put(plugin.getClass(), this);
     }
 
     /**
@@ -87,6 +86,7 @@ public class Localizer {
      *
      * @param language language to be used
      */
+    @Override
     public void setLocale(String language) {
         String localeFile = localesPrefix + "_" + language + ".properties";
 
@@ -108,6 +108,7 @@ public class Localizer {
      *
      * @return Replaced Messages
      */
+    @Override
     public String getMessage(String key, Replacement... replacements) {
         String result = null;
         if (localeFile.containsKey(key)) {
@@ -304,7 +305,9 @@ public class Localizer {
      *
      * @return array of available locales.
      */
+    @Override
     public String[] getIncludedLocales() {
         return includedLocales;
     }
+
 }

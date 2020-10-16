@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 public final class Replacement {
     private final String key;
     private String value;
-    private boolean caseInsensitive;
+    private boolean caseSensitive;
 
     private Replacement(String key, String value) {
         this.key = key;
@@ -87,8 +87,8 @@ public final class Replacement {
      *
      * @return Replacement with value changed
      */
-    public Replacement ignoreKeyCase() {
-        this.caseInsensitive = true;
+    public Replacement matchCase() {
+        this.caseSensitive = false;
         return this;
     }
 
@@ -101,7 +101,7 @@ public final class Replacement {
      * @return string with key replaced by value.
      */
     public String invoke(String string) {
-        if (caseInsensitive) {
+        if (!caseSensitive) {
             return string.replaceAll("(?i)" + key, value);
         }
         return string.replace(key, value);
