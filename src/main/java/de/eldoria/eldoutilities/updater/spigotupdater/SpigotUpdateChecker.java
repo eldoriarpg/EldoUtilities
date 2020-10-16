@@ -15,7 +15,7 @@ import java.util.logging.Level;
  * This class contains a simple to use update checker based on spigot api.
  */
 public final class SpigotUpdateChecker extends Updater<SpigotUpdateData> {
-    private SpigotUpdateChecker(SpigotUpdateData data) {
+    public SpigotUpdateChecker(SpigotUpdateData data) {
         super(data);
     }
 
