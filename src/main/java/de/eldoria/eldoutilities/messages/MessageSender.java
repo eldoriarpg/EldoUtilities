@@ -1,23 +1,32 @@
 package de.eldoria.eldoutilities.messages;
 
+import de.eldoria.eldoutilities.localization.ILocalizer;
+import de.eldoria.eldoutilities.localization.Localizer;
+import de.eldoria.eldoutilities.localization.Replacement;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class MessageSender {
-
-    private static final MessageSender DEFAULT_SENDER = new MessageSender("", "", "§c");
+    private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
+    private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
     private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
+    private Class<? extends Plugin> ownerPlugin;
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;
 
-    private MessageSender(String prefix, String defaultMessageColor, String defaultErrorColor) {
+    private MessageSender(Class<? extends Plugin> ownerPlugin, String prefix, String defaultMessageColor, String defaultErrorColor) {
+        this.ownerPlugin = ownerPlugin;
         this.prefix = prefix;
         this.defaultMessageColor = defaultMessageColor;
         this.defaultErrorColor = defaultErrorColor;
@@ -93,7 +102,7 @@ public final class MessageSender {
 
         PLUGIN_SENDER.compute(plugin.getName(),
                 (k, v) -> (v == null)
-                        ? new MessageSender(prefix, defMessageColor, defErrorColor)
+                        ? new MessageSender(plugin, prefix, defMessageColor, defErrorColor)
                         : v.update(prefix, defMessageColor, defErrorColor));
         return PLUGIN_SENDER.get(plugin.getName());
     }
@@ -129,6 +138,7 @@ public final class MessageSender {
         return this;
     }
 
+
     /**
      * Send a message to a sender
      *
@@ -150,12 +160,12 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendMessage(Player player, String message) {
-        String s = message.replaceAll("§r", defaultMessageColor);
+        String repMessage = message.replaceAll("§r", defaultMessageColor);
         if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + s);
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + repMessage);
             return;
         }
-        player.sendMessage(prefix + defaultMessageColor + s);
+        player.sendMessage(prefix + defaultMessageColor + repMessage);
     }
 
     /**
@@ -179,11 +189,136 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendError(Player player, String message) {
-        String s = message.replaceAll("§r", defaultErrorColor);
+        String repMessage = message.replaceAll("§r", defaultErrorColor);
         if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + s);
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + repMessage);
             return;
         }
-        player.sendMessage(prefix + defaultErrorColor + s);
+        player.sendMessage(prefix + defaultErrorColor + repMessage);
+    }
+
+    /**
+     * Send a message to a sender
+     * <p>
+     * The message will be localized.
+     * <p>
+     * The message can be a simple locale code in the format "code" or "code.code....".
+     * <p>
+     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
+     * and $code.more.code$}. You can write what you want between locale codes.
+     *
+     * @param sender  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendLocalizedMessage(CommandSender sender, String message, Replacement... replacements) {
+        if (!(sender instanceof Player)) {
+            sendLocalizedMessage(null, message, replacements);
+            return;
+        }
+        sendLocalizedMessage((Player) sender, message, replacements);
+    }
+
+    /**
+     * Send a message to a player
+     * <p>
+     * The message will be localized.
+     * <p>
+     * The message can be a simple locale code in the format "code" or "code.code....".
+     * <p>
+     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
+     * and $code.more.code$}. You can write what you want between locale codes.
+     *
+     * @param player  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendLocalizedMessage(Player player, String message, Replacement... replacements) {
+        String locMessage = localize(message, replacements).replaceAll("§r", defaultMessageColor);
+        if (player == null) {
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + locMessage);
+            return;
+        }
+        player.sendMessage(prefix + defaultMessageColor + locMessage);
+    }
+
+    /**
+     * Sends a error to a sender
+     * <p>
+     * The message will be localized.
+     * <p>
+     * The message can be a simple locale code in the format "code" or "code.code....".
+     * <p>
+     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
+     * and $code.more.code$}. You can write what you want between locale codes.
+     *
+     * @param sender  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendLocalizedError(CommandSender sender, String message, Replacement... replacements) {
+        if (!(sender instanceof Player)) {
+            sendLocalizedError(null, message, replacements);
+            return;
+        }
+        sendLocalizedError((Player) sender, message, replacements);
+    }
+
+    /**
+     * Sends a error to a player.
+     * <p>
+     * The message will be localized.
+     * <p>
+     * The message can be a simple locale code in the format "code" or "code.code....".
+     * <p>
+     * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
+     * and $code.more.code$}. You can write what you want between locale codes.
+     *
+     * @param player  receiver of the message
+     * @param message message with optinal color codes
+     */
+    public void sendLocalizedError(Player player, String message, Replacement... replacements) {
+        String locMessage = localize(message, replacements).replaceAll("§r", defaultErrorColor);
+        if (player == null) {
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + locMessage);
+            return;
+        }
+        player.sendMessage(prefix + defaultErrorColor + locMessage);
+    }
+
+    private ILocalizer loc() {
+        return ILocalizer.getPluginLocalizer(ownerPlugin);
+    }
+
+    /**
+     * Translates a String with Placeholders. Can handle multiple messages with replacements. Add replacements in the
+     * right order.
+     *
+     * @param message      Message to translate
+     * @param replacements Replacements in the right order.
+     *
+     * @return Replaced Messages
+     */
+    private String localize(String message, Replacement[] replacements) {
+        if (message == null) {
+            return null;
+        }
+
+        // If the matche doesn't find any key we assume its a simple message.
+        if (!LOCALIZATION_CODE.matcher(message).find()) {
+            loc().getMessage(message, replacements);
+        }
+
+        // find locale codes in message
+        Matcher matcher = LOCALIZATION_CODE.matcher(message);
+        List<String> localeCodes = new ArrayList<>();
+        while (matcher.find()) {
+            localeCodes.add(matcher.group(1));
+        }
+
+
+        String result = message;
+        for (String match : localeCodes) {
+            //Replace current locale code with result
+            result = result.replace("$" + match + "$", loc().getMessage(match, replacements));
+        }
+        return result;
     }
 }
