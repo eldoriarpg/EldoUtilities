@@ -25,6 +25,28 @@ public interface ILocalizer {
     }
 
     /**
+     * Create a new localizer instance with default values.
+     * <p>
+     * The message path and prefix will be messages and the fallback language the "en_US" locale.
+     * <p>
+     * This instance will create locale files, which are provided in the resources directory.
+     * <p>
+     * After this it will updates all locale files inside the locales directory. For this the ref keys from the internal
+     * default locale file will be used.
+     * <p>
+     * After a update check and a update if needed it will load the provided language or the fallback language if the
+     * provided language does not exists.
+     *
+     * @param plugin          instance of plugin
+     * @param language        language which should be used if existent
+     * @param includedLocales internal provided locales
+     */
+    static ILocalizer create(Plugin plugin, String language,
+                             String... includedLocales) {
+        return create(plugin, language, "messages", "messages", Locale.US, includedLocales);
+    }
+
+    /**
      * Create a new localizer instance.
      * <p>
      * This instance will create locale files, which are provided in the resources directory.
