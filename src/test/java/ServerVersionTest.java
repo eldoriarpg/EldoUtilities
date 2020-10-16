@@ -15,7 +15,7 @@ public class ServerVersionTest {
         System.out.println(Arrays.stream(ServerVersion.versionsBetween(ServerVersion.MC_1_9, ServerVersion.MC_1_16)).map(Enum::name).collect(Collectors.joining(", ")));
         Assertions.assertArrayEquals(
                 new ServerVersion[] {ServerVersion.MC_1_12, ServerVersion.MC_1_13, ServerVersion.MC_1_14, ServerVersion.MC_1_15, ServerVersion.MC_1_16},
-                ServerVersion.versionsBetween(ServerVersion.MC_1_9, ServerVersion.MC_1_16));
+                ServerVersion.versionsBetween(ServerVersion.MC_1_12, ServerVersion.MC_1_16));
     }
 
     @Test
