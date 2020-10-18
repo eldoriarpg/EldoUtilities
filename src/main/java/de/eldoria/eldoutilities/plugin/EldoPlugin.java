@@ -3,13 +3,29 @@ package de.eldoria.eldoutilities.plugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.logging.Logger;
 
 public class EldoPlugin extends JavaPlugin {
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
+    private static EldoPlugin instance;
+
+    public EldoPlugin() {
+        instance = this;
+    }
+
+    public EldoPlugin(@NotNull JavaPluginLoader loader, @NotNull PluginDescriptionFile description, @NotNull File dataFolder, @NotNull File file) {
+        super(loader, description, dataFolder, file);
+        instance = this;
+    }
 
     /**
      * Register a tabexecutor for a command.
@@ -90,5 +106,9 @@ public class EldoPlugin extends JavaPlugin {
             scheduler = getServer().getScheduler();
         }
         return scheduler;
+    }
+
+    public static Logger logger() {
+        return instance.getLogger();
     }
 }
