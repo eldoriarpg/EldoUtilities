@@ -1,11 +1,16 @@
 package de.eldoria.eldoutilities.serialization;
 
+import com.google.common.collect.ObjectArrays;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -160,21 +165,14 @@ public final class SerializationUtil {
 
     public static Map<String, Object> objectToMap(Object obj) {
         Builder builder = newBuilder();
-        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        Field[] declaredFields = getAllFields(obj);
         for (Field declaredField : declaredFields) {
             declaredField.setAccessible(true);
-            if (declaredField.isAnnotationPresent(SerializeField.class)) {
-                Object field;
+            if (!Modifier.isTransient(declaredField.getModifiers())) {
                 try {
-                    field = declaredField.get(obj);
+                    builder.add(declaredField.getName(), declaredField.get(obj));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                    continue;
-                }
-                if (field instanceof ConfigurationSerializable) {
-                    builder.add(declaredField.getName(), ((ConfigurationSerializable) field).serialize());
-                } else {
-                    builder.add(declaredField.getName(), field);
                 }
             }
         }
@@ -182,10 +180,10 @@ public final class SerializationUtil {
     }
 
     public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
-        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        Field[] declaredFields = getAllFields(obj);
         for (Field declaredField : declaredFields) {
             declaredField.setAccessible(true);
-            if (declaredField.isAnnotationPresent(SerializeField.class)) {
+            if (!Modifier.isTransient(declaredField.getModifiers())) {
                 if (!objectMap.containsKey(declaredField.getName())) continue;
                 try {
                     declaredField.set(obj, objectMap.get(declaredField.getName()));
@@ -193,7 +191,16 @@ public final class SerializationUtil {
                     e.printStackTrace();
                 }
             }
-
         }
+    }
+
+    private static Field[] getAllFields(Object obj) {
+        Field[] fields = new Field[0];
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            fields = ObjectArrays.concat(fields, clazz.getDeclaredFields(), Field.class);
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 }
