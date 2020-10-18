@@ -1,7 +1,7 @@
 package de.eldoria.eldoutilities.messages;
 
+import de.eldoria.eldoutilities.EldoUtil;
 import de.eldoria.eldoutilities.localization.ILocalizer;
-import de.eldoria.eldoutilities.localization.Localizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -102,7 +102,7 @@ public final class MessageSender {
 
         PLUGIN_SENDER.compute(plugin.getName(),
                 (k, v) -> (v == null)
-                        ? new MessageSender(plugin, prefix, defMessageColor, defErrorColor)
+                        ? new MessageSender(plugin, prefix.trim() + " ", defMessageColor, defErrorColor)
                         : v.update(prefix, defMessageColor, defErrorColor));
         return PLUGIN_SENDER.get(plugin.getName());
     }
@@ -231,6 +231,24 @@ public final class MessageSender {
         sendError(sender, localize(message, replacements));
     }
 
+    public void sendTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        String repTitle = title.replaceAll("§r", "§r" + defaultColor);
+        String repSubTitle = subtitle.replaceAll("§r", "§r" + defaultColor);
+        player.sendTitle(repTitle, repSubTitle, fadeIn, stay, fadeOut);
+    }
+
+    public void sendTitle(Player player, String defaultColor, String title, String subtitle) {
+        sendTitle(player, defaultColor, title, subtitle, 10, 70, 20);
+    }
+
+    public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
+        sendTitle(player, defaultColor, localize(title, replacements), localize(subtitle, replacements), fadeIn, stay, fadeOut);
+    }
+
+    public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
+        sendLocalizedTitle(player, defaultColor, title, subtitle, 10, 70, 20, replacements);
+    }
+
     private ILocalizer loc() {
         return ILocalizer.getPluginLocalizer(ownerPlugin);
     }
@@ -249,21 +267,21 @@ public final class MessageSender {
             return null;
         }
 
-        // If the matche doesn't find any key we assume its a simple message.
+        // If the matcher doesn't find any key we assume its a simple message.
         if (!LOCALIZATION_CODE.matcher(message).find()) {
-            loc().getMessage(message, replacements);
+            return loc().getMessage(message, replacements);
         }
 
         // find locale codes in message
         Matcher matcher = LOCALIZATION_CODE.matcher(message);
-        List<String> localeCodes = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
         while (matcher.find()) {
-            localeCodes.add(matcher.group(1));
+            keys.add(matcher.group(1));
         }
 
 
         String result = message;
-        for (String match : localeCodes) {
+        for (String match : keys) {
             //Replace current locale code with result
             result = result.replace("$" + match + "$", loc().getMessage(match, replacements));
         }
