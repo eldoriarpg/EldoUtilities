@@ -11,6 +11,7 @@ import java.util.Objects;
 public class SerializationUtilTest {
     private final SerializableClass.NestedObject nestedObject = new SerializableClass.NestedObject(2, "test");
     private final SerializableClass testClass = new SerializableClass(10, "test", nestedObject);
+       private final InheritClass inheritClass = new InheritClass();
 
     @Test
     public void serializationTest() {
@@ -24,6 +25,19 @@ public class SerializationUtilTest {
         stringObjectMap.put("someNestedObject", nestedObject);
         SerializableClass serializableClass = new SerializableClass(stringObjectMap);
         Assertions.assertEquals(testClass, serializableClass);
+    }
+
+    @Test
+    public void serializeInheritanceTest() {
+        Map<String, Object> serialize = inheritClass.serialize();
+        Assertions.assertEquals(3, serialize.size());
+    }
+
+    @Test
+    public void deserializeInheritanceTest() {
+        Map<String, Object> serialize = inheritClass.serialize();
+        InheritClass inheritClass = new InheritClass(serialize);
+        Assertions.assertEquals(this.inheritClass, inheritClass);
     }
 
     private static class SerializableClass implements ConfigurationSerializable {
@@ -94,5 +108,19 @@ public class SerializationUtilTest {
                 return Objects.hash(someInt, someString);
             }
         }
+    }
+
+    private static class InheritClass extends SerializableClass.NestedObject {
+
+        String someOtherString = "another string";
+
+        public InheritClass() {
+            super(2, "test");
+        }
+
+        public InheritClass(Map<String, Object> objectMap) {
+            super(objectMap);
+        }
+
     }
 }
