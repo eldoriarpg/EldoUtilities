@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SerializationUtilTest {
-    private final SerializableClass testClass = new SerializableClass(10, "test", new SerializableClass.NestedObject(2, "test"));
+    private final SerializableClass.NestedObject nestedObject = new SerializableClass.NestedObject(2, "test")
+    private final SerializableClass testClass = new SerializableClass(10, "test", nestedObject);
 
     @Test
     public void serializationTest() {
@@ -20,6 +21,7 @@ public class SerializationUtilTest {
     @Test
     public void deserializationTest() {
         Map<String, Object> stringObjectMap = testClass.serialize();
+        stringObjectMap.put("someNestedObject", nestedObject);
         SerializableClass serializableClass = new SerializableClass(stringObjectMap);
         Assertions.assertEquals(testClass, serializableClass);
     }

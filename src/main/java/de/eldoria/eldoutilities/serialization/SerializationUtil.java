@@ -3,7 +3,6 @@ package de.eldoria.eldoutilities.serialization;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -188,28 +187,13 @@ public final class SerializationUtil {
             declaredField.setAccessible(true);
             if (declaredField.isAnnotationPresent(SerializeField.class)) {
                 if (!objectMap.containsKey(declaredField.getName())) continue;
-                Object field;
                 try {
-                    field = declaredField.get(obj);
+                    declaredField.set(obj, objectMap.get(declaredField.getName()));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                    continue;
-                }
-                if (field instanceof ConfigurationSerializable) {
-                    try {
-                        Object o = declaredField.getType().getConstructor(Map.class).newInstance(objectMap.get(declaredField.getName()));
-                        declaredField.set(obj, o);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        declaredField.set(obj, objectMap.get(declaredField.getName()));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
+
         }
     }
 }
