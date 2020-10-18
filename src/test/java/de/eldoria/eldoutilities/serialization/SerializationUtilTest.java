@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SerializationUtilTest {
-    private final SerializableClass.NestedObject nestedObject = new SerializableClass.NestedObject(2, "test")
+    private final SerializableClass.NestedObject nestedObject = new SerializableClass.NestedObject(2, "test");
     private final SerializableClass testClass = new SerializableClass(10, "test", nestedObject);
 
     @Test
@@ -26,21 +26,11 @@ public class SerializationUtilTest {
         Assertions.assertEquals(testClass, serializableClass);
     }
 
-    @Test
-    public void generalTest(){
-        SerializableClass.NestedObject test = new SerializableClass.NestedObject(2, "test");
-        Assertions.assertEquals(test instanceof ConfigurationSerializable, ConfigurationSerializable.class.isAssignableFrom(test.getClass()));
-        Assertions.assertNotEquals(test instanceof ConfigurationSerializable, ConfigurationSerializable.class.isAssignableFrom(new Object().getClass()));
-    }
-
     private static class SerializableClass implements ConfigurationSerializable {
-        @SerializeField
         private int someInt = 1;
-        @SerializeField
         private String someString = "test";
-        @SerializeField
         private NestedObject someNestedObject = new NestedObject(2, "test");
-        private Object unserializedObject = new Object();
+        private transient Object unserializedObject = new Object();
 
         public SerializableClass(int someInt, String someString, NestedObject someNestedObject) {
             this.someInt = someInt;
@@ -73,9 +63,7 @@ public class SerializationUtilTest {
         }
 
         private static class NestedObject implements ConfigurationSerializable {
-            @SerializeField
             private int someInt = 2;
-            @SerializeField
             private String someString = "test";
 
             public NestedObject(int someInt, String someString) {
