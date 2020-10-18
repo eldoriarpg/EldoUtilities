@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.simplecommands;
 
+import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Localizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import de.eldoria.eldoutilities.messages.MessageSender;
@@ -22,12 +23,12 @@ import java.util.stream.Collectors;
 
 public abstract class EldoCommand implements TabExecutor {
     private final Map<String, TabExecutor> subCommands = new HashMap<>();
-    private final Localizer localizer;
+    private final ILocalizer localizer;
     private final MessageSender messageSender;
     private String[] registeredCommands = new String[0];
     private TabExecutor defaultCommand = null;
 
-    public EldoCommand(Localizer localizer, MessageSender messageSender) {
+    public EldoCommand(ILocalizer localizer, MessageSender messageSender) {
         this.localizer = localizer;
         this.messageSender = messageSender;
     }
@@ -44,7 +45,7 @@ public abstract class EldoCommand implements TabExecutor {
      *
      * @return true if the arguments are invalid
      */
-    protected static boolean argumentsInvalid(CommandSender sender, MessageSender messageSender, Localizer localizer, String[] args, int length, String syntax) {
+    protected static boolean argumentsInvalid(CommandSender sender, MessageSender messageSender, ILocalizer localizer, String[] args, int length, String syntax) {
         if (args.length < length) {
             messageSender.sendError(sender, localizer.getMessage("error.invalidArguments",
                     Replacement.create("SYNTAX", syntax).addFormatting('6')));
@@ -115,7 +116,7 @@ public abstract class EldoCommand implements TabExecutor {
      *
      * @return localizer instance
      */
-    protected Localizer localizer() {
+    protected ILocalizer localizer() {
         return localizer;
     }
 
