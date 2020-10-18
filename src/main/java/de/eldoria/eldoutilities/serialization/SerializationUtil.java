@@ -1,5 +1,9 @@
 package de.eldoria.eldoutilities.serialization;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -155,4 +159,57 @@ public final class SerializationUtil {
         }
     }
 
+    public static Map<String, Object> objectToMap(Object obj) {
+        Builder builder = newBuilder();
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            declaredField.setAccessible(true);
+            if (declaredField.isAnnotationPresent(SerializeField.class)) {
+                Object field;
+                try {
+                    field = declaredField.get(obj);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                if (field instanceof ConfigurationSerializable) {
+                    builder.add(declaredField.getName(), ((ConfigurationSerializable) field).serialize());
+                } else {
+                    builder.add(declaredField.getName(), field);
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            declaredField.setAccessible(true);
+            if (declaredField.isAnnotationPresent(SerializeField.class)) {
+                if (!objectMap.containsKey(declaredField.getName())) continue;
+                Object field;
+                try {
+                    field = declaredField.get(obj);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                if (field instanceof ConfigurationSerializable) {
+                    try {
+                        Object o = declaredField.getType().getConstructor(Map.class).newInstance(objectMap.get(declaredField.getName()));
+                        declaredField.set(obj, o);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        declaredField.set(obj, objectMap.get(declaredField.getName()));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 }
