@@ -81,6 +81,21 @@ public final class ArrayUtil {
         }
         return result;
     }
+    /**
+     * Combines two or more arrays.
+     *
+     * @param array  array to combine
+     * @param arrays arrays to combine
+     *
+     * @return one array
+     */
+    public static <T> T[] combineArrays(Class<T> clazz, T[] array, T[]... arrays) {
+        T[] result = array;
+        for (T[] arr : arrays) {
+            result = ObjectArrays.concat(arr, result, clazz);
+        }
+        return result;
+    }
 
     /**
      * Searches for strings, which are starting with the provided value
