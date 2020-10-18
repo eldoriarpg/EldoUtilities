@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.localization;
 
+import de.eldoria.eldoutilities.EldoUtil;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
@@ -36,8 +37,8 @@ import java.util.stream.Stream;
  * Easy to use and fully automatic setup and updating of locales.
  * <p>
  * Requires to have at least one default locale and one fallback locale in the resources. Use the {@link
- * #Localizer(Plugin, String, String, Locale, String...)} constructor for initial setup. This will create
- * missing files and updates existing files.
+ * #Localizer(Plugin, String, String, Locale, String...)} constructor for initial setup. This will create missing files
+ * and updates existing files.
  * <p>
  * You can change the currently used locale every time via {@link #setLocale(String)}.
  * <p>
