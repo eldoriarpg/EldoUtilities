@@ -10,24 +10,44 @@ public interface ILocalizer {
     Map<Class<? extends Plugin>, ILocalizer> LOCALIZER = new HashMap<>();
     ILocalizer DEFAULT = new DummyLocalizer();
 
+    /**
+     * Sets the locale of the localizer instance.
+     *
+     * @param language language to set.
+     */
     void setLocale(String language);
 
+    /**
+     * Get a message.
+     *
+     * @param key          message key
+     * @param replacements replacements for replacement keys
+     *
+     * @return message with replaced replacements if present.
+     */
     String getMessage(String key, Replacement... replacements);
 
+    /**
+     * Returns all available locales.
+     *
+     * @return array of registered locales.
+     */
     String[] getIncludedLocales();
 
     static ILocalizer getPluginLocalizer(Plugin plugin) {
+        if (plugin == null) return DEFAULT;
         return getPluginLocalizer(plugin.getClass());
     }
 
     static ILocalizer getPluginLocalizer(Class<? extends Plugin> plugin) {
+        if (plugin == null) return DEFAULT;
         return LOCALIZER.getOrDefault(plugin, DEFAULT);
     }
 
     /**
      * Create a new localizer instance with default values.
      * <p>
-     * The message path and prefix will be messages and the fallback language the "en_US" locale.
+     * The message path and prefix will be "messages" and the fallback language the "en_US" locale.
      * <p>
      * This instance will create locale files, which are provided in the resources directory.
      * <p>
