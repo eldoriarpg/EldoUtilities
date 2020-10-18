@@ -15,37 +15,54 @@ public final class Replacement {
     /**
      * Creates a new replacement.
      *
-     * @param key   key of replacement
-     * @param value value for replacement
+     * @param key     key of replacement
+     * @param value   value for replacement
+     * @param formats format which should be applied on the replacement.
      *
      * @return replacement with registered replacement
      */
-    public static Replacement create(String key, String value) {
-        return new Replacement("%" + key + "%", value);
+    public static Replacement create(String key, String value, char... formats) {
+        Replacement replacement = new Replacement("%" + key + "%", value);
+        return replacement.addFormatting(formats);
     }
 
     /**
      * Creates a new replacement.
      *
-     * @param key   key of replacement
-     * @param value value which provides a string via {@link Object#toString()}
+     * @param key     key of replacement
+     * @param value   value which provides a string via {@link Object#toString()}
+     * @param formats format which should be applied on the replacement.
      *
      * @return replacement with registered replacement
      */
-    public static Replacement create(String key, Object value) {
-        return new Replacement("%" + key + "%", value.toString());
+    public static Replacement create(String key, Object value, char... formats) {
+        return create(key, value.toString(), formats);
     }
 
     /**
      * Creates a new replacement.
      *
-     * @param key   key of replacement
-     * @param value value which provides the name of the player
+     * @param key     key of replacement
+     * @param value   value which provides a string via {@link Enum#name()}
+     * @param formats format which should be applied on the replacement.
      *
      * @return replacement with registered replacement
      */
-    public static Replacement create(String key, Player value) {
-        return new Replacement("%" + key + "%", value.getName());
+    public static Replacement create(String key, Enum<?> value, char... formats) {
+        return create(key, value.name(), formats);
+    }
+
+    /**
+     * Creates a new replacement.
+     *
+     * @param key     key of replacement
+     * @param value   value which provides the name of the player
+     * @param formats format which should be applied on the replacement.
+     *
+     * @return replacement with registered replacement
+     */
+    public static Replacement create(String key, Player value, char... formats) {
+        return create( key, value.getName(), formats);
     }
 
     /**
