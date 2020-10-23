@@ -1,6 +1,10 @@
 package de.eldoria.eldoutilities.updater;
 
 import de.eldoria.eldoutilities.messages.MessageSender;
+import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateChecker;
+import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
+import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateChecker;
+import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -110,5 +114,13 @@ public abstract class Updater<T extends UpdateData> implements Listener {
 
     public T getData() {
         return data;
+    }
+
+    public static void Spigot(SpigotUpdateData data) {
+        new SpigotUpdateChecker(data);
+    }
+
+    public static void Butler(ButlerUpdateData data) {
+        new ButlerUpdateChecker(data);
     }
 }
