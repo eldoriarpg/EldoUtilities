@@ -6,7 +6,7 @@
 
     <groupId>de.eldoria</groupId>
     <artifactId>EldoUtilities</artifactId>
-    <version>v1.0.29</version>
+    <version>v1.0.30</version>
     <packaging>jar</packaging>
     <name>Eldo Utilities</name>
     <url>https://github.com/eldoriarpg/EldoUtilities/wiki</url>
