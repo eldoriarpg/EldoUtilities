@@ -9,7 +9,6 @@ public class ButlerUpdateData extends UpdateData {
 
     /**
      * Creates a new Update data.
-     *
      */
     public ButlerUpdateData(Plugin plugin, String notifyPermission, boolean notifyUpdate, boolean autoUpdate, int butlerId, String host) {
         super(plugin, notifyPermission, notifyUpdate, autoUpdate);

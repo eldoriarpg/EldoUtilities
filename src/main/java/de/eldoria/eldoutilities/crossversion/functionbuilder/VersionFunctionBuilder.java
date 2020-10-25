@@ -14,7 +14,7 @@ public interface VersionFunctionBuilder {
      *
      * @return a new function builder instance
      */
-    public static <A, R> FunctionBuilder<A, R> functionBuilder(Class<A> a, Class<R> r) {
+    static <A, R> FunctionBuilder<A, R> functionBuilder(Class<A> a, Class<R> r) {
         return new FunctionBuilder<>();
     }
 
@@ -30,7 +30,7 @@ public interface VersionFunctionBuilder {
      *
      * @return a new bi function builder instance
      */
-    public static <A, B, R> BiFunctionBuilder<A, B, R> biFunctionBuilder(Class<A> a, Class<B> b, Class<R> r) {
+    static <A, B, R> BiFunctionBuilder<A, B, R> biFunctionBuilder(Class<A> a, Class<B> b, Class<R> r) {
         return new BiFunctionBuilder<>();
     }
 
@@ -48,7 +48,7 @@ public interface VersionFunctionBuilder {
      *
      * @return new tri function builder instance
      */
-    public static <A, B, C, R> TriFunctionBuilder<A, B, C, R> triFunctionBuilder(Class<A> a, Class<B> b, Class<C> c, Class<R> r) {
+    static <A, B, C, R> TriFunctionBuilder<A, B, C, R> triFunctionBuilder(Class<A> a, Class<B> b, Class<C> c, Class<R> r) {
         return new TriFunctionBuilder<>();
     }
 
@@ -68,7 +68,7 @@ public interface VersionFunctionBuilder {
      *
      * @return new quad function builder instance
      */
-    public static <A, B, C, D, R> QuadFunctionBuilder<A, B, C, D, R> quadFunctionBuilder(
+    static <A, B, C, D, R> QuadFunctionBuilder<A, B, C, D, R> quadFunctionBuilder(
             Class<A> a, Class<B> b, Class<C> c, Class<D> d, Class<R> r) {
         return new QuadFunctionBuilder<>();
     }

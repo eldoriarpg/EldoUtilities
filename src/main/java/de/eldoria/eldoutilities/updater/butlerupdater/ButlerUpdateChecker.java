@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,7 +58,7 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
 
 
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder builder = new StringBuilder();
             String responseLine;
             while ((responseLine = br.readLine()) != null) {

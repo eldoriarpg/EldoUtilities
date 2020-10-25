@@ -15,8 +15,8 @@ import java.util.Optional;
 
 public abstract class Updater<T extends UpdateData> implements Listener {
     private final Plugin plugin;
-    private String latestVersion;
     private final T data;
+    private String latestVersion;
     private boolean notifyActive = false;
 
     public Updater(T data) {
@@ -26,6 +26,14 @@ public abstract class Updater<T extends UpdateData> implements Listener {
         if (data.isAutoUpdate() && newVersion) {
             update();
         }
+    }
+
+    public static void Spigot(SpigotUpdateData data) {
+        new SpigotUpdateChecker(data);
+    }
+
+    public static void Butler(ButlerUpdateData data) {
+        new ButlerUpdateChecker(data);
     }
 
     /**
@@ -88,6 +96,10 @@ public abstract class Updater<T extends UpdateData> implements Listener {
         }
     }
 
+    public T getData() {
+        return data;
+    }
+
     private static class UpdateNotifier implements Listener {
         private final Plugin plugin;
         private final String permission;
@@ -110,17 +122,5 @@ public abstract class Updater<T extends UpdateData> implements Listener {
                         + "Download new version here: §b" + description.getWebsite());
             }
         }
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public static void Spigot(SpigotUpdateData data) {
-        new SpigotUpdateChecker(data);
-    }
-
-    public static void Butler(ButlerUpdateData data) {
-        new ButlerUpdateChecker(data);
     }
 }

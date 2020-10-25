@@ -11,12 +11,12 @@ public abstract class UpdateData {
     /**
      * Creates a new Update data.
      *
-     * @param plugin       plugin to check the version for
-     * @param notifyPermission   enter the permission which a user should have to get a notification. null to disable login
-     *                     notification.
-     * @param notifyUpdate set to true to notify admins on login
-     * @param autoUpdate   true if the updater should attempt to update the plugin. If true the updater should implement
-     *                     the {@link Updater#update()} method.
+     * @param plugin           plugin to check the version for
+     * @param notifyPermission enter the permission which a user should have to get a notification. null to disable
+     *                         login notification.
+     * @param notifyUpdate     set to true to notify admins on login
+     * @param autoUpdate       true if the updater should attempt to update the plugin. If true the updater should
+     *                         implement the {@link Updater#update()} method.
      */
     public UpdateData(Plugin plugin, String notifyPermission, boolean notifyUpdate, boolean autoUpdate) {
         this.plugin = plugin;

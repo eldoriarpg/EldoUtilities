@@ -10,30 +10,6 @@ public interface ILocalizer {
     Map<Class<? extends Plugin>, ILocalizer> LOCALIZER = new HashMap<>();
     ILocalizer DEFAULT = new DummyLocalizer();
 
-    /**
-     * Sets the locale of the localizer instance.
-     *
-     * @param language language to set.
-     */
-    void setLocale(String language);
-
-    /**
-     * Get a message.
-     *
-     * @param key          message key
-     * @param replacements replacements for replacement keys
-     *
-     * @return message with replaced replacements if present.
-     */
-    String getMessage(String key, Replacement... replacements);
-
-    /**
-     * Returns all available locales.
-     *
-     * @return array of registered locales.
-     */
-    String[] getIncludedLocales();
-
     static ILocalizer getPluginLocalizer(Plugin plugin) {
         if (plugin == null) return DEFAULT;
         return getPluginLocalizer(plugin.getClass());
@@ -91,4 +67,28 @@ public interface ILocalizer {
         LOCALIZER.put(plugin.getClass(), localizer);
         return localizer;
     }
+
+    /**
+     * Sets the locale of the localizer instance.
+     *
+     * @param language language to set.
+     */
+    void setLocale(String language);
+
+    /**
+     * Get a message.
+     *
+     * @param key          message key
+     * @param replacements replacements for replacement keys
+     *
+     * @return message with replaced replacements if present.
+     */
+    String getMessage(String key, Replacement... replacements);
+
+    /**
+     * Returns all available locales.
+     *
+     * @return array of registered locales.
+     */
+    String[] getIncludedLocales();
 }

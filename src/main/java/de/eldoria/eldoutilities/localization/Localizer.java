@@ -1,6 +1,5 @@
 package de.eldoria.eldoutilities.localization;
 
-import de.eldoria.eldoutilities.EldoUtil;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;

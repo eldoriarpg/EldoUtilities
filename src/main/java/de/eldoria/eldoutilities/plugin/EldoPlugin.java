@@ -14,9 +14,9 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class EldoPlugin extends JavaPlugin {
+    private static EldoPlugin instance;
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
-    private static EldoPlugin instance;
 
     public EldoPlugin() {
         instance = this;
@@ -25,6 +25,10 @@ public class EldoPlugin extends JavaPlugin {
     public EldoPlugin(@NotNull JavaPluginLoader loader, @NotNull PluginDescriptionFile description, @NotNull File dataFolder, @NotNull File file) {
         super(loader, description, dataFolder, file);
         instance = this;
+    }
+
+    public static Logger logger() {
+        return instance.getLogger();
     }
 
     /**
@@ -106,9 +110,5 @@ public class EldoPlugin extends JavaPlugin {
             scheduler = getServer().getScheduler();
         }
         return scheduler;
-    }
-
-    public static Logger logger() {
-        return instance.getLogger();
     }
 }

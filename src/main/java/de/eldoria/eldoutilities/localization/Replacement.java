@@ -62,7 +62,7 @@ public final class Replacement {
      * @return replacement with registered replacement
      */
     public static Replacement create(String key, Player value, char... formats) {
-        return create( key, value.getName(), formats);
+        return create(key, value.getName(), formats);
     }
 
     /**

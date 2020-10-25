@@ -1,16 +1,12 @@
 package de.eldoria.eldoutilities.serialization;
 
 import com.google.common.collect.ObjectArrays;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -44,6 +40,47 @@ public final class SerializationUtil {
 
     public static TypeResolvingMap mapOf(Map<String, Object> serialized) {
         return new TypeResolvingMap(serialized);
+    }
+
+    public static Map<String, Object> objectToMap(Object obj) {
+        Builder builder = newBuilder();
+        Field[] declaredFields = getAllFields(obj);
+        for (Field declaredField : declaredFields) {
+            declaredField.setAccessible(true);
+            if (!Modifier.isTransient(declaredField.getModifiers())) {
+                try {
+                    builder.add(declaredField.getName(), declaredField.get(obj));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
+        Field[] declaredFields = getAllFields(obj);
+        for (Field declaredField : declaredFields) {
+            declaredField.setAccessible(true);
+            if (!Modifier.isTransient(declaredField.getModifiers())) {
+                if (!objectMap.containsKey(declaredField.getName())) continue;
+                try {
+                    declaredField.set(obj, objectMap.get(declaredField.getName()));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static Field[] getAllFields(Object obj) {
+        Field[] fields = new Field[0];
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            fields = ObjectArrays.concat(fields, clazz.getDeclaredFields(), Field.class);
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 
     public static final class Builder {
@@ -161,46 +198,5 @@ public final class SerializationUtil {
         public Map<String, Object> build() {
             return this.serialized;
         }
-    }
-
-    public static Map<String, Object> objectToMap(Object obj) {
-        Builder builder = newBuilder();
-        Field[] declaredFields = getAllFields(obj);
-        for (Field declaredField : declaredFields) {
-            declaredField.setAccessible(true);
-            if (!Modifier.isTransient(declaredField.getModifiers())) {
-                try {
-                    builder.add(declaredField.getName(), declaredField.get(obj));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return builder.build();
-    }
-
-    public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
-        Field[] declaredFields = getAllFields(obj);
-        for (Field declaredField : declaredFields) {
-            declaredField.setAccessible(true);
-            if (!Modifier.isTransient(declaredField.getModifiers())) {
-                if (!objectMap.containsKey(declaredField.getName())) continue;
-                try {
-                    declaredField.set(obj, objectMap.get(declaredField.getName()));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static Field[] getAllFields(Object obj) {
-        Field[] fields = new Field[0];
-        Class<?> clazz = obj.getClass();
-        while (clazz != null) {
-            fields = ObjectArrays.concat(fields, clazz.getDeclaredFields(), Field.class);
-            clazz = clazz.getSuperclass();
-        }
-        return fields;
     }
 }

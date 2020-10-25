@@ -1,6 +1,5 @@
 package de.eldoria.eldoutilities.messages;
 
-import de.eldoria.eldoutilities.EldoUtil;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import org.bukkit.Bukkit;
@@ -20,7 +19,7 @@ public final class MessageSender {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
     private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
-    private Class<? extends Plugin> ownerPlugin;
+    private final Class<? extends Plugin> ownerPlugin;
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;

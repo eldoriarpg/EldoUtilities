@@ -1,6 +1,6 @@
 package de.eldoria.eldoutilities.simplecommands;
 
-import de.eldoria.eldoutilities.localization.Localizer;
+import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import de.eldoria.eldoutilities.utils.ArrayUtil;
 import de.eldoria.eldoutilities.utils.Parser;
@@ -179,7 +179,7 @@ public final class TabCompleteUtil {
      *
      * @return list with range advise or error
      */
-    public static List<String> completeDouble(String value, double min, double max, Localizer loc) {
+    public static List<String> completeDouble(String value, double min, double max, ILocalizer loc) {
         OptionalDouble d = Parser.parseDouble(value);
         if (d.isPresent()) {
             if (d.getAsDouble() > max || d.getAsDouble() < min) {
@@ -204,7 +204,7 @@ public final class TabCompleteUtil {
      *
      * @return list with range advise or error
      */
-    public static List<String> completeInt(String value, int min, int max, Localizer loc) {
+    public static List<String> completeInt(String value, int min, int max, ILocalizer loc) {
         OptionalInt d = Parser.parseInt(value);
         if (d.isPresent()) {
             if (d.getAsInt() > max || d.getAsInt() < min) {
@@ -229,7 +229,7 @@ public final class TabCompleteUtil {
      *
      * @return list of string with length 1
      */
-    public static List<String> completeFreeInput(String value, int maxLength, String defaultComplete, Localizer loc) {
+    public static List<String> completeFreeInput(String value, int maxLength, String defaultComplete, ILocalizer loc) {
         if (value.length() > maxLength) {
             return Collections.singletonList(loc.getMessage("error.invalidLength",
                     Replacement.create("MAX", maxLength).addFormatting('6')));
