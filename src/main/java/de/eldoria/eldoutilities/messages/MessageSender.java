@@ -113,9 +113,9 @@ public final class MessageSender {
      *
      * @return message sender of plugin or default sender if plugin is null
      */
-    public static MessageSender get(@Nullable Plugin plugin) {
+    public static MessageSender getPluginMessageSender(@Nullable Plugin plugin) {
         if (plugin == null) return DEFAULT_SENDER;
-        return get(plugin.getClass());
+        return getPluginMessageSender(plugin.getClass());
     }
 
     /**
@@ -125,7 +125,7 @@ public final class MessageSender {
      *
      * @return message sender of plugin or default sender if plugin is null
      */
-    public static MessageSender get(@Nullable Class<? extends Plugin> plugin) {
+    public static MessageSender getPluginMessageSender(@Nullable Class<? extends Plugin> plugin) {
         return plugin == null ? DEFAULT_SENDER
                 : PLUGIN_SENDER.getOrDefault(plugin.getName(), DEFAULT_SENDER);
     }
@@ -285,5 +285,9 @@ public final class MessageSender {
             result = result.replace("$" + match + "$", loc().getMessage(match, replacements));
         }
         return result;
+    }
+
+    public boolean isDefault() {
+        return ownerPlugin == null;
     }
 }
