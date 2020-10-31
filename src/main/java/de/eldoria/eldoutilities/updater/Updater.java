@@ -2,6 +2,8 @@ package de.eldoria.eldoutilities.updater;
 
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateChecker;
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
+import de.eldoria.eldoutilities.updater.notifier.DownloadedNotifier;
+import de.eldoria.eldoutilities.updater.notifier.UpdateNotifier;
 import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateChecker;
 import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateData;
 import org.bukkit.event.Listener;
