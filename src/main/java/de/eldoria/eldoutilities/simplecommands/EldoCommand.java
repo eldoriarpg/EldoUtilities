@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.simplecommands;
 
+import de.eldoria.eldoutilities.localization.DummyLocalizer;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import de.eldoria.eldoutilities.messages.MessageSender;
@@ -9,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,14 +24,14 @@ import java.util.stream.Collectors;
 
 public abstract class EldoCommand implements TabExecutor {
     private final Map<String, TabExecutor> subCommands = new HashMap<>();
-    private final ILocalizer localizer;
-    private final MessageSender messageSender;
+    private final Plugin plugin;
+    private ILocalizer localizer;
+    private MessageSender messageSender;
     private String[] registeredCommands = new String[0];
     private TabExecutor defaultCommand = null;
 
-    public EldoCommand(ILocalizer localizer, MessageSender messageSender) {
-        this.localizer = localizer;
-        this.messageSender = messageSender;
+    public EldoCommand(Plugin plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -116,6 +118,9 @@ public abstract class EldoCommand implements TabExecutor {
      * @return localizer instance
      */
     protected ILocalizer localizer() {
+        if(localizer == null || localizer instanceof DummyLocalizer){
+            localizer = ILocalizer.getPluginLocalizer(plugin);
+        }
         return localizer;
     }
 
@@ -125,6 +130,9 @@ public abstract class EldoCommand implements TabExecutor {
      * @return message sender instance
      */
     protected MessageSender messageSender() {
+        if(messageSender == null || messageSender.isDefault()){
+            messageSender = MessageSender.getPluginMessageSender(plugin);
+        }
         return messageSender;
     }
 
@@ -275,5 +283,9 @@ public abstract class EldoCommand implements TabExecutor {
 
     protected boolean invalidRange(CommandSender sender, int value, int min, int max) {
         return invalidRange(sender, (double) value, min, max);
+    }
+
+    public Plugin getPlugin() {
+        return plugin;
     }
 }
