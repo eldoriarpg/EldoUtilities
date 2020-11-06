@@ -192,7 +192,7 @@ public class Localizer implements ILocalizer {
                 }
 
                 // Lets be a bit nice with the formatting. not everyone knows the ISO.
-                if (path.toFile().getName().matches(localesPrefix + "_[a-zA-Z]{2}_[a-zA-Z]{2}\\.properties")) {
+                if (path.toFile().getName().matches(localesPrefix + "_[a-zA-Z]{2}(_[a-zA-Z]{2})?\\.properties")) {
                     localeFiles.add(path.toFile());
                 } else {
                     // Notify the user that he did something weird in his messages directory.
