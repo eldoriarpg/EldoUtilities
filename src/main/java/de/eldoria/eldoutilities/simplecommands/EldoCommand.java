@@ -147,7 +147,7 @@ public abstract class EldoCommand implements TabExecutor {
      * @return true if the arguments are invalid
      */
     protected boolean argumentsInvalid(CommandSender sender, String[] args, int length, String syntax) {
-        return argumentsInvalid(sender, messageSender, localizer, args, length, syntax);
+        return argumentsInvalid(sender, messageSender(), localizer, args, length, syntax);
     }
 
     /**
@@ -195,7 +195,7 @@ public abstract class EldoCommand implements TabExecutor {
             }
         }
         if (!silent) {
-            messageSender.sendMessage(player,
+            messageSender().sendMessage(player,
                     localizer.getMessage("error.permission",
                             Replacement.create("PERMISSION", String.join(", ", permissions)).addFormatting('6')));
         }
@@ -249,7 +249,7 @@ public abstract class EldoCommand implements TabExecutor {
      */
     protected boolean invalidRange(CommandSender sender, double value, double min, double max) {
         if (value > max || value < min) {
-            messageSender.sendError(sender, localizer.getMessage("error.invalidRange",
+            messageSender().sendError(sender, localizer.getMessage("error.invalidRange",
                     Replacement.create("MIN", min).addFormatting('6'),
                     Replacement.create("MAX", max).addFormatting('6')));
             return true;
@@ -270,7 +270,7 @@ public abstract class EldoCommand implements TabExecutor {
      */
     protected <T extends Enum<T>> boolean invalidEnumValue(CommandSender sender, T value, Class<T> clazz) {
         if (value == null) {
-            messageSender.sendError(sender, localizer.getMessage("error.invalidEnumValue",
+            messageSender().sendError(sender, localizer.getMessage("error.invalidEnumValue",
                     Replacement.create("VALUES",
                             Arrays.stream(clazz.getEnumConstants())
                                     .map(e -> e.name().toLowerCase())
