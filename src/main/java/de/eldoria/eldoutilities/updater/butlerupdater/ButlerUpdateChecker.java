@@ -71,7 +71,7 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
             return Optional.empty();
         }
 
-        return Optional.of(response.getLatestVersion());
+        return Optional.ofNullable(response.getLatestVersion());
     }
 
     @Override
@@ -104,8 +104,25 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
             }
         }
 
+        // Get File of plugin
+        Field fileField;
+        try {
+            fileField = JavaPlugin.class.getDeclaredField("file");
+        } catch (NoSuchFieldException e) {
+            plugin.getLogger().log(Level.WARNING, "§cCould not find field file in plugin.", e);
+            plugin.getLogger().warning("§cAborting Update.");
+            return false;
+        }
+        fileField.setAccessible(true);
+        File pluginFile;
+        try {
+            pluginFile = (File) fileField.get(plugin);
+        } catch (IllegalAccessException e) {
+            plugin.getLogger().log(Level.WARNING, "Could not retrieve file of plugin.", e);
+            return false;
+        }
 
-        File updateFile = Paths.get(updateDirectory.getAbsolutePath(), getData().getPlugin().getName() + ".jar").toFile();
+        File updateFile = Paths.get(updateDirectory.getAbsolutePath(), pluginFile.getName()).toFile();
         try (InputStream input = url.openStream()) {
             Files.copy(input, updateFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -133,33 +150,8 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
         }
         plugin.getLogger().info("§2Checksums of update file is correct.");
 
-        // Get File of plugin
-        Field fileField;
-        try {
-            fileField = JavaPlugin.class.getDeclaredField("file");
-        } catch (NoSuchFieldException e) {
-            plugin.getLogger().log(Level.WARNING, "§cCould not find field file in plugin.", e);
-            plugin.getLogger().warning("§cAborting Update.");
-            updateFile.delete();
-            return false;
-        }
-        fileField.setAccessible(true);
-        File pluginFile;
-        try {
-            pluginFile = (File) fileField.get(plugin);
-        } catch (IllegalAccessException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not retrieve file of plugin.", e);
-            updateFile.delete();
-            return false;
-        }
+        plugin.getLogger().info("§2File " + pluginFile.getName() + " will be replaced with the new version on next startup.");
 
-        if (!pluginFile.getName().equalsIgnoreCase(updateFile.getName())) {
-            plugin.getLogger().warning("§cPlease rename \"" + pluginFile.getName()
-                    + "\" to \"" + updateFile.getName() + "\". Otherwise an update can't be performed.");
-            plugin.getLogger().warning("§cAborting Update.");
-            updateFile.delete();
-            return false;
-        }
         plugin.getLogger().info("§2>----------------------------------------------------<");
         plugin.getLogger().info("§2> Update downloaded. Please restart to apply update. <");
         plugin.getLogger().info("§2>----------------------------------------------------<");
