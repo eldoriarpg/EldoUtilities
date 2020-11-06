@@ -8,27 +8,38 @@ import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateChecker;
 import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateData;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.Optional;
 
-public abstract class Updater<T extends UpdateData> implements Listener {
+public abstract class Updater<T extends UpdateData> extends BukkitRunnable implements Listener {
     private final Plugin plugin;
     private final T data;
     private String latestVersion;
     private boolean notifyActive = false;
+    private boolean updateAvailable = false;
+    private boolean downloaded = false;
 
     public Updater(T data) {
         this.plugin = data.getPlugin();
         this.data = data;
+    }
+
+    @Override
+    public void run() {
         performCheck();
     }
 
     /**
-     *
+     * Performs a update check with the saved data. This can be repeatet in a scheduler.
      */
     public final boolean performCheck() {
+        plugin.getLogger().info("§2Checking for new Version...");
+        // dont check if update is already available
+        if(updateAvailable) return true;
+
         Optional<String> optLatest = getLatestVersion(data);
-        boolean updateAvailable;
         if (optLatest.isPresent()) {
             latestVersion = optLatest.get();
             updateAvailable = evaluate(this.latestVersion);
@@ -40,20 +51,23 @@ public abstract class Updater<T extends UpdateData> implements Listener {
         if (updateAvailable) {
             logUpdateMessage();
             if (data.isAutoUpdate()) {
-                registerListener(new DownloadedNotifier(plugin, data.getNotifyPermission(), latestVersion, update()));
+                downloaded = update();
+                registerListener(new DownloadedNotifier(plugin, data.getNotifyPermission(), latestVersion, downloaded));
             } else {
                 registerListener(new UpdateNotifier(plugin, data.getNotifyPermission(), latestVersion));
             }
+        }else {
+            plugin.getLogger().info("§2Plugin is up to date.");
         }
         return updateAvailable;
     }
 
-    public static void Spigot(SpigotUpdateData data) {
-        new SpigotUpdateChecker(data);
+    public static Updater<?> Spigot(SpigotUpdateData data) {
+       return new SpigotUpdateChecker(data);
     }
 
-    public static void Butler(ButlerUpdateData data) {
-        new ButlerUpdateChecker(data);
+    public static Updater<?> Butler(ButlerUpdateData data) {
+        return new ButlerUpdateChecker(data);
     }
 
     /**
@@ -79,12 +93,7 @@ public abstract class Updater<T extends UpdateData> implements Listener {
      * @return true if a update is available.
      */
     private boolean evaluate(String latestVersion) {
-        if (!plugin.getDescription().getVersion().equalsIgnoreCase(latestVersion)) {
-            return true;
-        } else {
-            plugin.getLogger().info("§2Plugin is up to date.");
-            return false;
-        }
+        return !plugin.getDescription().getVersion().equalsIgnoreCase(latestVersion);
     }
 
     /**
@@ -99,7 +108,7 @@ public abstract class Updater<T extends UpdateData> implements Listener {
     private void logUpdateMessage() {
         plugin.getLogger().info("§2New version of §6" + plugin.getName() + "§2 available.");
         plugin.getLogger().info("§2Newest version: §3" + latestVersion + "! Current version: §c" + plugin.getDescription().getVersion() + "§2!");
-        if (!data.isAutoUpdate()) {
+        if (data.isAutoUpdate()) {
             plugin.getLogger().info("§2Download new version here: §6" + plugin.getDescription().getWebsite());
         }
     }
