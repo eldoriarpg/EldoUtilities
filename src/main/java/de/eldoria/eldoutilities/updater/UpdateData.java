@@ -1,7 +1,6 @@
 package de.eldoria.eldoutilities.updater;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class UpdateData {
     private final String notifyPermission;

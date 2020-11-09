@@ -118,7 +118,7 @@ public abstract class EldoCommand implements TabExecutor {
      * @return localizer instance
      */
     protected ILocalizer localizer() {
-        if(localizer == null || localizer instanceof DummyLocalizer){
+        if (localizer == null || localizer instanceof DummyLocalizer) {
             localizer = ILocalizer.getPluginLocalizer(plugin);
         }
         return localizer;
@@ -130,7 +130,7 @@ public abstract class EldoCommand implements TabExecutor {
      * @return message sender instance
      */
     protected MessageSender messageSender() {
-        if(messageSender == null || messageSender.isDefault()){
+        if (messageSender == null || messageSender.isDefault()) {
             messageSender = MessageSender.getPluginMessageSender(plugin);
         }
         return messageSender;

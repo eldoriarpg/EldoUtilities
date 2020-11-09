@@ -2,6 +2,7 @@ package de.eldoria.eldoutilities.updater.spigotupdater;
 
 import de.eldoria.eldoutilities.updater.UpdateData;
 import org.bukkit.plugin.Plugin;
+
 public class SpigotUpdateData extends UpdateData {
     private final int spigotId;
 

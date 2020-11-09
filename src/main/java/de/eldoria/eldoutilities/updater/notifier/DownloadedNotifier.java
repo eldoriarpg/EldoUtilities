@@ -23,8 +23,8 @@ public class DownloadedNotifier extends UpdateNotifier {
             if (updated) {
                 MessageSender.getPluginMessageSender(plugin).sendMessage(event.getPlayer(),
                         "New version of §b" + plugin.getName() + "§r downloaded.\n"
-                        + "Newest version: §a" + newestVersion + "§r! Current version: §c" + description.getVersion() + "§r!\n"
-                        + "Restart to apply update. Patchnotes can be found here: §b" + description.getWebsite());
+                                + "Newest version: §a" + newestVersion + "§r! Current version: §c" + description.getVersion() + "§r!\n"
+                                + "Restart to apply update. Patchnotes can be found here: §b" + description.getWebsite());
             } else {
                 MessageSender.getPluginMessageSender(plugin).sendMessage(event.getPlayer(), "New version of §b" + plugin.getName() + "§r available.\n"
                         + "Newest version: §a" + newestVersion + "§r! Current version: §c" + description.getVersion() + "§r!\n"
