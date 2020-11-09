@@ -9,8 +9,8 @@ import de.eldoria.eldoutilities.updater.spigotupdater.SpigotUpdateData;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public abstract class Updater<T extends UpdateData> extends BukkitRunnable implements Listener {
@@ -26,6 +26,14 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
         this.data = data;
     }
 
+    public static Updater<?> Spigot(SpigotUpdateData data) {
+        return new SpigotUpdateChecker(data);
+    }
+
+    public static Updater<?> Butler(ButlerUpdateData data) {
+        return new ButlerUpdateChecker(data);
+    }
+
     @Override
     public void run() {
         performCheck();
@@ -37,7 +45,7 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
     public final boolean performCheck() {
         plugin.getLogger().info("§2Checking for new Version...");
         // dont check if update is already available
-        if(updateAvailable) return true;
+        if (updateAvailable) return true;
 
         Optional<String> optLatest = getLatestVersion(data);
         if (optLatest.isPresent()) {
@@ -51,23 +59,17 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
         if (updateAvailable) {
             logUpdateMessage();
             if (data.isAutoUpdate()) {
-                downloaded = update();
+                if (!downloaded) {
+                    downloaded = update();
+                }
                 registerListener(new DownloadedNotifier(plugin, data.getNotifyPermission(), latestVersion, downloaded));
             } else {
                 registerListener(new UpdateNotifier(plugin, data.getNotifyPermission(), latestVersion));
             }
-        }else {
+        } else {
             plugin.getLogger().info("§2Plugin is up to date.");
         }
         return updateAvailable;
-    }
-
-    public static Updater<?> Spigot(SpigotUpdateData data) {
-       return new SpigotUpdateChecker(data);
-    }
-
-    public static Updater<?> Butler(ButlerUpdateData data) {
-        return new ButlerUpdateChecker(data);
     }
 
     /**
@@ -105,6 +107,17 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
         return false;
     }
 
+    /**
+     * Start the update scheduler.
+     * <p>
+     * This will check every 6 hours if a update is available.
+     *
+     * @return Bukkit task that contains the id number
+     */
+    public BukkitTask start() {
+        return runTaskTimerAsynchronously(plugin, 40, 432000);
+    }
+
     private void logUpdateMessage() {
         plugin.getLogger().info("§2New version of §6" + plugin.getName() + "§2 available.");
         plugin.getLogger().info("§2Newest version: §3" + latestVersion + "! Current version: §c" + plugin.getDescription().getVersion() + "§2!");
@@ -124,5 +137,4 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
     public T getData() {
         return data;
     }
-
 }
