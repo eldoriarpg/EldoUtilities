@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -90,9 +91,8 @@ public class Localizer implements ILocalizer {
     public void setLocale(String language) {
         String localeFile = localesPrefix + "_" + language + ".properties";
 
-        try {
-            this.localeFile = new PropertyResourceBundle(
-                    Files.newInputStream(Paths.get(plugin.getDataFolder().toString(), localesPath, localeFile)));
+        try (InputStream stream = Files.newInputStream(Paths.get(plugin.getDataFolder().toString(), localesPath, localeFile))) {
+            this.localeFile = new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
         } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING, "Could not load locale file " + Paths.get(localesPath, localeFile).toString(), e);
             this.localeFile = fallbackLocaleFile;
