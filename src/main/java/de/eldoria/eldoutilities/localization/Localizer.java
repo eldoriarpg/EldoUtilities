@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.localization;
 
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,7 +18,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,6 +55,8 @@ public class Localizer implements ILocalizer {
     private final String[] includedLocales;
     private final Pattern localePattern = Pattern.compile("([a-zA-Z]{2})_([a-zA-Z]{2})\\.properties");
     private ResourceBundle localeFile;
+    private boolean checked = false;
+    private Map<String, String> runtimeLocaleCodes;
 
     /**
      * Create a new localizer instance.
@@ -78,7 +82,6 @@ public class Localizer implements ILocalizer {
         this.localesPrefix = localesPrefix;
         this.includedLocales = includedLocales;
         fallbackLocaleFile = ResourceBundle.getBundle(localesPrefix, fallbackLocale);
-        createOrUpdateLocaleFiles();
         LOCALIZER.put(plugin.getClass(), this);
     }
 
@@ -89,6 +92,11 @@ public class Localizer implements ILocalizer {
      */
     @Override
     public void setLocale(String language) {
+        if (!checked) {
+            createOrUpdateLocaleFiles();
+            checked = true;
+        }
+
         String localeFile = localesPrefix + "_" + language + ".properties";
 
         try (InputStream stream = Files.newInputStream(Paths.get(plugin.getDataFolder().toString(), localesPath, localeFile))) {
@@ -208,20 +216,20 @@ public class Localizer implements ILocalizer {
         ResourceBundle defaultBundle = ResourceBundle.getBundle(localesPrefix);
 
         if (defaultBundle == null) {
-            // How should we update withour a reference?
+            // How should we update without a reference?
             plugin.getLogger().warning("No reference locale found. Please report this to the application owner");
             return;
         }
 
+        Set<String> defaultKeys = new HashSet<>(Collections.list(defaultBundle.getKeys()));
+        defaultKeys.addAll(runtimeLocaleCodes.keySet());
+
         // Update keys of existing files.
         for (File file : localeFiles) {
 
-            // Load ref sheet.
-            Enumeration<String> defaultKeys = defaultBundle.getKeys();
-
             // try to search for a included updated version.
             Locale currLocale = extractLocale(file.getName());
-            ResourceBundle refBundle;
+            @Nullable ResourceBundle refBundle;
 
             if (currLocale != null) {
                 refBundle = ResourceBundle.getBundle(localesPrefix, currLocale);
@@ -252,18 +260,18 @@ public class Localizer implements ILocalizer {
                 }
             } catch (IOException e) {
                 plugin.getLogger().log(Level.WARNING, "Could not update locale " + file.getName() + ".", e);
+                continue;
             }
 
             Set<String> keys = treemap.keySet();
 
             boolean updated = false;
             // check if ref key is in locale
-            while (defaultKeys.hasMoreElements()) {
-                String currKey = defaultKeys.nextElement();
+            for (String currKey : defaultKeys) {
                 if (keys.contains(currKey)) continue;
                 String value = "";
                 if (refBundle != null) {
-                    value = refBundle.containsKey(currKey) ? refBundle.getString(currKey) : "";
+                    value = refBundle.containsKey(currKey) ? refBundle.getString(currKey) : runtimeLocaleCodes.getOrDefault(currKey, "");
                 }
                 // Add the property with the value if it exists in a internal file.
                 treemap.put(currKey, value);
@@ -310,4 +318,8 @@ public class Localizer implements ILocalizer {
         return includedLocales;
     }
 
+    @Override
+    public void addLocaleCodes(Map<String, String> runtimeLocaleCodes) {
+        this.runtimeLocaleCodes = runtimeLocaleCodes;
+    }
 }

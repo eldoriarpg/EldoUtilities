@@ -34,12 +34,11 @@ public interface ILocalizer {
      * provided language does not exists.
      *
      * @param plugin          instance of plugin
-     * @param language        language which should be used if existent
      * @param includedLocales internal provided locales
      */
-    static ILocalizer create(Plugin plugin, String language,
+    static ILocalizer create(Plugin plugin,
                              String... includedLocales) {
-        return create(plugin, language, "messages", "messages", Locale.US, includedLocales);
+        return create(plugin, "messages", "messages", Locale.US, includedLocales);
     }
 
     /**
@@ -54,16 +53,14 @@ public interface ILocalizer {
      * provided language does not exists.
      *
      * @param plugin          instance of plugin
-     * @param language        language which should be used if existent
      * @param localesPath     path of the locales directory
      * @param localesPrefix   prefix of the locale files
      * @param fallbackLocale  fallbackLocale
      * @param includedLocales internal provided locales
      */
-    static ILocalizer create(Plugin plugin, String language, String localesPath,
+    static ILocalizer create(Plugin plugin, String localesPath,
                              String localesPrefix, Locale fallbackLocale, String... includedLocales) {
         ILocalizer localizer = new Localizer(plugin, localesPath, localesPrefix, fallbackLocale, includedLocales);
-        localizer.setLocale(language);
         LOCALIZER.put(plugin.getClass(), localizer);
         return localizer;
     }
@@ -91,4 +88,15 @@ public interface ILocalizer {
      * @return array of registered locales.
      */
     String[] getIncludedLocales();
+
+    /**
+     * Add requested locale codes in runtime.
+     * <p>
+     * This has to be done before calling {@link #setLocale(String)}
+     * <p>
+     * Every key has one default value which will be added to the file if the key is not present.
+     *
+     * @param runtimeLocaleCodes map with locales codes to add.
+     */
+    void addLocaleCodes(Map<String, String> runtimeLocaleCodes);
 }
