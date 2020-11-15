@@ -1,11 +1,11 @@
 package de.eldoria.eldoutilities.simplecommands;
 
+import de.eldoria.eldoutilities.C;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
 import de.eldoria.eldoutilities.utils.ArrayUtil;
 import de.eldoria.eldoutilities.utils.Parser;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -101,14 +101,28 @@ public final class TabCompleteUtil {
     }
 
     /**
-     * Complete a world
+     * Complete a world.
+     *
+     * Will replace spaces with `:`
      *
      * @param value current value
      *
      * @return list of strings
      */
     public static List<String> completeWorlds(String value) {
-        return complete(value, Bukkit.getWorlds(), World::getName);
+        return completeWorlds(value, C.SPACE_REPLACE);
+    }
+
+    /**
+     * Complete a world
+     *
+     * @param value        current value
+     * @param spaceReplace the replacement for spaces
+     *
+     * @return list of strings
+     */
+    public static List<String> completeWorlds(String value, String spaceReplace) {
+        return complete(value, Bukkit.getWorlds(), w -> w.getName().replace(" ", spaceReplace));
     }
 
     /**

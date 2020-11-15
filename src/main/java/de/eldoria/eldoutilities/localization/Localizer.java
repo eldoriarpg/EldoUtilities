@@ -3,30 +3,14 @@ package de.eldoria.eldoutilities.localization;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,10 +37,10 @@ public class Localizer implements ILocalizer {
     private final String localesPath;
     private final String localesPrefix;
     private final String[] includedLocales;
-    private final Pattern localePattern = Pattern.compile("([a-zA-Z]{2})_([a-zA-Z]{2})\\.properties");
+    private final Pattern localePattern = Pattern.compile("_(([a-zA-Z]{2})(_[a-zA-Z]{2})?)\\.properties");
     private ResourceBundle localeFile;
     private boolean checked = false;
-    private Map<String, String> runtimeLocaleCodes;
+    private Map<String, String> runtimeLocaleCodes = new HashMap<>();
 
     /**
      * Create a new localizer instance.
@@ -113,7 +97,6 @@ public class Localizer implements ILocalizer {
      *
      * @param key          Key of message
      * @param replacements Replacements in the right order.
-     *
      * @return Replaced Messages
      */
     @Override
@@ -213,7 +196,12 @@ public class Localizer implements ILocalizer {
         }
 
         // get the default pack to have a set of all needed keys. Hopefully its correct.
-        ResourceBundle defaultBundle = ResourceBundle.getBundle(localesPrefix);
+        ResourceBundle defaultBundle = null;
+        try {
+            defaultBundle = new PropertyResourceBundle(new InputStreamReader(plugin.getResource(localesPrefix + ".properties"), StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Could not load reference file... This is really bad!", e);
+        }
 
         if (defaultBundle == null) {
             // How should we update without a reference?
@@ -229,17 +217,20 @@ public class Localizer implements ILocalizer {
 
             // try to search for a included updated version.
             Locale currLocale = extractLocale(file.getName());
-            @Nullable ResourceBundle refBundle;
+            @Nullable ResourceBundle refBundle = null;
 
             if (currLocale != null) {
-                refBundle = ResourceBundle.getBundle(localesPrefix, currLocale);
+                try {
+                    refBundle = new PropertyResourceBundle(new InputStreamReader(
+                            plugin.getResource(localesPrefix + "_" + currLocale.toString() + ".properties"), StandardCharsets.UTF_8));
+                } catch (IOException | NullPointerException e) {
+                    plugin.getLogger().info("§eNo reference locale found for " + currLocale + ". Using default locale.");
+                }
+                ResourceBundle.getBundle(localesPrefix, currLocale);
                 if (refBundle == null) {
                     refBundle = defaultBundle;
                 } else {
-                    // Check if the found bundle is not the default one.
-                    if (refBundle.getLocale().getLanguage().trim().isEmpty()) {
-                        refBundle = null;
-                    }
+                    plugin.getLogger().info("§2Found matching locale " + refBundle.getLocale() + " for " + currLocale);
                 }
             } else {
                 plugin.getLogger().warning("Could not determine locale code of file " + file.getName());
@@ -275,8 +266,13 @@ public class Localizer implements ILocalizer {
                 }
                 // Add the property with the value if it exists in a internal file.
                 treemap.put(currKey, value);
-                plugin.getLogger().info("Added: " + currKey + "=" + value.replace("\n", "\\n"));
+                if (!updated) {
+                    plugin.getLogger().info("§2Updating " + file.getName() + ".");
+
+                }
+                plugin.getLogger().info("§2Added: §3" + currKey + "§6=§b" + value.replace("\n", "\\n"));
                 updated = true;
+
             }
 
             // Write to file if updated.
@@ -291,9 +287,9 @@ public class Localizer implements ILocalizer {
                     plugin.getLogger().log(Level.WARNING, "Could not update locale " + file.getName() + ".", e);
                     continue;
                 }
-                plugin.getLogger().info("Updated locale " + file.getName() + ". Please check you translation.");
+                plugin.getLogger().info("§2Updated locale " + file.getName() + ". Please check your translation.");
             } else {
-                plugin.getLogger().info("Locale " + file.getName() + " is up to date.");
+                plugin.getLogger().info("§2Locale " + file.getName() + " is up to date.");
             }
         }
     }
@@ -301,10 +297,13 @@ public class Localizer implements ILocalizer {
     private Locale extractLocale(String filename) {
         Matcher matcher = localePattern.matcher(filename);
         if (matcher.find()) {
-            return new Locale(matcher.group(1), matcher.group(2));
+            String group = matcher.group(1);
+            String[] s = group.split("_");
+            if (s.length == 1) {
+                return new Locale(s[0]);
+            }
+            return new Locale(s[0], s[1]);
         }
-        String[] s = filename.split("_", 2);
-        if (s.length == 2 && localesPrefix.equalsIgnoreCase(s[0])) return new Locale(s[1]);
         return null;
     }
 

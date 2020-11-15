@@ -1,5 +1,8 @@
 package de.eldoria.eldoutilities.utils;
 
+import de.eldoria.eldoutilities.C;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,6 +33,25 @@ public final class ArgumentUtils {
     }
 
     /**
+     * Get a value from string or a default value when the index does not exists or the parse result is null.
+     *
+     * @param arguments    array of string arguments.
+     * @param index        index of the requested parameter
+     * @param parse        Function to parse the string to value. Returns null if not parseable.
+     * @param defaultValue default value which will be returned when the index does not exists.
+     *
+     * @return string at index or default value if the index does not exists.
+     */
+    public static <T> T getOrDefault(String[] arguments, int index, Function<String, T> parse, T defaultValue) {
+        String s = get(arguments, index);
+
+        if (s == null) {
+            return defaultValue;
+        }
+        return parse.apply(s);
+    }
+
+    /**
      * Get the index from the string array .
      *
      * @param arguments array of string arguments.
@@ -41,7 +63,6 @@ public final class ArgumentUtils {
         if (arguments.length > index) return arguments[index];
         return null;
     }
-
 
     /**
      * Get the index parsed.
@@ -129,5 +150,33 @@ public final class ArgumentUtils {
      */
     public static String getRangeAsString(String[] strings, int from) {
         return getRangeAsString(" ", strings, from, 0);
+    }
+
+    public static String unescapeWorldName(String world) {
+        return unescapeWorldName(world, C.SPACE_REPLACE);
+    }
+
+    public static String unescapeWorldName(String world, String replace) {
+        return world.replace(replace, " ");
+    }
+
+    public static String escapeWorldName(String world) {
+        return escapeWorldName(world, C.SPACE_REPLACE);
+    }
+
+    public static String escapeWorldName(String world, String replace) {
+        return world.replace(" ", replace);
+    }
+
+    public static String escapeWorldName(World world) {
+        return escapeWorldName(world, C.SPACE_REPLACE);
+    }
+
+    public static String escapeWorldName(World world, String replace) {
+        return escapeWorldName(world.getName(), replace);
+    }
+
+    public static World getWorld(String world) {
+        return Bukkit.getWorld(unescapeWorldName(world));
     }
 }
