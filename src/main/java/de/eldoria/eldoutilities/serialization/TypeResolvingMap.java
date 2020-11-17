@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.serialization;
 
+import de.eldoria.eldoutilities.utils.EnumUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;
@@ -57,6 +58,19 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
 	@SuppressWarnings("unchecked")
 	public <T> T getValueOrDefault(String key, T defaultValue) {
 		return (T) delegate.getOrDefault(key, defaultValue);
+	}
+
+	/**
+	 * Get a value from map.
+	 *
+	 * @param key          key
+	 * @param defaultValue default value if key does not exist
+	 * @param <T>          type of return value
+	 *
+	 * @return value of key or default value
+	 */
+	public <T extends Enum<T>> T getValueOrDefault(String key, T defaultValue, Class<T> clazz) {
+		return EnumUtil.parse(getValueOrDefault(key, defaultValue.name()), clazz, defaultValue);
 	}
 
 	/**
