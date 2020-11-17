@@ -26,6 +26,7 @@ public interface QuadFunction<T1, T2, T3, T4, R> {
 	 * @param t1 the first function argument
 	 * @param t2 the second function argument
 	 * @param t3 the third function argument
+	 * @param t4 the fourth function argument
 	 *
 	 * @return the function result
 	 */

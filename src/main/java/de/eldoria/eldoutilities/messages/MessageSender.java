@@ -206,8 +206,9 @@ public final class MessageSender {
 	 * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
 	 * and $code.more.code$}. You can write what you want between locale codes.
 	 *
-	 * @param sender  receiver of the message
-	 * @param message message with optinal color codes
+	 * @param sender       receiver of the message
+	 * @param message      message with optinal color codes
+	 * @param replacements replacements to apply on the message
 	 */
 	public void sendLocalizedMessage(CommandSender sender, String message, Replacement... replacements) {
 		sendMessage(sender, localize(message, replacements));
@@ -223,8 +224,9 @@ public final class MessageSender {
 	 * If multiple code should be used every code musst be surrounded by a {@code $} mark. Example {@code "$code.code$
 	 * and $code.more.code$}. You can write what you want between locale codes.
 	 *
-	 * @param sender  receiver of the message
-	 * @param message message with optinal color codes
+	 * @param sender       receiver of the message
+	 * @param message      message with optinal color codes
+	 * @param replacements replacements to apply on the message
 	 */
 	public void sendLocalizedError(CommandSender sender, String message, Replacement... replacements) {
 		sendError(sender, localize(message, replacements));

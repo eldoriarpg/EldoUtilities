@@ -87,6 +87,8 @@ public final class ArrayUtil {
 	 *
 	 * @param array  array to combine
 	 * @param arrays arrays to combine
+	 * @param clazz  clazz of array
+	 * @param <T>    type of array
 	 *
 	 * @return one array
 	 */

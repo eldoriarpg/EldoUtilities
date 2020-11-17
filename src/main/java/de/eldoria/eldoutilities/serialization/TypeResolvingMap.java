@@ -65,6 +65,7 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
 	 *
 	 * @param key          key
 	 * @param defaultValue default value if key does not exist
+	 * @param clazz        enum clazz to resolve
 	 * @param <T>          type of return value
 	 *
 	 * @return value of key or default value

@@ -67,7 +67,7 @@ public final class Replacement {
 
 	/**
 	 * Add formatting codes to the replacement. A §r will be appended after the replacement. Only provide the formatting
-	 * character. Without § or &.
+	 * character. Without § or &amp;.
 	 *
 	 * @param format      format which should be applied on the replacement.
 	 * @param afterFormat The formatting codes which should be applied after the §r.
@@ -89,7 +89,7 @@ public final class Replacement {
 
 	/**
 	 * Add formatting codes to the replacement. A §r will be appended after the replacement. Only provide the formatting
-	 * character. Without § or &.
+	 * character. Without § or &amp;.
 	 *
 	 * @param format format which should be applied on the replacement.
 	 *

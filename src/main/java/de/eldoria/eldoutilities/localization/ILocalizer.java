@@ -35,6 +35,8 @@ public interface ILocalizer {
 	 *
 	 * @param plugin          instance of plugin
 	 * @param includedLocales internal provided locales
+	 *
+	 * @return the created localizer instance
 	 */
 	static ILocalizer create(Plugin plugin,
 	                         String... includedLocales) {
@@ -57,6 +59,8 @@ public interface ILocalizer {
 	 * @param localesPrefix   prefix of the locale files
 	 * @param fallbackLocale  fallbackLocale
 	 * @param includedLocales internal provided locales
+	 *
+	 * @return the created localizer instance
 	 */
 	static ILocalizer create(Plugin plugin, String localesPath,
 	                         String localesPrefix, Locale fallbackLocale, String... includedLocales) {

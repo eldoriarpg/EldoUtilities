@@ -39,6 +39,7 @@ public final class ArgumentUtils {
 	 * @param index        index of the requested parameter
 	 * @param parse        Function to parse the string to value. Returns null if not parseable.
 	 * @param defaultValue default value which will be returned when the index does not exists.
+	 * @param <T>          return type
 	 *
 	 * @return string at index or default value if the index does not exists.
 	 */

@@ -7,10 +7,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * A task which iterates of a collection and cancels itself when done.
- * <p>
- *
- * <pre>{@ccode
+ * A task which iterates of a collection and cancels itself when done. *
+ * <pre>{@code
  *         IteratingTask<T> iteratingTask = new IteratingTask<>(collection, (e) ->
  *         {
  *             if (didSomething(e)) {

@@ -41,6 +41,8 @@ public abstract class Updater<T extends UpdateData> extends BukkitRunnable imple
 
 	/**
 	 * Performs a update check with the saved data. This can be repeatet in a scheduler.
+	 *
+	 * @return true when the check was successful and a new version is available
 	 */
 	public final boolean performCheck() {
 		plugin.getLogger().info("§2Checking for new Version...");

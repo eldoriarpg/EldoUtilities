@@ -244,11 +244,10 @@ public class Localizer implements ILocalizer {
 				} catch (IOException | NullPointerException e) {
 					plugin.getLogger().info("§eNo reference locale found for " + currLocale + ". Using default locale.");
 				}
-				ResourceBundle.getBundle(localesPrefix, currLocale);
 				if (refBundle == null) {
 					refBundle = defaultBundle;
 				} else {
-					plugin.getLogger().info("§2Found matching locale " + refBundle.getLocale() + " for " + currLocale);
+					plugin.getLogger().info("§2Found matching locale for " + currLocale);
 				}
 			} else {
 				plugin.getLogger().warning("Could not determine locale code of file " + file.getName());

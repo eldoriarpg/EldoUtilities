@@ -6,7 +6,7 @@
 
     <groupId>de.eldoria</groupId>
     <artifactId>EldoUtilities</artifactId>
-    <version>1.0.38</version>
+    <version>1.0.39</version>
     <packaging>jar</packaging>
     <name>Eldo Utilities</name>
     <url>https://github.com/eldoriarpg/EldoUtilities/wiki</url>
@@ -19,6 +19,8 @@
         <!-- This is used for backwards compatibility from java 9 and above
         <maven.compiler.release>8<s/maven.compiler.release>
         -->
+        <javadoc.version>3.2.0</javadoc.version>
+        <source.version>3.2.1</source.version>
     </properties>
 
     <build>
@@ -36,6 +38,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>${source.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -48,6 +51,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
