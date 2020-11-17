@@ -7,32 +7,32 @@ package de.eldoria.eldoutilities.container;
  * @param <B> value B
  */
 public class Pair<A, B> {
-    public final A first;
-    public final B second;
+	public final A first;
+	public final B second;
 
-    /**
-     * Create a new pair.
-     *
-     * @param first  first value
-     * @param second second value
-     */
-    public Pair(A first, B second) {
-        this.first = first;
-        this.second = second;
-    }
+	/**
+	 * Create a new pair.
+	 *
+	 * @param first  first value
+	 * @param second second value
+	 */
+	public Pair(A first, B second) {
+		this.first = first;
+		this.second = second;
+	}
 
-    /**
-     * Create a new pair.
-     *
-     * @param x   first value
-     * @param y   second value
-     * @param <X> type of first value
-     * @param <Y> type of second value
-     *
-     * @return new pair
-     */
-    public static <X, Y> Pair<X, Y> of(X x, Y y) {
-        return new Pair<>(x, y);
-    }
+	/**
+	 * Create a new pair.
+	 *
+	 * @param x   first value
+	 * @param y   second value
+	 * @param <X> type of first value
+	 * @param <Y> type of second value
+	 *
+	 * @return new pair
+	 */
+	public static <X, Y> Pair<X, Y> of(X x, Y y) {
+		return new Pair<>(x, y);
+	}
 
 }
