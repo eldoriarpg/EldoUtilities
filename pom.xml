@@ -6,7 +6,7 @@
 
     <groupId>de.eldoria</groupId>
     <artifactId>EldoUtilities</artifactId>
-    <version>1.0.39</version>
+    <version>1.0.40</version>
     <packaging>jar</packaging>
     <name>Eldo Utilities</name>
     <url>https://github.com/eldoriarpg/EldoUtilities/wiki</url>
@@ -110,11 +110,6 @@
             <artifactId>mockito-core</artifactId>
             <version>3.5.13</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.eldoria</groupId>
-            <artifactId>BloodNight</artifactId>
-            <version>0.8.1</version>
         </dependency>
     </dependencies>
 </project>
