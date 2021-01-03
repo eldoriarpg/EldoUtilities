@@ -1,6 +1,6 @@
 package de.eldoria.eldoutilities.utils;
 
-import de.eldoria.eldoutilities.EldoUtil;
+import de.eldoria.eldoutilities.EldoUtilities;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -60,14 +60,14 @@ public final class AttributeUtil {
         AttributeInstance targetAttribute = target.getAttribute(attribute);
 
         if (sourceAttribute == null) {
-            EldoUtil.logger().log(Level.WARNING, "Attempted to sync attribute "
+            EldoUtilities.logger().log(Level.WARNING, "Attempted to sync attribute "
                             + attribute + " between source " + source.getType() + " and target " + target.getType()
                             + ", but Attribute is not present on source",
                     new IllegalArgumentException("A not present attribute was requested to change"));
             return;
         }
         if (targetAttribute == null) {
-            EldoUtil.logger().log(Level.WARNING, "Attempted to sync attribute "
+            EldoUtilities.logger().log(Level.WARNING, "Attempted to sync attribute "
                             + attribute + " between source " + source.getType() + " and target " + target.getType()
                             + ", but Attribute is not present on target",
                     new IllegalArgumentException("A not present attribute was requested to change"));
@@ -82,10 +82,10 @@ public final class AttributeUtil {
     }
 
     public static double getAttributeValue(LivingEntity entity, Attribute attribute) {
-		AttributeInstance entityAttribute = entity.getAttribute(attribute);
-		if (entityAttribute == null) {
-			return 0;
-		}
-		return entityAttribute.getValue();
+        AttributeInstance entityAttribute = entity.getAttribute(attribute);
+        if (entityAttribute == null) {
+            return 0;
+        }
+        return entityAttribute.getValue();
     }
 }

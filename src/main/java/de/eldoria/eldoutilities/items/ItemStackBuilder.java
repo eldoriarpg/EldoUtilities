@@ -22,6 +22,10 @@ import java.util.function.Consumer;
 public final class ItemStackBuilder {
     private final ItemStack itemStack;
 
+    private ItemStackBuilder(Material material, int amount) {
+        itemStack = new ItemStack(material, amount);
+    }
+
     /**
      * Creates a new item stack builder
      *
@@ -41,10 +45,6 @@ public final class ItemStackBuilder {
      */
     public ItemStackBuilder of(Material material, int amount) {
         return new ItemStackBuilder(material, amount);
-    }
-
-    private ItemStackBuilder(Material material, int amount) {
-        itemStack = new ItemStack(material, amount);
     }
 
     /**
@@ -276,6 +276,7 @@ public final class ItemStackBuilder {
      * Sets the damage
      *
      * @param damage item damage
+     * @return builder instance
      */
     public ItemStackBuilder withDurability(int damage) {
         withMetaValue(m -> {

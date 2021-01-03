@@ -9,19 +9,19 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 public class UpdateNotifier extends Notifier {
 
-	public UpdateNotifier(Plugin plugin, String permission, String latestVersion) {
-		super(plugin, permission, latestVersion);
-	}
+    public UpdateNotifier(Plugin plugin, String permission, String latestVersion) {
+        super(plugin, permission, latestVersion);
+    }
 
-	@Override
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		PluginDescriptionFile description = plugin.getDescription();
-		// send to operator.
-		if (event.getPlayer().isOp() || event.getPlayer().hasPermission(permission)) {
-			MessageSender.getPluginMessageSender(plugin).sendMessage(event.getPlayer(), "New version of §b" + plugin.getName() + "§r available.\n"
-					+ "Newest version: §a" + newestVersion + "§r! Current version: §c" + description.getVersion() + "§r!\n"
-					+ "Download new version here: §b" + description.getWebsite());
-		}
-	}
+    @Override
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        PluginDescriptionFile description = plugin.getDescription();
+        // send to operator.
+        if (event.getPlayer().isOp() || event.getPlayer().hasPermission(permission)) {
+            MessageSender.getPluginMessageSender(plugin).sendMessage(event.getPlayer(), "New version of §b" + plugin.getName() + "§r available.\n"
+                    + "Newest version: §a" + newestVersion + "§r! Current version: §c" + description.getVersion() + "§r!\n"
+                    + "Download new version here: §b" + description.getWebsite());
+        }
+    }
 }

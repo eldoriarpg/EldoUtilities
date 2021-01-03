@@ -36,7 +36,7 @@ public final class EntityBuilder {
      * Add a passenger to the vehicle.
      *
      * @param passengers One or more passengers to add
-     * @return false if it could not be done for whatever reason
+     * @return builder instance
      */
     public EntityBuilder withPassenger(@NotNull Entity... passengers) {
         for (Entity passenger : passengers) {
@@ -51,7 +51,7 @@ public final class EntityBuilder {
      * Entities can have no more than 1024 tags.
      *
      * @param tag the tag to add
-     * @return true if the tag was successfully added
+     * @return builder instance
      */
     public EntityBuilder withScoreboardTag(@NotNull String tag) {
         entity.addScoreboardTag(tag);
@@ -62,6 +62,7 @@ public final class EntityBuilder {
      * Sets this entity's velocity
      *
      * @param velocity New velocity to travel with
+     * @return builder instance
      */
     public EntityBuilder withVelocity(@NotNull Vector velocity) {
         entity.setVelocity(velocity);
@@ -75,6 +76,7 @@ public final class EntityBuilder {
      *
      * @param yaw   the yaw
      * @param pitch the pitch
+     * @return builder instance
      * @throws UnsupportedOperationException if used for players
      */
     public EntityBuilder withRotation(float yaw, float pitch) {
@@ -87,6 +89,7 @@ public final class EntityBuilder {
      * being on fire).
      *
      * @param ticks Current ticks remaining
+     * @return builder instance
      */
     public EntityBuilder withFireTicks(int ticks) {
         entity.setFireTicks(ticks);
@@ -97,6 +100,7 @@ public final class EntityBuilder {
      * Sets whether or not the entity gets persisted.
      *
      * @param persistent the persistence status
+     * @return builder instance
      * @see Entity#isPersistent()
      */
     public EntityBuilder asPersistent(boolean persistent) {
@@ -108,6 +112,7 @@ public final class EntityBuilder {
      * Sets the fall distance for this entity
      *
      * @param distance The new distance.
+     * @return builder instance
      */
     public EntityBuilder withFallDistance(float distance) {
         entity.setFallDistance(distance);
@@ -121,6 +126,7 @@ public final class EntityBuilder {
      * tick.
      *
      * @param value Age of entity
+     * @return builder instance
      */
     public EntityBuilder withTicksLived(int value) {
         entity.setTicksLived(value);
@@ -135,6 +141,7 @@ public final class EntityBuilder {
      * name.
      *
      * @param flag custom name or not
+     * @return builder instance
      */
     public EntityBuilder withVisibleCustomName(boolean flag) {
         entity.setCustomNameVisible(flag);
@@ -149,6 +156,7 @@ public final class EntityBuilder {
      * name.
      *
      * @param flag custom name or not
+     * @return builder instance
      */
     public EntityBuilder withGlowing(boolean flag) {
         entity.setGlowing(flag);
@@ -162,6 +170,7 @@ public final class EntityBuilder {
      * creative mode.
      *
      * @param flag if the entity is invulnerable
+     * @return builder instance
      */
     public EntityBuilder asInvulnerable(boolean flag) {
         entity.setInvulnerable(flag);
@@ -174,6 +183,7 @@ public final class EntityBuilder {
      * When an entity is silent it will not produce any sound.
      *
      * @param flag if the entity is silent
+     * @return builder instance
      */
     public EntityBuilder asSilent(boolean flag) {
         entity.setSilent(flag);
@@ -184,6 +194,7 @@ public final class EntityBuilder {
      * Sets whether gravity applies to this entity.
      *
      * @param gravity whether gravity should apply
+     * @return builder instance
      */
     public EntityBuilder withGravity(boolean gravity) {
         entity.setGravity(gravity);
@@ -195,6 +206,7 @@ public final class EntityBuilder {
      *
      * @param metadataKey      A unique key to identify this metadata.
      * @param newMetadataValue The metadata value to apply.
+     * @return builder instance
      * @throws IllegalArgumentException If value is null, or the owning plugin
      *                                  is null
      */
@@ -213,6 +225,7 @@ public final class EntityBuilder {
      * name.
      *
      * @param name the name to set
+     * @return builder instance
      */
     public EntityBuilder withCustomName(@Nullable String name) {
         entity.setCustomName(name);
@@ -230,6 +243,7 @@ public final class EntityBuilder {
      *
      * @param attribute attribute type to set if present
      * @param value     target value which should be retrieved via {@link AttributeInstance#getValue()}
+     * @return builder instance
      */
     public EntityBuilder withAttribute(Attribute attribute, double value) {
         AttributeUtil.setAttributeValue(entity, attribute, value);
@@ -240,7 +254,7 @@ public final class EntityBuilder {
      * Adds the given {@link PotionEffect} to the living entity.
      *
      * @param effect PotionEffect to be added
-     * @return whether the effect could be added
+     * @return builder instance
      */
     public EntityBuilder withPotionEffect(@NotNull PotionEffect effect) {
         entity.addPotionEffect(effect);
@@ -253,6 +267,7 @@ public final class EntityBuilder {
      * The entity will be completely unable to move if it has no AI.
      *
      * @param ai whether the mob will have AI or not.
+     * @return builder instance
      */
     public EntityBuilder withAI(boolean ai) {
         entity.setAI(ai);
@@ -266,6 +281,7 @@ public final class EntityBuilder {
      * {@link LivingEntity#getCollidableExemptions()}
      *
      * @param collidable collision status
+     * @return builder instance
      */
     public EntityBuilder setCollidable(boolean collidable) {
         entity.setCollidable(collidable);
@@ -276,6 +292,7 @@ public final class EntityBuilder {
      * Sets whether the entity is invisible or not.
      *
      * @param invisible If the entity is invisible
+     * @return builder instance
      */
     public EntityBuilder setInvisible(boolean invisible) {
         entity.setInvisible(invisible);
@@ -287,6 +304,7 @@ public final class EntityBuilder {
      * dead.
      *
      * @param health New health represented from 0 to max
+     * @return builder instance
      */
     public EntityBuilder withHealth(double health) {
         entity.setHealth(EMath.clamp(0, AttributeUtil.getAttributeValue(entity, Attribute.GENERIC_MAX_HEALTH), health));
@@ -297,6 +315,7 @@ public final class EntityBuilder {
      * Sets the entity's absorption amount.
      *
      * @param amount new absorption amount from 0
+     * @return builder instance
      * @throws IllegalArgumentException thrown if health is {@literal < 0} or
      *                                  non-finite.
      */
@@ -305,6 +324,12 @@ public final class EntityBuilder {
         return this;
     }
 
+    /**
+     * Returns the builded entity and casts it to the requested type.
+     *
+     * @param <T> type of entity
+     * @return entity instance
+     */
     @SuppressWarnings("unchecked")
     public <T extends LivingEntity> T build() {
         return (T) entity;
