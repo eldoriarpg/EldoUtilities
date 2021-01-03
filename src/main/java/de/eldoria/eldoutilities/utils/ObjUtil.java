@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -21,7 +22,7 @@ public final class ObjUtil {
 	 *
 	 * @return true if the object was not null and the consumer was applied
 	 */
-	public static <T> boolean nonNull(T obj, Consumer<T> execute) {
+	public static <T> boolean nonNull(@Nullable T obj, Consumer<T> execute) {
 		if (obj == null) return false;
 		execute.accept(obj);
 		return true;
@@ -37,7 +38,7 @@ public final class ObjUtil {
 	 *
 	 * @return true if the object was not null and the consumer was applied false if the object was null
 	 */
-	public static <T> boolean nonNull(T obj, Consumer<T> execute, Runnable runnable) {
+	public static <T> boolean nonNull(@Nullable T obj, Consumer<T> execute, Runnable runnable) {
 		if (obj == null) {
 			runnable.run();
 			return false;
@@ -56,7 +57,7 @@ public final class ObjUtil {
 	 *
 	 * @return object of return type U
 	 */
-	public static <T, U> U nonNull(T obj, Function<T, U> execute) {
+	public static <T, U> U nonNull(@Nullable T obj, Function<T, U> execute) {
 		if (obj == null) return null;
 		return execute.apply(obj);
 	}
@@ -70,7 +71,7 @@ public final class ObjUtil {
 	 *
 	 * @return object or other object if object is null
 	 */
-	public static <T> T nonNull(T obj, @NotNull T otherObject) {
+	public static <T> T nonNull(@Nullable T obj, @NotNull T otherObject) {
 		return obj == null ? otherObject : obj;
 	}
 
@@ -85,7 +86,7 @@ public final class ObjUtil {
 	 *
 	 * @return value of function or default value
 	 */
-	public static <R, A> R nonNullOrElse(A obj, Function<A, R> function, R defaultVal) {
+	public static <R, A> R nonNullOrElse(@Nullable A obj, Function<A, R> function, R defaultVal) {
 		if (obj != null) {
 			return function.apply(obj);
 		}
