@@ -134,14 +134,23 @@ public abstract class EldoConfig {
      * @param path           path to the file. the file ending .yml is appended by the function
      * @param defaultCreator Creator of config setting, if the file is not present. If the creator is null and the file
      *                       does not exist null will be returned.
-     * @param reload         true if the object should be read from disc if cached.
+     * @param reload         forces to load the file configuration from disk even if it was already loaded
      * @return file configuration or null if something went wrong.
+     * @throws ExternalConfigException When load config is invoked on a eldo config which is not the main config.
      */
     protected final FileConfiguration loadConfig(String path, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
         Path configPath = Paths.get(pluginData.toString(), path + ".yml");
         return loadConfig(configPath, defaultCreator, reload);
     }
 
+    /**
+     * @param configPath     path to the file.
+     * @param defaultCreator Creator of config setting, if the file is not present. If the creator is null and the file
+     *                       does not exist null will be returned.
+     * @param reload         forces to load the file configuration from disk even if it was already loaded
+     * @return File configuration which was already loaded, loaded or created.
+     * @throws ExternalConfigException When load config is invoked on a eldo config which is not the main config.
+     */
     protected final FileConfiguration loadConfig(Path configPath, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
         validateMainConfigEntry();
         File configFile = configPath.toFile();
