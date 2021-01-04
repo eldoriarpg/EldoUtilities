@@ -310,7 +310,7 @@ public final class ItemStackBuilder {
      * @return builder instance
      */
     @SuppressWarnings("unchecked")
-    public <T extends ItemMeta> ItemStackBuilder withMetaValue(Class<T> clazz, Consumer<T> consumer) {
+    public <T extends ItemMeta> ItemStackBuilder withMetaValue(Class<T> clazz, Consumer<@NotNull T> consumer) {
         ObjUtil.nonNull(itemStack.getItemMeta(), m -> {
             if (clazz.isInstance(m.getClass())) {
                 consumer.accept((T) m);

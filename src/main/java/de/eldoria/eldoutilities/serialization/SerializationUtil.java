@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.serialization;
 
 import com.google.common.collect.ObjectArrays;
+import de.eldoria.eldoutilities.EldoUtilities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 public final class SerializationUtil {
     private static final NamingStrategy NAMING_STRATEGY = new KebabNamingStrategy();
@@ -18,10 +20,21 @@ public final class SerializationUtil {
 
     }
 
+    /**
+     * Creates a new serialization map builder.
+     *
+     * @return builder for serialization
+     */
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    /**
+     * Creates a new serialization map builder based on a map.
+     *
+     * @param map map which should be used to append the new values
+     * @return builder for serialization
+     */
     public static Builder newBuilder(Map<String, Object> map) {
         return new Builder(map);
     }
@@ -38,10 +51,27 @@ public final class SerializationUtil {
         return (k, v) -> prefix + k.toString();
     }
 
+    /**
+     * Creates a new type resolving map from a map.
+     *
+     * @param serialized object as map
+     * @return type resolving map
+     */
     public static TypeResolvingMap mapOf(Map<String, Object> serialized) {
         return new TypeResolvingMap(serialized);
     }
 
+    /**
+     * Converts an Object to a Map.
+     * <p>
+     * This is done by retrieving all fields which are not marked as transient.
+     * This will include fields which are defined by a inherited class as well.
+     * <p>
+     * the variable names are used as keys.
+     *
+     * @param obj object to map
+     * @return object as map
+     */
     public static Map<String, Object> objectToMap(Object obj) {
         Builder builder = newBuilder();
         Field[] declaredFields = getAllFields(obj);
@@ -51,13 +81,24 @@ public final class SerializationUtil {
                 try {
                     builder.add(declaredField.getName(), declaredField.get(obj));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    EldoUtilities.logger().log(Level.WARNING, "Could not access field " + declaredField.getName(), e);
                 }
             }
         }
         return builder.build();
     }
 
+    /**
+     * Maps objects from a map on an object.
+     * <p>
+     * Only fields which are not mapped as transient will be mapped.
+     * <p>
+     * Fields are identified by their name. Fields are only set when a key is present in the map.
+     *
+     * @param objectMap mappings of object content
+     * @param obj       object to map the objects from map
+     * @param <T>       type of object
+     */
     public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
         Field[] declaredFields = getAllFields(obj);
         for (Field declaredField : declaredFields) {
@@ -67,7 +108,7 @@ public final class SerializationUtil {
                 try {
                     declaredField.set(obj, objectMap.get(declaredField.getName()));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    EldoUtilities.logger().log(Level.WARNING, "Could not access field " + declaredField.getName(), e);
                 }
             }
         }
