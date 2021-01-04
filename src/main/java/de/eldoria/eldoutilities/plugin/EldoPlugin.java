@@ -11,24 +11,37 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class EldoPlugin extends JavaPlugin {
-    private static EldoPlugin instance;
+    private static Map<Class<? extends EldoPlugin>, EldoPlugin> instance;
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
 
     public EldoPlugin() {
-        instance = this;
+        registerSelf(this);
     }
 
     public EldoPlugin(@NotNull JavaPluginLoader loader, @NotNull PluginDescriptionFile description, @NotNull File dataFolder, @NotNull File file) {
         super(loader, description, dataFolder, file);
-        instance = this;
+        registerSelf(this);
     }
 
-    public static Logger logger() {
-        return instance.getLogger();
+    private static void registerSelf(EldoPlugin eldoPlugin) {
+        instance.put(eldoPlugin.getClass(), eldoPlugin);
+    }
+
+    private static EldoPlugin getEldoPlugin(Class<? extends EldoPlugin> clazz) {
+        return instance.get(clazz);
+    }
+
+    public static EldoPlugin getInstance(Class<? extends EldoPlugin> clazz) {
+        return instance.get(clazz);
+    }
+
+    public static Logger logger(Class<? extends EldoPlugin> plugin) {
+        return instance.get(plugin).getLogger();
     }
 
     /**
@@ -83,7 +96,7 @@ public class EldoPlugin extends JavaPlugin {
      * @return Task id number (-1 if scheduling failed)
      */
     public int scheduleRepeatingTask(Runnable task, int delay, int period) {
-        return scheduler.scheduleSyncRepeatingTask(this, task, delay, period);
+        return getScheduler().scheduleSyncRepeatingTask(this, task, delay, period);
     }
 
     /**
