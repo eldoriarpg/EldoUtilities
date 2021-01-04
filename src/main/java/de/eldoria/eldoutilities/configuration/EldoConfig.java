@@ -22,13 +22,15 @@ public abstract class EldoConfig {
     protected final Plugin plugin;
     private final Path pluginData;
     private final Map<String, FileConfiguration> configs = new HashMap<>();
-    private FileConfiguration mainConfig;
+    private FileConfiguration config;
 
     public EldoConfig(Plugin plugin) {
         this.plugin = plugin;
         pluginData = plugin.getDataFolder().toPath();
-        PLUGIN_MAIN_CONFIGS.computeIfAbsent(plugin.getClass(), k -> this);
-        init();
+        PLUGIN_MAIN_CONFIGS.putIfAbsent(plugin.getClass(), this);
+        if (isMainConfig()) {
+            init();
+        }
         reload();
     }
 
@@ -40,7 +42,7 @@ public abstract class EldoConfig {
      */
     public static boolean isDebug(Class<? extends Plugin> clazz) {
         return ObjUtil.nonNull(ObjUtil.nonNull(PLUGIN_MAIN_CONFIGS.get(clazz), i -> {
-            return ObjUtil.nonNull(i.mainConfig, c -> {
+            return ObjUtil.nonNull(i.config, c -> {
                 return c.getBoolean("debug", false);
             });
         }), false);
@@ -80,11 +82,13 @@ public abstract class EldoConfig {
      * <p>
      * All configs are already reloaded.
      */
-    protected abstract void reloadConfigs();
+    protected void reloadConfigs() {
+
+    }
 
     private void readConfigs() {
         plugin.reloadConfig();
-        mainConfig = plugin.getConfig();
+        config = plugin.getConfig();
         setIfAbsent("debug", false);
         for (Map.Entry<String, FileConfiguration> entry : configs.entrySet()) {
             loadConfig(Paths.get(entry.getKey()), null, true);
@@ -98,9 +102,9 @@ public abstract class EldoConfig {
      * @param value value to set
      * @return true if the value was not present and was set.
      */
-    protected boolean setIfAbsent(String path, Object value) {
-        if (!mainConfig.isSet(path)) {
-            mainConfig.set(path, value);
+    protected final boolean setIfAbsent(String path, Object value) {
+        if (!config.isSet(path)) {
+            config.set(path, value);
             return true;
         }
         return false;
@@ -114,7 +118,7 @@ public abstract class EldoConfig {
      * @param value   value to set
      * @return true if the value was not present and was set.
      */
-    protected boolean setIfAbsent(ConfigurationSection section, String path, Object value) {
+    protected final boolean setIfAbsent(ConfigurationSection section, String path, Object value) {
         if (!section.isSet(path)) {
             section.set(path, value);
             return true;
@@ -133,12 +137,13 @@ public abstract class EldoConfig {
      * @param reload         true if the object should be read from disc if cached.
      * @return file configuration or null if something went wrong.
      */
-    protected FileConfiguration loadConfig(String path, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
+    protected final FileConfiguration loadConfig(String path, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
         Path configPath = Paths.get(pluginData.toString(), path + ".yml");
         return loadConfig(configPath, defaultCreator, reload);
     }
 
-    protected FileConfiguration loadConfig(Path configPath, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
+    protected final FileConfiguration loadConfig(Path configPath, @Nullable Consumer<FileConfiguration> defaultCreator, boolean reload) {
+        validateMainConfigEntry();
         File configFile = configPath.toFile();
 
         try {
@@ -198,8 +203,20 @@ public abstract class EldoConfig {
         }
     }
 
-    public Plugin getPlugin() {
+    public final Plugin getPlugin() {
         return plugin;
+    }
+
+    /**
+     * Get the main config.
+     * <p>
+     * Also refered as the config.yml
+     *
+     * @param clazz class of plugin to retrieve the main config
+     * @return file configuration for the main config.
+     */
+    public static EldoConfig getMainConfig(Class<? extends Plugin> clazz) {
+        return PLUGIN_MAIN_CONFIGS.get(clazz);
     }
 
     /**
@@ -209,8 +226,17 @@ public abstract class EldoConfig {
      *
      * @return file configuration for the main config.
      */
-    public FileConfiguration getMainConfig() {
-        return mainConfig;
+    public final EldoConfig getMainConfig() {
+        return PLUGIN_MAIN_CONFIGS.get(plugin.getClass());
+    }
+
+    /**
+     * Get the underlying file configuration.
+     *
+     * @return file configuration for the main config.
+     */
+    public final FileConfiguration getConfig() {
+        return config;
     }
 
     /**
@@ -218,8 +244,8 @@ public abstract class EldoConfig {
      *
      * @return config version or -1 if not set.
      */
-    public int getVersion() {
-        return mainConfig.getInt("version", -1);
+    public final int getVersion() {
+        return config.getInt("version", -1);
     }
 
     /**
@@ -228,8 +254,8 @@ public abstract class EldoConfig {
      * @param version new config version
      * @param save    true to save after set.
      */
-    public void setVersion(int version, boolean save) {
-        mainConfig.set("version", version);
+    public final void setVersion(int version, boolean save) {
+        config.set("version", version);
         if (save) {
             save();
         }
@@ -241,5 +267,15 @@ public abstract class EldoConfig {
      * Intialize everything here.
      */
     protected void init() {
+    }
+
+    public boolean isMainConfig() {
+        return PLUGIN_MAIN_CONFIGS.get(plugin.getClass()) == this;
+    }
+
+    private void validateMainConfigEntry() {
+        if (!isMainConfig()) {
+            throw new ExternalConfigException();
+        }
     }
 }
