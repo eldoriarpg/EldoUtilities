@@ -1,3 +1,5 @@
+Javadocs: [https://javadoc.jitpack.io/com/github/eldoriarpg/EldoUtilities/latest/javadoc/index.html](Javadocs \o/)
+
 [![](https://jitpack.io/v/de.eldoria/EldoUtilities.svg)](https://jitpack.io/#de.eldoria/EldoUtilities)
 ```
         <repository>
