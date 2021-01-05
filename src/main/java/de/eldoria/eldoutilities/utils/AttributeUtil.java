@@ -9,6 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
+/**
+ * Class which holds utility methods to handle and manage attributes.
+ *
+ * @since 1.1.0
+ */
 public final class AttributeUtil {
     private AttributeUtil() {
     }

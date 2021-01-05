@@ -7,6 +7,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+/**
+ * Notifier implementation for updater with update check function.
+ *
+ * @since 1.1.0
+ */
 public class UpdateNotifier extends Notifier {
 
     public UpdateNotifier(Plugin plugin, String permission, String latestVersion) {

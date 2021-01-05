@@ -5,6 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * Naming strategie to define field names on serialization.
+ *
+ * @since 1.0.0
+ */
 public final class KebabNamingStrategy implements NamingStrategy {
     private static final Map<Class<?>, String> KEY_LOOKUP_CACHE = new HashMap<>();
     private static final Pattern PATTERN = Pattern.compile("([a-z0-9])([A-Z])");

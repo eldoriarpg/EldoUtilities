@@ -17,6 +17,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+/**
+ * A wrapper class for {@link FileConfiguration}.
+ * <p>
+ * This class can also be act as a main config which holds references to external configuration files.
+ *
+ * @since 1.1.0
+ */
 public abstract class EldoConfig {
     private static final Map<Class<? extends Plugin>, EldoConfig> PLUGIN_MAIN_CONFIGS = new HashMap<>();
     protected final Plugin plugin;

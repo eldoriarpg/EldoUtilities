@@ -3,6 +3,11 @@ package de.eldoria.eldoutilities.updater.spigotupdater;
 import de.eldoria.eldoutilities.updater.UpdateData;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Updater implementation for spigot update check.
+ *
+ * @since 1.0.0
+ */
 public class SpigotUpdateData extends UpdateData {
     private final int spigotId;
 

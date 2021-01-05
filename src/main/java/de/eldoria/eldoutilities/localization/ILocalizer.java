@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Basic Interface for localizer implementations.
+ *
+ * Also allows access to localizer instances per plugin.
+ *
+ * @since 1.0.0
+ */
 public interface ILocalizer {
     Map<Class<? extends Plugin>, ILocalizer> LOCALIZER = new HashMap<>();
     ILocalizer DEFAULT = new DummyLocalizer();

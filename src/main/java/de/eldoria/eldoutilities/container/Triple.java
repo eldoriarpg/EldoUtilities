@@ -6,6 +6,7 @@ package de.eldoria.eldoutilities.container;
  * @param <A> value A
  * @param <B> value B
  * @param <C> value C
+ * @since 1.0.0
  */
 public class Triple<A, B, C> {
     public final A first;

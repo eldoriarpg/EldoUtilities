@@ -12,6 +12,8 @@ import java.util.function.Function;
 
 /**
  * This class contains helpful methods for handling of command arguments.
+ *
+ * @since 1.0.0
  */
 public final class ArgumentUtils {
     private ArgumentUtils() {

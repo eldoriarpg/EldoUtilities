@@ -5,6 +5,7 @@ package de.eldoria.eldoutilities.container;
  *
  * @param <A> value A
  * @param <B> value B
+ * @since 1.0.0
  */
 public class Pair<A, B> {
     public final A first;

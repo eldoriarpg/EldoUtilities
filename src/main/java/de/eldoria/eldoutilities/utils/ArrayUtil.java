@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 /**
  * This class containts methods to handle arrays and search.
+ *
+ * @since 1.0.0
  */
 public final class ArrayUtil {
 

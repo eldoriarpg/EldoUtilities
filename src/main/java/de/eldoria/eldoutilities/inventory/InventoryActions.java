@@ -9,6 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Represens a set of {@link ActionItem}s.
+ *
+ * Essentially a wrapper for a previously created inventory.
+ *
+ * Handles inserting of items and event handling together with {@link InventoryActionHandler}
+ *
+ * @since 1.1.1
+ */
 public final class InventoryActions {
     private final Map<Integer, ActionItem> actions = new HashMap<>();
     private final Inventory inventory;

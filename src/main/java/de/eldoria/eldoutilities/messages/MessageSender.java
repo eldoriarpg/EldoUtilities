@@ -15,6 +15,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A message sender to manage message sending.
+ * <p>
+ * Allows definition of a plugin prefix, Message color, Error color.
+ * <p>
+ * Allows sending of messages, error messages, titles.
+ * <p>
+ * Allows sending of automatically localized messages in combination with a created localizer.
+ *
+ * @since 1.0.0
+ */
 public final class MessageSender {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");

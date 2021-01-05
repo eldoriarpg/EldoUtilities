@@ -2,6 +2,11 @@ package de.eldoria.eldoutilities.updater;
 
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Update data base implementation.
+ *
+ * @since 1.0.0
+ */
 public abstract class UpdateData {
     private final String notifyPermission;
     private final boolean notifyUpdate;

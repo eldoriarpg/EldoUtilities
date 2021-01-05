@@ -1,5 +1,10 @@
 package de.eldoria.eldoutilities.threading;
 
+/**
+ * Statistics used in {@link IteratingTask}.
+ *
+ * @since 1.0.0
+ */
 public class TaskStatistics {
     private int processedElements;
     private long time;

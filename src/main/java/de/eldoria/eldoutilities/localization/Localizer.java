@@ -29,6 +29,8 @@ import java.util.stream.Stream;
  * You can change the currently used locale every time via {@link #setLocale(String)}.
  * <p>
  * The localizer also allows to use locales which are not included in the ressources folder.
+ *
+ * @since 1.0.0
  */
 public class Localizer implements ILocalizer {
 

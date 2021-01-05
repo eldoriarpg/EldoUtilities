@@ -5,6 +5,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+/**
+ * A class which represends a result used by {@link ProjectileUtil#getProjectileSource(Entity)}.
+ *
+ * @since 1.0.0
+ */
 public class ProjectileSender {
     private Entity entity;
     private Block block;

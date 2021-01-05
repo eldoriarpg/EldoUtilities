@@ -1,5 +1,10 @@
 package de.eldoria.eldoutilities.utils;
 
+/**
+ * Basic text utilities
+ *
+ * @since 1.0.0
+ */
 public final class TextUtil {
     private TextUtil() {
         throw new UnsupportedOperationException("This is a utility class!");

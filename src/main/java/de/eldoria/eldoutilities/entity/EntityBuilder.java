@@ -17,6 +17,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+/**
+ * A class to build entities with a builder pattern.
+ *
+ * @since 1.1.0
+ */
 public final class EntityBuilder {
     private final LivingEntity entity;
 
@@ -37,6 +42,7 @@ public final class EntityBuilder {
      *
      * @param passengers One or more passengers to add
      * @return builder instance
+     * @since 1.1.0
      */
     public EntityBuilder withPassenger(@NotNull Entity... passengers) {
         for (Entity passenger : passengers) {
@@ -52,6 +58,7 @@ public final class EntityBuilder {
      *
      * @param tag the tag to add
      * @return builder instance
+     * @since 1.1.0
      */
     public EntityBuilder withScoreboardTag(@NotNull String tag) {
         entity.addScoreboardTag(tag);
@@ -63,6 +70,7 @@ public final class EntityBuilder {
      *
      * @param velocity New velocity to travel with
      * @return builder instance
+     * @since 1.1.0
      */
     public EntityBuilder withVelocity(@NotNull Vector velocity) {
         entity.setVelocity(velocity);
@@ -78,6 +86,7 @@ public final class EntityBuilder {
      * @param pitch the pitch
      * @return builder instance
      * @throws UnsupportedOperationException if used for players
+     * @since 1.1.0
      */
     public EntityBuilder withRotation(float yaw, float pitch) {
         entity.setRotation(yaw, pitch);

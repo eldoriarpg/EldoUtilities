@@ -14,6 +14,13 @@ import java.io.File;
 import java.util.Map;
 import java.util.logging.Logger;
 
+/**
+ * Basic Plugin implementation of a {@link JavaPlugin}.
+ *
+ * Provides basic function to wrap some stuff and make it easier to access
+ *
+ * @since 1.1.0
+ */
 public class EldoPlugin extends JavaPlugin {
     private static Map<Class<? extends EldoPlugin>, EldoPlugin> instance;
     private PluginManager pluginManager = null;

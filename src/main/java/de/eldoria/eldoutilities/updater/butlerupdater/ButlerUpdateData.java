@@ -3,6 +3,11 @@ package de.eldoria.eldoutilities.updater.butlerupdater;
 import de.eldoria.eldoutilities.updater.UpdateData;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Update Data implementation for butler application.
+ *
+ * @since 1.1.0
+ */
 public class ButlerUpdateData extends UpdateData {
     private final int butlerId;
     private final String host;

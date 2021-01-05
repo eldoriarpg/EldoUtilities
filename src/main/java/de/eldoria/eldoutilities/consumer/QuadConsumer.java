@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * @param <T3> the type of the third argument to the operation
  * @param <T4> the type of the fourth argument to the operation
  * @see Consumer
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface QuadConsumer<T1, T2, T3, T4> {

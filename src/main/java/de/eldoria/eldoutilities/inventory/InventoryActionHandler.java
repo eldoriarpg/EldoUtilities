@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 
 /**
  * A InventoryActionHandler allows to handle basic click uis easily.
+ *
+ * @since 1.1.1
  */
 public class InventoryActionHandler {
     private static final Map<Class<? extends Plugin>, InventoryActionHandler> PLUGIN_HANDLER = new HashMap<>();

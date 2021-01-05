@@ -1,5 +1,10 @@
 package de.eldoria.eldoutilities.updater.butlerupdater;
 
+/**
+ * Web Response for butler application.
+ *
+ * @since 1.1.0
+ */
 public class UpdateCheckResponse {
     private final boolean newVersionAvailable;
     private final String latestVersion;

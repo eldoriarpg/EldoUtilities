@@ -4,6 +4,9 @@ import de.eldoria.eldoutilities.container.Pair;
 
 import static java.lang.Math.*;
 
+/**
+ * Utility class with basic math functions which are not covered by java.math
+ */
 public final class EMath {
     private EMath() {
     }

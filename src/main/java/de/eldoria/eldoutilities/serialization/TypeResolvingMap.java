@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Map for type resolving.
+ *
+ * @since 1.0.0
+ */
 public final class TypeResolvingMap extends AbstractMap<String, Object> {
     private final Map<String, Object> delegate;
 

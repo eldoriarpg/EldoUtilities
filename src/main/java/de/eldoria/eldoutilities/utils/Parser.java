@@ -6,6 +6,8 @@ import java.util.OptionalInt;
 
 /**
  * This class contains methods to parse strings to primitve types and other things.
+ *
+ * @since 1.0.0
  */
 public final class Parser {
     private Parser() {

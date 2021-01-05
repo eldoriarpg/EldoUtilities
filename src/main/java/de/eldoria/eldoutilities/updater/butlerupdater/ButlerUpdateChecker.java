@@ -2,6 +2,7 @@ package de.eldoria.eldoutilities.updater.butlerupdater;
 
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
+import de.eldoria.eldoutilities.EldoUtilities;
 import de.eldoria.eldoutilities.updater.Updater;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,8 +19,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.logging.Level;
 
+/**
+ * Updater implementation for butler application.
+ *
+ * @since 1.1.0
+ */
 public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
-    UpdateCheckResponse response;
+    private UpdateCheckResponse response;
 
     public ButlerUpdateChecker(ButlerUpdateData data) {
         super(data);
@@ -27,7 +33,6 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
 
     @Override
     protected Optional<String> getLatestVersion(ButlerUpdateData data) {
-        data.getHost();
         Plugin plugin = data.getPlugin();
 
         HttpURLConnection con;
@@ -50,7 +55,7 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
                 return Optional.empty();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Could not read response.", e);
         }
 
 
@@ -153,6 +158,4 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
         plugin.getLogger().info("§2>----------------------------------------------------<");
         return true;
     }
-
-
 }

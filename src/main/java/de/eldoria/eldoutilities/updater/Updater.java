@@ -13,6 +13,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Optional;
 
+/**
+ * Base implementation for Updater.
+ *
+ * @param <T> type of Updater
+ */
 public abstract class Updater<T extends UpdateData> extends BukkitRunnable implements Listener {
     private final Plugin plugin;
     private final T data;

@@ -13,6 +13,11 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
 
+/**
+ * Class which provides utilities for serialization and deserialization.
+ *
+ * @since 1.0.0
+ */
 public final class SerializationUtil {
     private static final NamingStrategy NAMING_STRATEGY = new KebabNamingStrategy();
 
@@ -71,6 +76,7 @@ public final class SerializationUtil {
      *
      * @param obj object to map
      * @return object as map
+     * @since 1.1.0
      */
     public static Map<String, Object> objectToMap(Object obj) {
         Builder builder = newBuilder();
@@ -98,6 +104,7 @@ public final class SerializationUtil {
      * @param objectMap mappings of object content
      * @param obj       object to map the objects from map
      * @param <T>       type of object
+     * @since 1.1.0
      */
     public static <T> void mapOnObject(Map<String, Object> objectMap, T obj) {
         Field[] declaredFields = getAllFields(obj);

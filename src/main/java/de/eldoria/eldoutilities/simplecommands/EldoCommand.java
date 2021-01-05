@@ -17,6 +17,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class for command creation.
+ *
+ * Features automatic tab completion and sub commands.
+ *
+ * @since 1.1.0
+ */
 public abstract class EldoCommand implements TabExecutor {
     private final Map<String, TabExecutor> subCommands = new HashMap<>();
     private final Plugin plugin;

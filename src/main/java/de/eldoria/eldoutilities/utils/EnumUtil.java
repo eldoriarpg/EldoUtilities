@@ -1,7 +1,9 @@
 package de.eldoria.eldoutilities.utils;
 
 /**
- * This class contains methods to parse string to enums
+ * This class contains methods to parse string to enums.
+ *
+ * @since 1.0.0
  */
 public final class EnumUtil {
     private EnumUtil() {

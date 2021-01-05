@@ -5,6 +5,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Notifier to notice server owners on server join.
+ *
+ * @since 1.0.0
+ */
 public abstract class Notifier implements Listener {
     protected final Plugin plugin;
     protected final String permission;

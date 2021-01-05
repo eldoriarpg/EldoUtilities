@@ -27,6 +27,7 @@ import java.util.function.Predicate;
  * </pre>
  *
  * @param <T> type of collection
+ * @since 1.0.0
  */
 public class IteratingTask<T> extends BukkitRunnable {
     private static final int MAX_DURATION_TARGET = 50; // assuming 50ms = 1 tick

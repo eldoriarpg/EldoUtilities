@@ -6,6 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+/**
+ * A class which represents an item in a slot which will execute actions on click on the item and on close of the inventory.
+ *
+ * @since 1.1.1
+ */
 public class ActionItem {
     private final ItemStack itemStack;
     private final int slot;

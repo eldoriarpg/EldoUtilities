@@ -7,7 +7,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * General handling of objects
+ * General handling of objects.
+ *
+ * @since 1.0.0
  */
 public final class ObjUtil {
     private ObjUtil() {

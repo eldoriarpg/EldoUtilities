@@ -13,6 +13,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Utilitiy class to provide util functions for tab completion.
+ *
+ * @since 1.0.0
+ */
 public final class TabCompleteUtil {
     private TabCompleteUtil() {
     }

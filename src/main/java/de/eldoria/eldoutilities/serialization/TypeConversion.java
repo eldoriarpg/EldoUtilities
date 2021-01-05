@@ -3,6 +3,11 @@ package de.eldoria.eldoutilities.serialization;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+/**
+ * Class for simple type conversion.
+ *
+ * @since 1.0.0
+ */
 public final class TypeConversion {
     private TypeConversion() {
         throw new UnsupportedOperationException("This is a utility class!");

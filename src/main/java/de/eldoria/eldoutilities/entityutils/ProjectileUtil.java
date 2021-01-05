@@ -6,6 +6,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 
+/**
+ * Util to dtermine the sender of a projectile.
+ *
+ * @since 1.0.0
+ */
 public final class ProjectileUtil {
     private ProjectileUtil() {
     }

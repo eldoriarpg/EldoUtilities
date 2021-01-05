@@ -2,6 +2,13 @@ package de.eldoria.eldoutilities.localization;
 
 import java.util.Map;
 
+/**
+ * A dummy localizer which serves as a default localizer.
+ * <p>
+ * Does return the locale code.
+ *
+ * @since 1.0.0
+ */
 public class DummyLocalizer implements ILocalizer {
     @Override
     public void setLocale(String language) {

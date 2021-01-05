@@ -1,7 +1,11 @@
 package de.eldoria.eldoutilities.localization;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+/**
+ * A replacement represents a text placeholder and its replacement.
+ */
 public final class Replacement {
     private final String key;
     private String value;
@@ -41,24 +45,36 @@ public final class Replacement {
      * Creates a new replacement.
      *
      * @param key     key of replacement
-     * @param value   value which provides a string via {@link Enum#name()}
+     * @param anEnum   value which provides a string via {@link Enum#name()}
      * @param formats format which should be applied on the replacement.
      * @return replacement with registered replacement
      */
-    public static Replacement create(String key, Enum<?> value, char... formats) {
-        return create(key, value.name(), formats);
+    public static Replacement create(String key, Enum<?> anEnum, char... formats) {
+        return create(key, anEnum.name(), formats);
     }
 
     /**
-     * Creates a new replacement.
+     * Creates a new replacement for a player.
      *
      * @param key     key of replacement
-     * @param value   value which provides the name of the player
+     * @param player   value which provides the name of the player
      * @param formats format which should be applied on the replacement.
      * @return replacement with registered replacement
      */
-    public static Replacement create(String key, Player value, char... formats) {
-        return create(key, value.getName(), formats);
+    public static Replacement create(String key, Player player, char... formats) {
+        return create(key, player.getName(), formats);
+    }
+
+    /**
+     * Creates a new replacement for a player.
+     *
+     * @param key     key of replacement
+     * @param world   world which provides the name of the world
+     * @param formats format which should be applied on the replacement.
+     * @return replacement with registered replacement
+     */
+    public static Replacement create(String key, World world, char... formats) {
+        return create(key, world.getName(), formats);
     }
 
     /**

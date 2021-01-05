@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * A class which allows the creation of ItemStacks with a builder like pattern.
+ *
+ * @since 1.1.0
+ */
 public final class ItemStackBuilder {
     private final ItemStack itemStack;
 
