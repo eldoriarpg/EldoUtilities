@@ -2,6 +2,6 @@ name: ${project.name}
 description: ${project.description}
 author: Hadde
 version: ${project.version}
-main: ${project.groupId}.${project.artifactId}.${project.name}
+main: ${project.groupId}.eldoutilities.${project.name}
 website: ${project.url}
 api-version: 1.16

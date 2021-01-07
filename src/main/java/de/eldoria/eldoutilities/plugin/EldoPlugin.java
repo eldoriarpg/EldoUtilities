@@ -1,5 +1,8 @@
 package de.eldoria.eldoutilities.plugin;
 
+import com.google.common.collect.Lists;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
@@ -9,9 +12,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -22,7 +26,7 @@ import java.util.logging.Logger;
  * @since 1.1.0
  */
 public class EldoPlugin extends JavaPlugin {
-    private static Map<Class<? extends EldoPlugin>, EldoPlugin> instance;
+    private static Map<Class<? extends EldoPlugin>, EldoPlugin> instance = new HashMap<>();
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
 

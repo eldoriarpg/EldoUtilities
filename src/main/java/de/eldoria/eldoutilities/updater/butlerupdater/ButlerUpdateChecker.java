@@ -2,7 +2,7 @@ package de.eldoria.eldoutilities.updater.butlerupdater;
 
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
-import de.eldoria.eldoutilities.EldoUtilities;
+import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.eldoutilities.updater.Updater;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +41,9 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
         } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not open connection.", e);
+            if (EldoConfig.isDebug(plugin.getClass())) {
+                plugin.getLogger().log(Level.FINEST, "Could not open connection.", e);
+            }
             return Optional.empty();
         }
 
@@ -51,11 +53,16 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
 
         try {
             if (con.getResponseCode() != 200) {
-                plugin.getLogger().log(Level.WARNING, "Received non 200 request.");
+                if (EldoConfig.isDebug(plugin.getClass())) {
+                    plugin.getLogger().log(Level.FINEST, "Received non 200 request.");
+                }
                 return Optional.empty();
             }
         } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not read response.", e);
+            if (EldoConfig.isDebug(plugin.getClass())) {
+                plugin.getLogger().log(Level.INFO, "Could not read response.", e);
+            }
+            return Optional.empty();
         }
 
 
@@ -68,7 +75,9 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
             }
             response = new Gson().fromJson(builder.toString(), UpdateCheckResponse.class);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not read response.", e);
+            if (EldoConfig.isDebug(plugin.getClass())) {
+                plugin.getLogger().log(Level.FINEST, "Could not read response.", e);
+            }
             return Optional.empty();
         }
 
@@ -88,7 +97,9 @@ public class ButlerUpdateChecker extends Updater<ButlerUpdateData> {
         try {
             url = new URL(getData().getHost() + "/download?id=" + getData().getButlerId() + "&version=" + response.getLatestVersion());
         } catch (MalformedURLException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not create download url.", e);
+            if (EldoConfig.isDebug(plugin.getClass())) {
+                plugin.getLogger().log(Level.WARNING, "Could not create download url.", e);
+            }
             plugin.getLogger().warning("§cAborting Update.");
             return false;
         }
