@@ -67,7 +67,7 @@ public class Localizer implements ILocalizer {
         this.localesPath = localesPath;
         this.localesPrefix = localesPrefix;
         this.includedLocales = includedLocales;
-        fallbackLocaleFile = ResourceBundle.getBundle(localesPrefix, fallbackLocale);
+        fallbackLocaleFile = ResourceBundle.getBundle(localesPrefix, fallbackLocale, plugin.getClass().getClassLoader());
         LOCALIZER.put(plugin.getClass(), this);
     }
 
