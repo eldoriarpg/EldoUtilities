@@ -2,6 +2,8 @@ package de.eldoria.eldoutilities.messages;
 
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -164,12 +166,21 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendMessage(Player player, String message) {
-        String repMessage = message.replaceAll("§r", defaultMessageColor);
         if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + repMessage);
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + forceMessageColor(message));
             return;
         }
-        player.sendMessage(prefix + defaultMessageColor + repMessage);
+        player.sendMessage(prefix + forceMessageColor(message));
+    }
+
+    private String forceMessageColor(String message) {
+        String repMessage = message.replaceAll("§r", defaultMessageColor);
+        return defaultMessageColor + repMessage;
+    }
+
+    private String forceErrorColor(String message) {
+        String repMessage = message.replaceAll("§r", defaultErrorColor);
+        return defaultErrorColor + repMessage;
     }
 
     /**
@@ -193,12 +204,11 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendError(Player player, String message) {
-        String repMessage = message.replaceAll("§r", defaultErrorColor);
         if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + defaultMessageColor + repMessage);
+            Bukkit.getConsoleSender().sendMessage("[INFO]" + forceErrorColor(message));
             return;
         }
-        player.sendMessage(prefix + defaultErrorColor + repMessage);
+        player.sendMessage(prefix + forceErrorColor(message));
     }
 
     /**
@@ -253,6 +263,14 @@ public final class MessageSender {
 
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
         sendLocalizedTitle(player, defaultColor, title, subtitle, 10, 70, 20, replacements);
+    }
+
+    public void sendLocalizedActionBar(Player player, String message, Replacement... replacements) {
+        sendActionBar(player, localize(message, replacements));
+    }
+
+    public void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(forceMessageColor(message)));
     }
 
     private ILocalizer loc() {
