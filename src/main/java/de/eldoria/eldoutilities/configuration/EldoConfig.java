@@ -35,6 +35,7 @@ public abstract class EldoConfig {
         this.plugin = plugin;
         pluginData = plugin.getDataFolder().toPath();
         PLUGIN_MAIN_CONFIGS.putIfAbsent(plugin.getClass(), this);
+        plugin.saveDefaultConfig();
         if (isMainConfig()) {
             init();
         }
