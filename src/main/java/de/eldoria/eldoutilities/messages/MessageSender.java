@@ -416,7 +416,7 @@ public final class MessageSender {
      * @param replacements replacements for messages in locale codes
      * @since 1.2.1
      */
-    private void sendLocalized(MessageChannel channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
+    public void sendLocalized(MessageChannel channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
         send(channel, type, sender, localize(message, replacements));
     }
 
