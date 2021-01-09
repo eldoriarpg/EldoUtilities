@@ -30,6 +30,6 @@ public interface MessageType {
      * @return message with forced color codes.
      */
     default String forceColor(String message) {
-        return "§r" + getDefaultColor() + message.replaceAll("\\$", "§").replaceAll("§r", "§r" + getDefaultColor());
+        return "§r" + getDefaultColor() + message.replaceAll("§r", "§r" + getDefaultColor());
     }
 }
