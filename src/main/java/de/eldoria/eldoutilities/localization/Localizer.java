@@ -69,6 +69,23 @@ public class Localizer implements ILocalizer {
         this.includedLocales = includedLocales;
         fallbackLocaleFile = ResourceBundle.getBundle(localesPrefix, fallbackLocale, plugin.getClass().getClassLoader());
         LOCALIZER.put(plugin.getClass(), this);
+        createDefaults();
+    }
+
+    private void createDefaults() {
+        Map<String, String> locales = new HashMap<String, String>() {
+            {
+                put("error.invalidArguments", "Invalid arguments.\nSyntax: %SYNTAX%");
+                put("error.invalidCommand", "Invalid Command");
+                put("error.permission", "You do not have the permissionNode to do this. (%PERMISSION%)");
+                put("error.invalidRange", "This value is out of range. Min: %MIN% Max: %MAX%");
+                put("error.invalidEnumValue", "Invalid input value. Valid inputs are %VALUES%.");
+                put("error.invalidNumber", "Invalid number");
+                put("error.invalidLength", "This input is too long. Max: %MAX% chars.");
+                put("about", "%PLUGIN_NAME% by %AUTHORS%\nVersion: %VERSION%\nSpigot: %WEBSITE%\nSupport: %DISCORD%");
+            }
+        };
+        addLocaleCodes(locales);
     }
 
     /**
@@ -320,6 +337,6 @@ public class Localizer implements ILocalizer {
 
     @Override
     public void addLocaleCodes(Map<String, String> runtimeLocaleCodes) {
-        this.runtimeLocaleCodes = runtimeLocaleCodes;
+        this.runtimeLocaleCodes.putAll(runtimeLocaleCodes);
     }
 }
