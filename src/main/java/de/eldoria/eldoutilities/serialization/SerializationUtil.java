@@ -165,6 +165,10 @@ public final class SerializationUtil {
             return add(key, toString.apply(value));
         }
 
+        public Builder add(String key, Map<?, ?> value) {
+            return add(key, new ArrayList<>(value.values()));
+        }
+
         /**
          * Add a key with a enum constant name
          *
