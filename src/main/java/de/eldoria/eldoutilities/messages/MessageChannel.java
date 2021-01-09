@@ -46,15 +46,6 @@ public interface MessageChannel {
     };
 
     /**
-     * Send a message via this channel to a target with the delivered message sender instance.
-     *
-     * @param message message to send
-     * @param target  target of message
-     * @param sender  message sender instance
-     */
-    void sendMessage(String message, CommandSender target, MessageSender sender);
-
-    /**
      * Get a default channel by name.
      *
      * @param name name of channel not case sensitive
@@ -89,4 +80,13 @@ public interface MessageChannel {
 
         return null;
     }
+
+    /**
+     * Send a message via this channel to a target with the delivered message sender instance.
+     *
+     * @param message message to send
+     * @param target  target of message
+     * @param sender  message sender instance
+     */
+    void sendMessage(String message, CommandSender target, MessageSender sender);
 }

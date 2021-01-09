@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Basic Interface for localizer implementations.
- *
+ * <p>
  * Also allows access to localizer instances per plugin.
  *
  * @since 1.0.0

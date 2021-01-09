@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 
 /**
  * Represens a set of {@link ActionItem}s.
- *
+ * <p>
  * Essentially a wrapper for a previously created inventory.
- *
+ * <p>
  * Handles inserting of items and event handling together with {@link InventoryActionHandler}
  *
  * @since 1.1.1

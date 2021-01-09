@@ -58,6 +58,18 @@ public abstract class EldoConfig {
     }
 
     /**
+     * Get the main config.
+     * <p>
+     * Also refered as the config.yml
+     *
+     * @param clazz class of plugin to retrieve the main config
+     * @return file configuration for the main config.
+     */
+    public static EldoConfig getMainConfig(Class<? extends Plugin> clazz) {
+        return PLUGIN_MAIN_CONFIGS.get(clazz);
+    }
+
+    /**
      * Saves the config to disk.
      */
     public final void save() {
@@ -223,18 +235,6 @@ public abstract class EldoConfig {
 
     public final Plugin getPlugin() {
         return plugin;
-    }
-
-    /**
-     * Get the main config.
-     * <p>
-     * Also refered as the config.yml
-     *
-     * @param clazz class of plugin to retrieve the main config
-     * @return file configuration for the main config.
-     */
-    public static EldoConfig getMainConfig(Class<? extends Plugin> clazz) {
-        return PLUGIN_MAIN_CONFIGS.get(clazz);
     }
 
     /**

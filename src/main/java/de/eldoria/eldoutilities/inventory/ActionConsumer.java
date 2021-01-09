@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ActionConsumer {
     public static Consumer<InventoryClickEvent> getIntRange(NamespacedKey key, int min, int max) {

@@ -45,7 +45,7 @@ public final class Replacement {
      * Creates a new replacement.
      *
      * @param key     key of replacement
-     * @param anEnum   value which provides a string via {@link Enum#name()}
+     * @param anEnum  value which provides a string via {@link Enum#name()}
      * @param formats format which should be applied on the replacement.
      * @return replacement with registered replacement
      */
@@ -57,7 +57,7 @@ public final class Replacement {
      * Creates a new replacement for a player.
      *
      * @param key     key of replacement
-     * @param player   value which provides the name of the player
+     * @param player  value which provides the name of the player
      * @param formats format which should be applied on the replacement.
      * @return replacement with registered replacement
      */

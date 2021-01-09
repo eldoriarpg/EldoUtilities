@@ -209,7 +209,7 @@ public final class SerializationUtil {
             return add(NAMING_STRATEGY.adapt(enumValue.getClass()), enumValue);
         }
 
-        public Builder add(String key, UUID uuid){
+        public Builder add(String key, UUID uuid) {
             return add(key, uuid.toString());
         }
 

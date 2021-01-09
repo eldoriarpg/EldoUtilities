@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class for command creation.
- *
+ * <p>
  * Features automatic tab completion and sub commands.
  *
  * @since 1.1.0

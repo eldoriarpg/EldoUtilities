@@ -15,8 +15,12 @@ public final class EldoUtilities extends EldoPlugin {
         return delayedActions;
     }
 
-    public static InventoryActionHandler getInventoryActions(){
+    public static InventoryActionHandler getInventoryActions() {
         return inventoryActionHandler;
+    }
+
+    public static Logger logger() {
+        return getInstance(EldoUtilities.class).getLogger();
     }
 
     @Override
@@ -28,9 +32,5 @@ public final class EldoUtilities extends EldoPlugin {
         delayedActions = DelayedActions.start(this);
         inventoryActionHandler = new InventoryActionHandler();
         registerListener(inventoryActionHandler);
-    }
-
-    public static Logger logger() {
-        return getInstance(EldoUtilities.class).getLogger();
     }
 }

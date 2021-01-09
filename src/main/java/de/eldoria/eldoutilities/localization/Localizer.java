@@ -42,7 +42,7 @@ public class Localizer implements ILocalizer {
     private final Pattern localePattern = Pattern.compile("_(([a-zA-Z]{2})(_[a-zA-Z]{2})?)\\.properties");
     private ResourceBundle localeFile;
     private boolean checked = false;
-    private Map<String, String> runtimeLocaleCodes = new HashMap<>();
+    private final Map<String, String> runtimeLocaleCodes = new HashMap<>();
 
     /**
      * Create a new localizer instance.

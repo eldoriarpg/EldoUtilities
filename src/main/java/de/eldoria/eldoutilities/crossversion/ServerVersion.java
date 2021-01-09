@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * Enum to determine and work with multiple versions.
+ *
  * @since 1.0.0
  */
 public enum ServerVersion {
