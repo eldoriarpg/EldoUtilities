@@ -80,7 +80,7 @@ public abstract class EldoCommand implements TabExecutor {
         if (args.length == 0) return Collections.emptyList();
 
         return getCommand(args[0]).map(c -> c.onTabComplete(sender, command, alias, newArgs))
-                .orElse(Collections.singletonList("invalid command"));
+                .orElse(Collections.singletonList(localizer().getMessage("error.invalidCommand")));
     }
 
     private Optional<TabExecutor> getCommand(String command) {
