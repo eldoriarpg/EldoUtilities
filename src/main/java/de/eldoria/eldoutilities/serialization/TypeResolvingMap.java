@@ -3,10 +3,7 @@ package de.eldoria.eldoutilities.serialization;
 import de.eldoria.eldoutilities.utils.EnumUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -66,6 +63,10 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
     @SuppressWarnings("unchecked")
     public <T> T getValueOrDefault(String key, T defaultValue) {
         return (T) delegate.getOrDefault(key, defaultValue);
+    }
+
+    public UUID getValueOrDefault(String key, UUID defaultValue) {
+        return getValueOrDefault(key, defaultValue, UUID::fromString);
     }
 
     /**

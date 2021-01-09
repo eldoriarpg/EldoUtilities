@@ -5,10 +5,7 @@ import de.eldoria.eldoutilities.EldoUtilities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -210,6 +207,10 @@ public final class SerializationUtil {
          */
         public Builder add(Enum<?> enumValue) {
             return add(NAMING_STRATEGY.adapt(enumValue.getClass()), enumValue);
+        }
+
+        public Builder add(String key, UUID uuid){
+            return add(key, uuid.toString());
         }
 
         /**
