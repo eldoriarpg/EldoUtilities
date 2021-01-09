@@ -17,7 +17,7 @@ public interface MessageChannel {
      */
     public static MessageChannel TITLE = (message, target, sender) -> {
         if (target instanceof Player) {
-            sender.sendTitle((Player) target, message, null);
+            sender.sendTitle((Player) target, message, "");
         } else {
             sender.sendMessage(target, message);
         }
@@ -28,7 +28,7 @@ public interface MessageChannel {
      */
     public static MessageChannel SUBTITLE = (message, target, sender) -> {
         if (target instanceof Player) {
-            sender.sendTitle((Player) target, null, message);
+            sender.sendTitle((Player) target, "", message);
         } else {
             sender.sendMessage(target, message);
         }
