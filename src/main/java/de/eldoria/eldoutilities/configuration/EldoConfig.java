@@ -40,6 +40,7 @@ public abstract class EldoConfig {
             init();
         }
         reload();
+        save();
     }
 
     /**
