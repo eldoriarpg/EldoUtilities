@@ -128,7 +128,7 @@ public final class Replacement {
      */
     public String invoke(String string) {
         if (!caseSensitive) {
-            return string.replaceAll("(?i)" + key, value);
+            return string.replaceAll("(?i)" + key, value.replaceAll("[\\W]", "\\\\$0"));
         }
         return string.replace(key, value);
     }
