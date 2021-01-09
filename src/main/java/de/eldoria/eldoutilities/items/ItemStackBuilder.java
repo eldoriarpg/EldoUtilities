@@ -31,13 +31,17 @@ public final class ItemStackBuilder {
         itemStack = new ItemStack(material, amount);
     }
 
+    public ItemStackBuilder(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
     /**
      * Creates a new item stack builder
      *
      * @param material material of item stack
      * @return builder instance
      */
-    public ItemStackBuilder of(Material material) {
+    public static ItemStackBuilder of(Material material) {
         return new ItemStackBuilder(material, 1);
     }
 
@@ -48,8 +52,35 @@ public final class ItemStackBuilder {
      * @param amount   size of item stack.
      * @return builder instance
      */
-    public ItemStackBuilder of(Material material, int amount) {
+    public static ItemStackBuilder of(Material material, int amount) {
         return new ItemStackBuilder(material, amount);
+    }
+
+    /**
+     * Load a item stack into a item stack builder.
+     * <p>
+     * The item stack will be cloned to provide immutability.
+     *
+     * @param stack item stack to load
+     * @return builder instance
+     */
+    public static ItemStackBuilder of(ItemStack stack) {
+        return of(stack, true);
+    }
+
+    /**
+     * Load a item stack into a item stack builder.
+     *
+     * @param stack item stack to load
+     * @param clone true if the item should be cloned
+     * @return builder instance
+     */
+    public static ItemStackBuilder of(ItemStack stack, boolean clone) {
+        if (clone) {
+            return new ItemStackBuilder(stack.clone());
+        } else {
+            return new ItemStackBuilder(stack);
+        }
     }
 
     /**
