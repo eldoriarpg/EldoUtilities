@@ -4,6 +4,7 @@ import de.eldoria.eldoutilities.utils.EnumUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -47,6 +48,11 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key) {
         return (T) get(key);
+    }
+
+    public <T, V> void listToMap(Map<T, V> map, String key, Function<V, T> valueToKey) {
+        List<V> values = getValue(key);
+        values.forEach(v -> map.put(valueToKey.apply(v), v));
     }
 
     /**
