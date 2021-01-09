@@ -174,13 +174,16 @@ public final class MessageSender {
     }
 
     private String forceMessageColor(String message) {
-        String repMessage = message.replaceAll("§r", defaultMessageColor);
-        return defaultMessageColor + repMessage;
+        return forceColor(message, defaultMessageColor);
     }
 
     private String forceErrorColor(String message) {
-        String repMessage = message.replaceAll("§r", defaultErrorColor);
-        return defaultErrorColor + repMessage;
+        return forceColor(message, defaultErrorColor);
+    }
+
+    private String forceColor(String message, String defaultColor) {
+        String repMessage = message.replaceAll("§r", defaultColor);
+        return defaultColor + repMessage;
     }
 
     /**
@@ -247,28 +250,120 @@ public final class MessageSender {
         sendError(sender, localize(message, replacements));
     }
 
+    @Deprecated
     public void sendTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         String repTitle = title.replaceAll("§r", "§r" + defaultColor);
         String repSubTitle = subtitle.replaceAll("§r", "§r" + defaultColor);
-        player.sendTitle(repTitle, repSubTitle, fadeIn, stay, fadeOut);
+        sendTitle(player, repTitle, repSubTitle, fadeIn, stay, fadeOut);
     }
 
+    @Deprecated
     public void sendTitle(Player player, String defaultColor, String title, String subtitle) {
-        sendTitle(player, defaultColor, title, subtitle, 10, 70, 20);
+        sendTitle(player, forceColor(title, defaultColor), forceColor(subtitle, defaultColor));
     }
 
+    /**
+     * Send a title to a player
+     *
+     * @param player   player to send
+     * @param title    title to send
+     * @param subtitle subtitle to send
+     * @param fadeIn   fade in time of title
+     * @param stay     stay time of title
+     * @param fadeOut  fade out time of title
+     */
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    /**
+     * Send a title to a player
+     *
+     * @param player   player to send
+     * @param title    title to send
+     * @param subtitle subtitle to send
+     */
+    public void sendTitle(Player player, String title, String subtitle) {
+        sendTitle(player, title, subtitle, 10, 50, 20);
+    }
+
+    /**
+     * Send a localized title to a player
+     *
+     * @param player       player to send
+     * @param defaultColor default color of message
+     * @param title        title to send
+     * @param subtitle     subtitle to send
+     * @param fadeIn       fade in time of title
+     * @param stay         stay time of title
+     * @param fadeOut      fade out time of title
+     * @param replacements replacements for the localized message
+     * @deprecated Default colors should not be used anymore. Use {@link #sendLocalizedTitle(Player, String, String, int, int, int, Replacement...)} instead.
+     */
+    @Deprecated
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
         sendTitle(player, defaultColor, localize(title, replacements), localize(subtitle, replacements), fadeIn, stay, fadeOut);
     }
 
-    public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
-        sendLocalizedTitle(player, defaultColor, title, subtitle, 10, 70, 20, replacements);
+    /**
+     * Send a localized title to a player
+     *
+     * @param player       player to send
+     * @param title        title to send
+     * @param subtitle     subtitle to send
+     * @param fadeIn       fade in time of title
+     * @param stay         stay time of title
+     * @param fadeOut      fade out time of title
+     * @param replacements replacements for the localized message
+     */
+    public void sendLocalizedTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
+        sendTitle(player, localize(title, replacements), localize(subtitle, replacements), fadeIn, stay, fadeOut);
     }
 
+    /**
+     * Send a localized title to a player
+     *
+     * @param player       player to send
+     * @param defaultColor default color of message
+     * @param title        title to send
+     * @param subtitle     subtitle to send
+     * @param replacements replacements for the localized message
+     * @deprecated Default colors should not be used anymore. Use {@link #sendLocalizedTitle(Player, String, String, Replacement...)} instead.
+     */
+    @Deprecated
+    public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
+        sendTitle(player, defaultColor, localize(title, replacements), localize(subtitle, replacements));
+    }
+
+    /**
+     * Send a localized title to a player
+     *
+     * @param player       player to send
+     * @param title        title to send
+     * @param subtitle     subtitle to send
+     * @param replacements replacements for the localized message
+     */
+    public void sendLocalizedTitle(Player player, @Nullable String title, @Nullable String subtitle, Replacement... replacements) {
+        sendTitle(player, localize(title, replacements), localize(subtitle, replacements));
+    }
+
+    /**
+     * Send a localized action bar to a player
+     *
+     * @param player       player to send
+     * @param message      message to send
+     * @param replacements replacements for the localized message
+     */
     public void sendLocalizedActionBar(Player player, String message, Replacement... replacements) {
         sendActionBar(player, localize(message, replacements));
     }
 
+    /**
+     * Send a message to a player Action bar.
+     *
+     * @param player  player to send
+     * @param message message to send
+     */
     public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(forceMessageColor(message)));
     }
@@ -309,6 +404,35 @@ public final class MessageSender {
             result = result.replace("$" + match + "$", loc().getMessage(match, replacements));
         }
         return result;
+    }
+
+    /**
+     * Send a localized message via a channel.
+     *
+     * @param channel      channel which should be used
+     * @param type         type of message
+     * @param sender       target of message
+     * @param message      message locale codes
+     * @param replacements replacements for messages in locale codes
+     * @since 1.2.1
+     */
+    private void sendLocalized(MessageChannel channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
+        send(channel, type, sender, localize(message, replacements));
+    }
+
+    /**
+     * Sends a message via a channel
+     *
+     * @param channel channel which should be used
+     * @param type    type of message
+     * @param target  target of message
+     * @param message message locale codes
+     * @since 1.2.1
+     */
+    public void send(MessageChannel channel, MessageType type, CommandSender target, String message) {
+        String coloredMessage = type.forceColor(message);
+
+        channel.sendMessage(coloredMessage, target, this);
     }
 
     public boolean isDefault() {
