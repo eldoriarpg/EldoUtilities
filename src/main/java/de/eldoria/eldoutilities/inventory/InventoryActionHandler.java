@@ -1,7 +1,9 @@
 package de.eldoria.eldoutilities.inventory;
 
+import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +19,7 @@ import java.util.function.Consumer;
  *
  * @since 1.1.1
  */
-public class InventoryActionHandler {
+public class InventoryActionHandler implements Listener {
     private static final Map<Class<? extends Plugin>, InventoryActionHandler> PLUGIN_HANDLER = new HashMap<>();
 
     private final Map<UUID, InventoryActions> inventories = new HashMap<>();
@@ -32,13 +34,22 @@ public class InventoryActionHandler {
         this.onClose = onClose;
     }
 
-    public static InventoryActionHandler create(Class<? extends Plugin> plugin) {
-        return PLUGIN_HANDLER.computeIfAbsent(plugin, k -> new InventoryActionHandler());
+    public static InventoryActionHandler create(EldoPlugin plugin) {
+        return PLUGIN_HANDLER.computeIfAbsent(plugin.getClass(), k -> {
+            InventoryActionHandler handler = new InventoryActionHandler();
+            plugin.registerListener(handler);
+            return handler;
+        });
 
     }
 
-    public static InventoryActionHandler create(Class<? extends Plugin> plugin, Runnable onClose) {
-        return PLUGIN_HANDLER.computeIfAbsent(plugin, k -> new InventoryActionHandler(onClose));
+    public static InventoryActionHandler create(EldoPlugin plugin, Runnable onClose) {
+        return PLUGIN_HANDLER.computeIfAbsent(plugin.getClass(), k -> {
+            InventoryActionHandler handler = new InventoryActionHandler(onClose);
+            plugin.registerListener(handler);
+            return handler;
+        });
+
     }
 
     public static InventoryActionHandler getPluginInventoryHandler(Class<? extends Plugin> plugin) {
