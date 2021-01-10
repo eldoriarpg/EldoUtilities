@@ -9,7 +9,7 @@ Javadocs: [Javadocs \o/](https://javadoc.jitpack.io/com/github/eldoriarpg/EldoUt
 
         <dependency>
             <groupId>de.eldoria</groupId>
-            <artifactId>EldoUtilities</artifactId>
+            <artifactId>eldo-utilities</artifactId>
             <version>version</version>
         </dependency>
 
