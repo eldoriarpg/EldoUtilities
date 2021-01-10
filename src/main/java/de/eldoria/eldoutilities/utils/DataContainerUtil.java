@@ -14,6 +14,16 @@ public final class DataContainerUtil {
     private DataContainerUtil() {
     }
 
+    /**
+     * Sets a value in a data container if it is absent.
+     *
+     * @param holder holder of the {@link PersistentDataContainer}
+     * @param key    key to set
+     * @param type   type of key
+     * @param value  value of key
+     * @param <T>    type of key
+     * @param <Z>    type of value
+     */
     public static <T, Z> void setIfAbsent(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
         if (holder == null) return;
 
@@ -23,7 +33,18 @@ public final class DataContainerUtil {
         container.set(key, type, value);
     }
 
-    public static @Nullable <T, Z> Z compute(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<Z, Z> map) {
+    /**
+     * Compute a value in a {@link PersistentDataContainer} based on the current value
+     *
+     * @param holder holder of the {@link PersistentDataContainer}
+     * @param key    key to compute
+     * @param type   type of key
+     * @param map    map the current value to the new value. Current value is null if key is not set.
+     * @param <T>    type of value
+     * @param <Z>    type of value
+     * @return the mapped value. can be null if mapping function returns null or holder is null
+     */
+    public static @Nullable <T, Z> Z compute(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<@Nullable Z, Z> map) {
         if (holder == null) return null;
 
         PersistentDataContainer container = holder.getPersistentDataContainer();
@@ -35,6 +56,19 @@ public final class DataContainerUtil {
         return container.get(key, type);
     }
 
+    /**
+     * Gets the {@link PersistentDataContainer} from item meta, computes the value by calling
+     * {@link #compute(PersistentDataHolder, NamespacedKey, PersistentDataType, Function)}
+     * and applies the meta afterward again.
+     *
+     * @param holder item stack to change. This causes the item meta to be reapplied after computation of the value.
+     * @param key    key to compute
+     * @param type   type of key
+     * @param map    map the current value to the new value. Current value is null if key is not set.
+     * @param <T>    type of value
+     * @param <Z>    type of value
+     * @return the mapped value. can be null if mapping function returns null or holder is null
+     */
     public static @Nullable <T, Z> Z compute(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<Z, Z> map) {
         if (holder == null) return null;
 
@@ -44,12 +78,24 @@ public final class DataContainerUtil {
         return compute;
     }
 
+    /**
+     * Converts a byte to boolean.
+     *
+     * @param aByte byte to convert
+     * @return byte as boolean. false if null
+     */
     public static boolean byteToBoolean(Byte aByte) {
         if (aByte == null) return false;
 
         return aByte == (byte) 1;
     }
 
+    /**
+     * Converts a boolean to a byte.
+     *
+     * @param aBoolean boolean to convert
+     * @return boolean as byte.
+     */
     public static byte booleanToByte(boolean aBoolean) {
         return (byte) (aBoolean ? 1 : 0);
     }
