@@ -1,7 +1,7 @@
 package de.eldoria.eldoutilities.serialization;
 
 import com.google.common.collect.ObjectArrays;
-import de.eldoria.eldoutilities.EldoUtilities;
+import de.eldoria.eldoutilities.core.EldoUtilities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
