@@ -9,7 +9,23 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.function.Consumer;
 
-public class ActionConsumer {
+/**
+ * Class which holds some simple consumers which can be used in a {@link ActionItem}.
+ *
+ * @since 1.2.3
+ */
+public final class ActionConsumer {
+    private ActionConsumer() {
+    }
+
+    /**
+     * Get a consumer which allows to raise and lower a value between a range.
+     *
+     * @param key key of value
+     * @param min min value. inclusive.
+     * @param max max value. inclusive.
+     * @return consumer with range
+     */
     public static Consumer<InventoryClickEvent> getIntRange(NamespacedKey key, int min, int max) {
         return clickEvent -> {
             int amount = 0;
@@ -46,6 +62,12 @@ public class ActionConsumer {
         };
     }
 
+    /**
+     * Gets a consumer which allows to toggle a boolean value. Used for {@link PersistentDataType#BYTE} fields.
+     *
+     * @param key key of value
+     * @return consumer for boolean
+     */
     public static Consumer<InventoryClickEvent> booleanToggle(NamespacedKey key) {
         return clickEvent -> {
             switch (clickEvent.getClick()) {

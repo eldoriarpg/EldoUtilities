@@ -108,5 +108,14 @@ public interface ILocalizer {
      */
     void addLocaleCodes(Map<String, String> runtimeLocaleCodes);
 
+    /**
+     * Translates a String with Placeholders. Can handle multiple messages with replacements. Add replacements in the
+     * right order.
+     *
+     * @param message      Message to translate
+     * @param replacements Replacements in the right order.
+     * @return Replaced Messages
+     * @since 1.2.3
+     */
     String localize(String message, Replacement[] replacements);
 }
