@@ -11,6 +11,11 @@ public interface MessageType {
     public static MessageType ERROR = () -> "§c";
 
     /**
+     * Default implementation for a message without default color.
+     */
+    public static MessageType BLANK = () -> "";
+
+    /**
      * Get the default color of the channel.
      * <p>
      * The color code should use the § notation.
