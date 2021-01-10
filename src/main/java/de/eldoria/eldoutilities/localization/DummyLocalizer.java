@@ -28,4 +28,9 @@ public class DummyLocalizer implements ILocalizer {
     @Override
     public void addLocaleCodes(Map<String, String> runtimeLocaleCodes) {
     }
+
+    @Override
+    public String localize(String message, Replacement[] replacements) {
+        return message;
+    }
 }

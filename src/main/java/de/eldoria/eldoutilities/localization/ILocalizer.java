@@ -107,4 +107,6 @@ public interface ILocalizer {
      * @param runtimeLocaleCodes map with locales codes to add.
      */
     void addLocaleCodes(Map<String, String> runtimeLocaleCodes);
+
+    String localize(String message, Replacement[] replacements);
 }

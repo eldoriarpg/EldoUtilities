@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public final class MessageSender {
-    private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
     private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
     private final Class<? extends Plugin> ownerPlugin;
@@ -229,7 +228,7 @@ public final class MessageSender {
      * @param replacements replacements to apply on the message
      */
     public void sendLocalizedMessage(CommandSender sender, String message, Replacement... replacements) {
-        sendMessage(sender, localize(message, replacements));
+        sendMessage(sender, loc().localize(message, replacements));
     }
 
     /**
@@ -247,7 +246,7 @@ public final class MessageSender {
      * @param replacements replacements to apply on the message
      */
     public void sendLocalizedError(CommandSender sender, String message, Replacement... replacements) {
-        sendError(sender, localize(message, replacements));
+        sendError(sender, loc().localize(message, replacements));
     }
 
     @Deprecated
@@ -302,7 +301,7 @@ public final class MessageSender {
      */
     @Deprecated
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
-        sendTitle(player, defaultColor, localize(title, replacements), localize(subtitle, replacements), fadeIn, stay, fadeOut);
+        sendTitle(player, defaultColor, loc().localize(title, replacements), loc().localize(subtitle, replacements), fadeIn, stay, fadeOut);
     }
 
     /**
@@ -317,7 +316,7 @@ public final class MessageSender {
      * @param replacements replacements for the localized message
      */
     public void sendLocalizedTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
-        sendTitle(player, localize(title, replacements), localize(subtitle, replacements), fadeIn, stay, fadeOut);
+        sendTitle(player, loc().localize(title, replacements), loc().localize(subtitle, replacements), fadeIn, stay, fadeOut);
     }
 
     /**
@@ -332,7 +331,7 @@ public final class MessageSender {
      */
     @Deprecated
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
-        sendTitle(player, defaultColor, localize(title, replacements), localize(subtitle, replacements));
+        sendTitle(player, defaultColor, loc().localize(title, replacements), loc().localize(subtitle, replacements));
     }
 
     /**
@@ -344,7 +343,7 @@ public final class MessageSender {
      * @param replacements replacements for the localized message
      */
     public void sendLocalizedTitle(Player player, @Nullable String title, @Nullable String subtitle, Replacement... replacements) {
-        sendTitle(player, localize(title, replacements), localize(subtitle, replacements));
+        sendTitle(player, loc().localize(title, replacements), loc().localize(subtitle, replacements));
     }
 
     /**
@@ -355,7 +354,7 @@ public final class MessageSender {
      * @param replacements replacements for the localized message
      */
     public void sendLocalizedActionBar(Player player, String message, Replacement... replacements) {
-        sendActionBar(player, localize(message, replacements));
+        sendActionBar(player, loc().localize(message, replacements));
     }
 
     /**
@@ -373,40 +372,6 @@ public final class MessageSender {
     }
 
     /**
-     * Translates a String with Placeholders. Can handle multiple messages with replacements. Add replacements in the
-     * right order.
-     *
-     * @param message      Message to translate
-     * @param replacements Replacements in the right order.
-     * @return Replaced Messages
-     */
-    private String localize(String message, Replacement[] replacements) {
-        if (message == null) {
-            return null;
-        }
-
-        // If the matcher doesn't find any key we assume its a simple message.
-        if (!LOCALIZATION_CODE.matcher(message).find()) {
-            return loc().getMessage(message, replacements);
-        }
-
-        // find locale codes in message
-        Matcher matcher = LOCALIZATION_CODE.matcher(message);
-        List<String> keys = new ArrayList<>();
-        while (matcher.find()) {
-            keys.add(matcher.group(1));
-        }
-
-
-        String result = message;
-        for (String match : keys) {
-            //Replace current locale code with result
-            result = result.replace("$" + match + "$", loc().getMessage(match, replacements));
-        }
-        return result;
-    }
-
-    /**
      * Send a localized message via a channel.
      *
      * @param channel      channel which should be used
@@ -417,7 +382,7 @@ public final class MessageSender {
      * @since 1.2.1
      */
     public void sendLocalized(MessageChannel channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
-        send(channel, type, sender, localize(message, replacements));
+        send(channel, type, sender, loc().localize(message, replacements));
     }
 
     /**

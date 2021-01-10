@@ -33,6 +33,7 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class Localizer implements ILocalizer {
+    private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
 
     private final ResourceBundle fallbackLocaleFile;
     private final Plugin plugin;
@@ -323,6 +324,41 @@ public class Localizer implements ILocalizer {
             return new Locale(s[0], s[1]);
         }
         return null;
+    }
+
+    /**
+     * Translates a String with Placeholders. Can handle multiple messages with replacements. Add replacements in the
+     * right order.
+     *
+     * @param message      Message to translate
+     * @param replacements Replacements in the right order.
+     * @return Replaced Messages
+     */
+    @Override
+    public String localize(String message, Replacement[] replacements) {
+        if (message == null) {
+            return null;
+        }
+
+        // If the matcher doesn't find any key we assume its a simple message.
+        if (!LOCALIZATION_CODE.matcher(message).find()) {
+            return getMessage(message, replacements);
+        }
+
+        // find locale codes in message
+        Matcher matcher = LOCALIZATION_CODE.matcher(message);
+        List<String> keys = new ArrayList<>();
+        while (matcher.find()) {
+            keys.add(matcher.group(1));
+        }
+
+
+        String result = message;
+        for (String match : keys) {
+            //Replace current locale code with result
+            result = result.replace("$" + match + "$", getMessage(match, replacements));
+        }
+        return result;
     }
 
     /**
