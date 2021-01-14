@@ -1,8 +1,10 @@
 package de.eldoria.eldoutilities.plugin;
 
+import de.eldoria.eldoutilities.logging.DebugLogger;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,9 +25,10 @@ import java.util.logging.Logger;
  * @since 1.1.0
  */
 public class EldoPlugin extends JavaPlugin {
-    private static final Map<Class<? extends EldoPlugin>, EldoPlugin> instance = new HashMap<>();
+    private static final Map<Class<? extends EldoPlugin>, EldoPlugin> INSTANCES = new HashMap<>();
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
+    private DebugLogger debugLogger = null;
 
     public EldoPlugin() {
         registerSelf(this);
@@ -37,19 +40,27 @@ public class EldoPlugin extends JavaPlugin {
     }
 
     private static void registerSelf(EldoPlugin eldoPlugin) {
-        instance.put(eldoPlugin.getClass(), eldoPlugin);
+        INSTANCES.put(eldoPlugin.getClass(), eldoPlugin);
     }
 
-    private static EldoPlugin getEldoPlugin(Class<? extends EldoPlugin> clazz) {
-        return instance.get(clazz);
-    }
-
-    public static EldoPlugin getInstance(Class<? extends EldoPlugin> clazz) {
-        return instance.get(clazz);
+    public static EldoPlugin getInstance(Class<? extends Plugin> clazz) {
+        return INSTANCES.get(clazz);
     }
 
     public static Logger logger(Class<? extends EldoPlugin> plugin) {
-        return instance.get(plugin).getLogger();
+        return getInstance(plugin).getLogger();
+    }
+
+    @Override
+    public Logger getLogger() {
+        if (debugLogger == null) {
+            debugLogger = new DebugLogger(this, super.getLogger());
+        }
+        return debugLogger;
+    }
+
+    public String getDebugInformations() {
+        return null;
     }
 
     /**

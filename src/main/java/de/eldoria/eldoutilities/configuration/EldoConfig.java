@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.configuration;
 
 import de.eldoria.eldoutilities.utils.ObjUtil;
+import de.eldoria.eldoutilities.utils.Parser;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,7 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -49,12 +52,48 @@ public abstract class EldoConfig {
      * @param clazz clazz to check
      * @return true if plugin is in debug state.
      */
-    public static boolean isDebug(Class<? extends Plugin> clazz) {
+    public static Level getLogLevel(Class<? extends Plugin> clazz) {
         return ObjUtil.nonNull(ObjUtil.nonNull(PLUGIN_MAIN_CONFIGS.get(clazz), i -> {
             return ObjUtil.nonNull(i.config, c -> {
-                return c.getBoolean("debug", false);
+                String debug = c.getString("debug", "INFO");
+                Optional<Boolean> aBoolean = Parser.parseBoolean(debug);
+                if (aBoolean.isPresent()) {
+                    c.set("debug", aBoolean.get() ? "DEBUG" : "INFO");
+                }
+                return parseLevel(debug);
             });
-        }), false);
+        }), Level.INFO);
+    }
+
+    private static Level parseLevel(String level) {
+        if ("OFF".equalsIgnoreCase(level)) {
+            return Level.OFF;
+        }
+        if ("SEVERE".equalsIgnoreCase(level)) {
+            return Level.SEVERE;
+        }
+        if ("WARNING".equalsIgnoreCase(level)) {
+            return Level.WARNING;
+        }
+        if ("INFO".equalsIgnoreCase(level)) {
+            return Level.INFO;
+        }
+        if ("DEBUG".equalsIgnoreCase(level)) {
+            return Level.CONFIG;
+        }
+        if ("FINE".equalsIgnoreCase(level)) {
+            return Level.CONFIG;
+        }
+        if ("FINER".equalsIgnoreCase(level)) {
+            return Level.CONFIG;
+        }
+        if ("FINEST".equalsIgnoreCase(level)) {
+            return Level.CONFIG;
+        }
+        if ("ALL".equalsIgnoreCase(level)) {
+            return Level.ALL;
+        }
+        return Level.INFO;
     }
 
     /**
@@ -110,7 +149,7 @@ public abstract class EldoConfig {
     private void readConfigs() {
         plugin.reloadConfig();
         config = plugin.getConfig();
-        setIfAbsent("debug", false);
+        setIfAbsent("debug", "INFO");
         for (Map.Entry<String, FileConfiguration> entry : configs.entrySet()) {
             loadConfig(Paths.get(entry.getKey()), null, true);
         }
@@ -277,6 +316,13 @@ public abstract class EldoConfig {
         if (save) {
             save();
         }
+    }
+
+    public Map<String, FileConfiguration> getConfigs() {
+        Map<String, FileConfiguration> configs = new LinkedHashMap<>();
+        configs.put(Paths.get(plugin.getDataFolder().toPath().toString(), "config.yml").toString(), getMainConfig().getConfig());
+        configs.putAll(this.configs);
+        return configs;
     }
 
     /**
