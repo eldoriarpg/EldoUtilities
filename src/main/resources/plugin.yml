@@ -5,3 +5,8 @@ version: ${project.version}
 main: ${project.groupId}.eldoutilities.core.${project.name}
 website: ${project.url}
 api-version: 1.16
+
+commands:
+  eldoDebug:
+    permission: eldoutilities.debug
+    description: get a debug log for a plugin.

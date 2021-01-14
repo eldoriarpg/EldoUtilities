@@ -1,6 +1,8 @@
 package de.eldoria.eldoutilities.core;
 
+import de.eldoria.eldoutilities.core.commands.EldoDebug;
 import de.eldoria.eldoutilities.inventory.InventoryActionHandler;
+import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.updater.Updater;
@@ -13,7 +15,6 @@ public final class EldoUtilities extends EldoPlugin {
     private static DelayedActions delayedActions;
     private static InventoryActionHandler inventoryActionHandler;
     private Configuration configuration;
-
 
     public static DelayedActions getDelayedActions() {
         return delayedActions;
@@ -36,12 +37,15 @@ public final class EldoUtilities extends EldoPlugin {
         configuration = new Configuration(this);
         delayedActions = DelayedActions.start(this);
         inventoryActionHandler = new InventoryActionHandler();
+        MessageSender.create(this, "§6[EU] ", 'a', 'c');
         registerListener(inventoryActionHandler);
         Updater.Butler(new ButlerUpdateData(this, "eldoutilities", configuration.isUpdateCheck(),
                 false, 9, ButlerUpdateData.HOST)).start();
         Metrics metrics = new Metrics(this, 9958);
-        if(metrics.isEnabled()){
+        if (metrics.isEnabled()) {
             getLogger().info("§2Metrics enabled. Thank you <3");
         }
+
+        registerCommand("eldoDebug", new EldoDebug(this));
     }
 }
