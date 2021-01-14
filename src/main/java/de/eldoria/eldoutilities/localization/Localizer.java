@@ -41,9 +41,9 @@ public class Localizer implements ILocalizer {
     private final String localesPrefix;
     private final String[] includedLocales;
     private final Pattern localePattern = Pattern.compile("_(([a-zA-Z]{2})(_[a-zA-Z]{2})?)\\.properties");
+    private final Map<String, String> runtimeLocaleCodes = new HashMap<>();
     private ResourceBundle localeFile;
     private boolean checked = false;
-    private final Map<String, String> runtimeLocaleCodes = new HashMap<>();
 
     /**
      * Create a new localizer instance.

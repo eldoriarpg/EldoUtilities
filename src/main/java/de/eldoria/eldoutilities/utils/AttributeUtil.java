@@ -43,7 +43,7 @@ public final class AttributeUtil {
     public static void setAttributeValue(@NotNull LivingEntity entity, @NotNull Attribute attribute, @NotNull double target) {
         AttributeInstance a = entity.getAttribute(attribute);
         if (a == null) {
-            Bukkit.getLogger().log(Level.WARNING, "[EldoUtilities] Attempted to set attribute "
+            EldoUtilities.logger().log(Level.WARNING, "[EldoUtilities] Attempted to set attribute "
                             + attribute + " for " + entity.getType() + ", but Attribute is not present on this type.",
                     new IllegalArgumentException("A not present attribute was requested to change"));
             return;
