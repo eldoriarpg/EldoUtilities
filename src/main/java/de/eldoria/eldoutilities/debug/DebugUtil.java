@@ -14,6 +14,7 @@ import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -24,15 +25,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class DebugUtil {
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
+    private static final Pattern IP = Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})");
 
     private DebugUtil() {
     }
 
+    /**
+     * This method will collect debug data from the plugin.
+     * <p>
+     * It will also send it to the butler instance and will send the links to the sender.
+     *
+     * @param sender sender which requested the data
+     * @param plugin plugin to collect the data for
+     */
     public static void dispatchDebug(CommandSender sender, Plugin plugin) {
         EldoConfig config = EldoConfig.getMainConfig(EldoUtilities.class);
         MessageSender messageSender = MessageSender.getPluginMessageSender(EldoUtilities.class);
@@ -41,7 +52,7 @@ public final class DebugUtil {
                     + "We will only send data when someone executes this command.\n"
                     + "The data will be handled confidential from our side and will be only available by a hashed key.\n"
                     + "Unless you share this key no one can access it. §cEveryone who receives this key will have access to your data.§r\n"
-                    + "You can delete your data at every time with the deletion key. §cIf you lose or didnt saved your key we cant help you.§r\n"
+                    + "You can delete your data at every time with the deletion key. §cIf you lose or didnt save your key we can not help you.§r\n"
                     + "Your data will be deleted after §l§c14 days§r.\n"
                     + "This data includes but is §l§cnot§r limited to:\n"
                     + "  - Installed Plugins and their meta data\n"
@@ -50,7 +61,7 @@ public final class DebugUtil {
                     + "  - The configuration file or files of the debugged plugin\n"
                     + "  - Additional Data provided by our own plugins.\n"
                     + "We will filter sensitive data like IPs before sending.\n"
-                    + "However we §l§ccan not§r and §l§cwill not§r gurantee that we can remove all data which is considered as confidential by you.\n"
+                    + "However we §l§ccan not§r and §l§cwill not§r gurantee that we can remove all data which is considered confidential by you.\n"
                     + "§2If you agree please execute this command once again.\n"
                     + "§2This is a one time opt in.\n"
                     + "You can opt out again in the EldoUtilities config file.";
@@ -71,7 +82,13 @@ public final class DebugUtil {
         }
     }
 
-    static String getLatestLog(Plugin plugin) {
+    /**
+     * Gets the latest log from the logs directory.
+     *
+     * @param plugin plugin for pure lazyness and logging purposes
+     * @return Log as string.
+     */
+    public static @NotNull String getLatestLog(Plugin plugin) {
         Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
         File logFile = Paths.get(root.toString(), "logs", "latest.log").toFile();
 
@@ -84,10 +101,19 @@ public final class DebugUtil {
                 plugin.getLogger().info("Could not read log file");
             }
         }
+        latestLog = latestLog.replaceAll(IP.pattern(), "/127.0.0.1");
         return latestLog;
     }
 
-    public static EntryData[] getAdditionalPluginMeta(Plugin plugin) {
+    /**
+     * Extracts additional Plugin meta data from a {@link EldoPlugin}.
+     * <p>
+     * If the plugin is not a eldo plugin it will return an empty array.
+     *
+     * @param plugin plugin to get meta
+     * @return array with meta data. may be empty, but not null.
+     */
+    public static @NotNull EntryData[] getAdditionalPluginMeta(Plugin plugin) {
         EntryData[] meta = new EntryData[0];
         if (plugin instanceof EldoPlugin) {
             meta = ((EldoPlugin) plugin).getDebugInformations();
@@ -96,6 +122,7 @@ public final class DebugUtil {
     }
 
     private static Optional<DebugResponse> sendDebug(Plugin plugin, DebugPayloadData payload) {
+        // Open connection to Butler.
         HttpURLConnection con;
         try {
             URL url = new URL(ButlerUpdateData.HOST + "/debug/v1/submit");
@@ -106,10 +133,12 @@ public final class DebugUtil {
             return Optional.empty();
         }
 
+        // we will send json. probably.
         con.setRequestProperty("Content-Type", "application/json; utf-8");
         con.setRequestProperty("Accept", "application/json");
         con.setDoOutput(true);
 
+        // Lets write our data.
         try (OutputStream outputStream = con.getOutputStream()) {
             byte[] input = GSON.toJson(payload).getBytes(StandardCharsets.UTF_8);
             outputStream.write(input, 0, input.length);
@@ -117,9 +146,10 @@ public final class DebugUtil {
             plugin.getLogger().info("Could not write to connection.");
         }
 
+        // check if the response was OK.
         try {
             if (con.getResponseCode() != 200) {
-                plugin.getLogger().log(Level.FINEST, "Received non 200 request for debug submission.");
+                plugin.getLogger().log(Level.FINEST, "Received non 200 request for debug submission.\n" + con.getResponseMessage());
                 return Optional.empty();
             }
         } catch (IOException e) {
@@ -127,6 +157,7 @@ public final class DebugUtil {
             return Optional.empty();
         }
 
+        // Lets read the response.
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder builder = new StringBuilder();
@@ -137,7 +168,6 @@ public final class DebugUtil {
             return Optional.of(GSON.fromJson(builder.toString(), DebugResponse.class));
         } catch (IOException e) {
             plugin.getLogger().log(Level.FINEST, "Could not read response.", e);
-
             return Optional.empty();
         }
     }

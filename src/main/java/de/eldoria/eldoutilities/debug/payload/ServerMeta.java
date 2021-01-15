@@ -8,7 +8,7 @@ import org.bukkit.World;
 
 import java.util.Arrays;
 
-public class ServerMeta extends ServerMetaData {
+public final class ServerMeta extends ServerMetaData {
 
     private ServerMeta(String version, int currentPlayers, String[] loadedWorlds, PluginMetaData[] plugins) {
         super(version, currentPlayers, loadedWorlds, plugins);

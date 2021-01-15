@@ -60,7 +60,7 @@ public class EldoPlugin extends JavaPlugin {
         return debugLogger;
     }
 
-    public EntryData[] getDebugInformations() {
+    public @NotNull EntryData[] getDebugInformations() {
         return new EntryData[0];
     }
 

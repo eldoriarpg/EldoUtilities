@@ -16,6 +16,12 @@ public final class DebugPayload extends DebugPayloadData {
         super(pluginMeta, serverMeta, additionalPluginMeta, latestLog, configDumps);
     }
 
+    /**
+     * Create a new debug payload.
+     *
+     * @param plugin plugin to create debug data for
+     * @return debug payload data
+     */
     public static DebugPayloadData create(Plugin plugin) {
         PluginMetaData pluginMeta = PluginMeta.create(plugin);
         ServerMetaData serverMeta = ServerMeta.create();

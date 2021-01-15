@@ -2,6 +2,7 @@ package de.eldoria.eldoutilities.debug.payload;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.eldoutilities.debug.data.EntryData;
+import de.eldoria.eldoutilities.simplecommands.EldoCommand;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -22,13 +23,18 @@ public class ConfigDump extends EntryData {
         super(path, content);
     }
 
+    /**
+     * Creates a new config dump. This dump will include external configs as well if the plugin is a {@link EldoCommand}.
+     *
+     * @param plugin plugin to dump teh configs
+     * @return configs as an array.
+     */
     public static EntryData[] create(Plugin plugin) {
         Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
 
-        Set<String> configs = new HashSet<>();
-        List<ConfigDump> dumps = new ArrayList<>();
-
         EldoConfig mainConfig = EldoConfig.getMainConfig(plugin.getClass());
+
+        Set<String> configs = new HashSet<>();
         if (mainConfig != null) {
             mainConfig.save();
             configs.addAll(mainConfig.getConfigs().keySet());
@@ -36,6 +42,7 @@ public class ConfigDump extends EntryData {
             configs.add(Paths.get(plugin.getDataFolder().toPath().toString(), "config.yml").toString());
         }
 
+        List<ConfigDump> dumps = new ArrayList<>();
         for (String config : configs) {
             File currentConfig = Paths.get(root.toString(), config).toFile();
             String content = "Could not read";

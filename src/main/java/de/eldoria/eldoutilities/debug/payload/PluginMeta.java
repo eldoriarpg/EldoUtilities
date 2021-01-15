@@ -4,12 +4,18 @@ import de.eldoria.eldoutilities.debug.data.PluginMetaData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-public class PluginMeta extends PluginMetaData {
+public final class PluginMeta extends PluginMetaData {
 
-    public PluginMeta(String name, String version, boolean enabled, String main, String[] authors, String[] loadBefore, String[] dependencies, String[] softDependencies, String[] provides) {
+    private PluginMeta(String name, String version, boolean enabled, String main, String[] authors, String[] loadBefore, String[] dependencies, String[] softDependencies, String[] provides) {
         super(name, version, enabled, main, authors, loadBefore, dependencies, softDependencies, provides);
     }
 
+    /**
+     * Create a new plugin meta data for a plugin
+     *
+     * @param plugin plugin to create meta for
+     * @return plugin meta instance for plugin
+     */
     public static PluginMetaData create(Plugin plugin) {
         String name = plugin.getName();
         PluginDescriptionFile descr = plugin.getDescription();
