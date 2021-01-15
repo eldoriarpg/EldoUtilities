@@ -59,6 +59,7 @@ public abstract class EldoConfig {
                 Optional<Boolean> aBoolean = Parser.parseBoolean(debug);
                 if (aBoolean.isPresent()) {
                     c.set("debug", aBoolean.get() ? "DEBUG" : "INFO");
+                    i.save();
                 }
                 return parseLevel(debug);
             });
