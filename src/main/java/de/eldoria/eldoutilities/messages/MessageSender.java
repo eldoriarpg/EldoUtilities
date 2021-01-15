@@ -26,12 +26,17 @@ import java.util.Map;
  */
 public final class MessageSender {
     private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
-    private static final Map<String, MessageSender> PLUGIN_SENDER = new HashMap<>();
+    private static final Map<Class<? extends Plugin>, MessageSender> PLUGIN_SENDER = new HashMap<>();
     private final Class<? extends Plugin> ownerPlugin;
     private String prefix;
     private String defaultMessageColor;
     private String defaultErrorColor;
 
+    private MessageSender(Class<? extends Plugin> ownerPlugin, String prefix) {
+        this(ownerPlugin, prefix, "", "");
+    }
+
+    @Deprecated
     private MessageSender(Class<? extends Plugin> ownerPlugin, String prefix, String defaultMessageColor, String defaultErrorColor) {
         this.ownerPlugin = ownerPlugin;
         this.prefix = prefix;
@@ -48,6 +53,7 @@ public final class MessageSender {
      * @param errorColor   default error color
      * @return message sender instance or default sender if plugin is null
      */
+    @Deprecated
     public static MessageSender create(Class<? extends Plugin> plugin, String prefix, char messageColor, char errorColor) {
         return create(plugin, prefix, new char[]{messageColor}, new char[]{errorColor});
     }
@@ -61,6 +67,7 @@ public final class MessageSender {
      * @param errorColor   default error color
      * @return message sender instance or default sender if plugin is null
      */
+    @Deprecated
     public static MessageSender create(Plugin plugin, String prefix, char messageColor, char errorColor) {
         return create(plugin.getClass(), prefix, new char[]{messageColor}, new char[]{errorColor});
     }
@@ -74,6 +81,7 @@ public final class MessageSender {
      * @param errorColor   default error color
      * @return message sender instance or default sender if plugin is null
      */
+    @Deprecated
     public static MessageSender create(Plugin plugin, String prefix, char[] messageColor, char[] errorColor) {
         return create(plugin.getClass(), prefix, messageColor, errorColor);
     }
@@ -87,27 +95,18 @@ public final class MessageSender {
      * @param errorColor   default error color
      * @return message sender instance or default sender if plugin is null
      */
+    @Deprecated
     public static MessageSender create(Class<? extends Plugin> plugin, String prefix, char[] messageColor, char[] errorColor) {
+        return create(plugin, prefix);
+    }
+
+    public static MessageSender create(Class<? extends Plugin> plugin, String prefix) {
         if (plugin == null) return DEFAULT_SENDER;
 
-        StringBuilder builder = new StringBuilder("§r");
-        for (char aChar : messageColor) {
-            builder.append("§").append(aChar);
-        }
-        String defMessageColor = builder.toString();
-
-        builder.setLength(0);
-        builder.append("§r");
-        for (char aChar : errorColor) {
-            builder.append("§").append(aChar);
-        }
-        String defErrorColor = builder.toString();
-
-        PLUGIN_SENDER.compute(plugin.getName(),
-                (k, v) -> (v == null)
-                        ? new MessageSender(plugin, prefix.trim() + " ", defMessageColor, defErrorColor)
-                        : v.update(prefix, defMessageColor, defErrorColor));
-        return PLUGIN_SENDER.get(plugin.getName());
+        return PLUGIN_SENDER.compute(plugin,
+                (k, v) -> v == null
+                        ? new MessageSender(plugin, prefix.trim() + " ")
+                        : v.update(prefix));
     }
 
     /**
@@ -129,13 +128,11 @@ public final class MessageSender {
      */
     public static MessageSender getPluginMessageSender(@Nullable Class<? extends Plugin> plugin) {
         return plugin == null ? DEFAULT_SENDER
-                : PLUGIN_SENDER.getOrDefault(plugin.getName(), DEFAULT_SENDER);
+                : PLUGIN_SENDER.getOrDefault(plugin, DEFAULT_SENDER);
     }
 
-    private MessageSender update(String prefix, String defaultMessageColor, String defaultErrorColor) {
+    private MessageSender update(String prefix) {
         this.prefix = prefix;
-        this.defaultMessageColor = defaultMessageColor;
-        this.defaultErrorColor = defaultErrorColor;
         return this;
     }
 
@@ -224,7 +221,7 @@ public final class MessageSender {
      * @param replacements replacements to apply on the message
      */
     public void sendLocalizedMessage(CommandSender sender, String message, Replacement... replacements) {
-        sendMessage(sender, loc().localize(message, replacements));
+        sendLocalized(MessageChannel.CHAT, MessageType.NORMAL, sender, message, replacements);
     }
 
     /**
@@ -242,7 +239,7 @@ public final class MessageSender {
      * @param replacements replacements to apply on the message
      */
     public void sendLocalizedError(CommandSender sender, String message, Replacement... replacements) {
-        sendError(sender, loc().localize(message, replacements));
+        sendLocalized(MessageChannel.CHAT, MessageType.ERROR, sender, message, replacements);
     }
 
     @Deprecated
