@@ -1,7 +1,7 @@
 package de.eldoria.eldoutilities.debug.payload;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
-import de.eldoria.eldoutilities.debug.data.ConfigDumpData;
+import de.eldoria.eldoutilities.debug.data.EntryData;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConfigDump extends ConfigDumpData {
+public class ConfigDump extends EntryData {
 
     public ConfigDump(String path, String content) {
         super(path, content);
     }
 
-    public static ConfigDumpData[] create(Plugin plugin) {
+    public static EntryData[] create(Plugin plugin) {
         Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
 
         Set<String> configs = new HashSet<>();

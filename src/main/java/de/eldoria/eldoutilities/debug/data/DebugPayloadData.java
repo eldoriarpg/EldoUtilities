@@ -4,11 +4,11 @@ public class DebugPayloadData {
     private final int v = 1;
     protected PluginMetaData pluginMeta;
     protected ServerMetaData serverMeta;
-    protected String additionalPluginMeta;
+    protected EntryData[] additionalPluginMeta;
     protected String latestLog;
-    protected ConfigDumpData[] configDumps;
+    protected EntryData[] configDumps;
 
-    public DebugPayloadData(PluginMetaData pluginMeta, ServerMetaData serverMeta, String additionalPluginMeta, String latestLog, ConfigDumpData[] configDumps) {
+    public DebugPayloadData(PluginMetaData pluginMeta, ServerMetaData serverMeta, EntryData[] additionalPluginMeta, String latestLog, EntryData[] configDumps) {
         this.pluginMeta = pluginMeta;
         this.serverMeta = serverMeta;
         this.additionalPluginMeta = additionalPluginMeta;

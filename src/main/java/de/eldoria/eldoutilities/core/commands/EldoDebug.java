@@ -1,12 +1,10 @@
 package de.eldoria.eldoutilities.core.commands;
 
-import de.eldoria.eldoutilities.debug.DebugPayload;
 import de.eldoria.eldoutilities.debug.DebugUtil;
 import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageType;
 import de.eldoria.eldoutilities.simplecommands.EldoCommand;
 import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
-import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EldoDebug extends EldoCommand {
@@ -52,14 +49,7 @@ public class EldoDebug extends EldoCommand {
             return true;
         }
 
-        Optional<String> s = DebugUtil.dispatchDebug(plugin);
-
-        if (s.isPresent()) {
-            messageSender().send(MessageChannel.CHAT, MessageType.NORMAL, sender,
-                    "Your data is available here: §6" + ButlerUpdateData.HOST + "/debug/v1/read/" + s.get());
-        } else {
-            messageSender().send(MessageChannel.CHAT, MessageType.ERROR, sender, "Could not send data. Please try again later");
-        }
+        DebugUtil.dispatchDebug(sender, plugin);
         return true;
     }
 

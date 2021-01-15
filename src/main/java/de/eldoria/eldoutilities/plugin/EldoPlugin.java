@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.plugin;
 
+import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.logging.DebugLogger;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -59,8 +60,8 @@ public class EldoPlugin extends JavaPlugin {
         return debugLogger;
     }
 
-    public String getDebugInformations() {
-        return null;
+    public EntryData[] getDebugInformations() {
+        return new EntryData[0];
     }
 
     /**
