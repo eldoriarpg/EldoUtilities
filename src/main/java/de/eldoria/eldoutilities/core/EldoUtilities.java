@@ -35,9 +35,8 @@ public final class EldoUtilities extends EldoPlugin {
     @Override
     public void onEnable() {
         configuration = new Configuration(this);
-        delayedActions = DelayedActions.start(this);
-        inventoryActionHandler = new InventoryActionHandler();
-        MessageSender.create(this, "§6[EU] ", 'a', 'c');
+        registerPublicServices();
+        MessageSender.create(this, "§6[EU]");
         registerListener(inventoryActionHandler);
         Updater.Butler(new ButlerUpdateData(this, "eldoutilities", configuration.isUpdateCheck(),
                 false, 9, ButlerUpdateData.HOST)).start();
@@ -47,5 +46,11 @@ public final class EldoUtilities extends EldoPlugin {
         }
 
         registerCommand("eldoDebug", new EldoDebug(this));
+        getLogger().info("EldoUtilities armed and ready.");
+    }
+
+    private static void registerPublicServices() {
+        delayedActions = DelayedActions.start(getInstance(EldoUtilities.class));
+        inventoryActionHandler = new InventoryActionHandler();
     }
 }
