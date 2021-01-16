@@ -24,6 +24,7 @@ public class DelayedActions extends BukkitRunnable {
      * <p>
      * The scheduler will also ensure that the main thread is not abused by overloading operations per tick.
      *
+     * @param plugin plugin which owns the instance
      * @return new delayed action instance
      */
     public static DelayedActions start(Plugin plugin) {
@@ -51,7 +52,16 @@ public class DelayedActions extends BukkitRunnable {
      * @param delay    delay for execution.
      */
     public void schedule(Runnable runnable, int delay) {
+        if(isCancelled()) return;
         delayedTasks.add(new DelayedTask(runnable, delay + currentTick));
+    }
+
+    public void shutdown() {
+        cancel();
+        for (DelayedTask delayedTask : delayedTasks) {
+            delayedTask.invoke();
+        }
+        delayedTasks.clear();
     }
 
     private static class DelayedTask implements Comparable<DelayedTask> {
