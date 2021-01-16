@@ -16,22 +16,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class DebugUtil {
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
-    private static final Pattern IP = Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})");
 
     private DebugUtil() {
     }
@@ -80,29 +77,6 @@ public final class DebugUtil {
         } else {
             messageSender.send(MessageChannel.CHAT, MessageType.ERROR, sender, "Could not send data. Please try again later");
         }
-    }
-
-    /**
-     * Gets the latest log from the logs directory.
-     *
-     * @param plugin plugin for pure lazyness and logging purposes
-     * @return Log as string.
-     */
-    public static @NotNull String getLatestLog(Plugin plugin) {
-        Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
-        File logFile = Paths.get(root.toString(), "logs", "latest.log").toFile();
-
-        String latestLog = "Could not read latest log.";
-        if (logFile.exists()) {
-            try {
-                latestLog = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8).stream()
-                        .collect(Collectors.joining(System.lineSeparator()));
-            } catch (IOException e) {
-                plugin.getLogger().info("Could not read log file");
-            }
-        }
-        latestLog = latestLog.replaceAll(IP.pattern(), "/127.0.0.1");
-        return latestLog;
     }
 
     /**
