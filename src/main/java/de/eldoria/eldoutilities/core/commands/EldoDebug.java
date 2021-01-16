@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.core.commands;
 
+import de.eldoria.eldoutilities.debug.DebugSettings;
 import de.eldoria.eldoutilities.debug.DebugUtil;
 import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageType;
@@ -49,7 +50,7 @@ public class EldoDebug extends EldoCommand {
             return true;
         }
 
-        DebugUtil.dispatchDebug(sender, plugin);
+        DebugUtil.dispatchDebug(sender, plugin, DebugSettings.DEFAULT);
         return true;
     }
 

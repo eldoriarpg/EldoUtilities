@@ -11,7 +11,6 @@ import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.messages.MessageType;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
-import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public final class DebugUtil {
      * @param sender sender which requested the data
      * @param plugin plugin to collect the data for
      */
-    public static void dispatchDebug(CommandSender sender, Plugin plugin) {
+    public static void dispatchDebug(CommandSender sender, Plugin plugin, DebugSettings settings) {
         EldoConfig config = EldoConfig.getMainConfig(EldoUtilities.class);
         MessageSender messageSender = MessageSender.getPluginMessageSender(EldoUtilities.class);
         if (!config.getConfig().getBoolean("debugConsens", false)) {
@@ -68,15 +67,19 @@ public final class DebugUtil {
             return;
         }
 
-        Optional<DebugResponse> response = sendDebug(plugin, DebugPayload.create(plugin));
-
-        if (response.isPresent()) {
-            messageSender.send(MessageChannel.CHAT, MessageType.NORMAL, sender,
-                    "Your data is available here:\n§6" + ButlerUpdateData.HOST + "/debug/v1/read/" + response.get().getHash()
-                            + "§r\nYou can delete it via this link:\n§c" + ButlerUpdateData.HOST + "/debug/v1/delete/" + response.get().getDeletionHash());
-        } else {
-            messageSender.send(MessageChannel.CHAT, MessageType.ERROR, sender, "Could not send data. Please try again later");
-        }
+        EldoUtilities.getAsyncSyncingCallbackExecutor().schedule(
+                () -> sendDebug(plugin, DebugPayload.create(plugin), settings),
+                debugResponse -> {
+                    if (debugResponse.isPresent()) {
+                        messageSender.send(MessageChannel.CHAT, MessageType.NORMAL, sender,
+                                "Your data is available here:\n"
+                                        + "§6" + settings.getHost() + "/debug/v1/read/" + debugResponse.get().getHash()
+                                        + "§r\nYou can delete it via this link:\n"
+                                        + "§c" + settings.getHost() + "/debug/v1/delete/" + debugResponse.get().getDeletionHash());
+                    } else {
+                        messageSender.send(MessageChannel.CHAT, MessageType.ERROR, sender, "Could not send data. Please try again later");
+                    }
+                });
     }
 
     /**
@@ -95,11 +98,11 @@ public final class DebugUtil {
         return meta;
     }
 
-    private static Optional<DebugResponse> sendDebug(Plugin plugin, DebugPayloadData payload) {
+    private static Optional<DebugResponse> sendDebug(Plugin plugin, DebugPayloadData payload, DebugSettings settings) {
         // Open connection to Butler.
         HttpURLConnection con;
         try {
-            URL url = new URL(ButlerUpdateData.HOST + "/debug/v1/submit");
+            URL url = new URL(settings.getHost() + "/debug/v1/submit");
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
         } catch (IOException e) {
