@@ -3,6 +3,8 @@ package de.eldoria.eldoutilities.messages;
 import de.eldoria.eldoutilities.messages.channeldata.ChannelData;
 import de.eldoria.eldoutilities.messages.channeldata.TitleData;
 import de.eldoria.eldoutilities.utils.ObjUtil;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -12,40 +14,42 @@ public interface MessageChannel<T extends ChannelData> {
     /**
      * Default implementation for a chat message
      */
-    public static MessageChannel<? extends ChannelData> CHAT = (message, target, sender, data) -> sender.sendMessage(target, message);
+    public static MessageChannel<? extends ChannelData> CHAT = (message, target, data) -> target.sendMessage(message);
 
     /**
      * Default implementation for a title message
      */
-    public static MessageChannel<TitleData> TITLE = (message, target, sender, data) -> {
+    public static MessageChannel<TitleData> TITLE = (message, target, data) -> {
         TitleData titleData = data;
         if (titleData == null) titleData = TitleData.DEFAULT;
         if (target instanceof Player) {
-            sender.sendTitle((Player) target, message, "", titleData.getFadeIn(), titleData.getStay(), titleData.getFadeOut());
+            ((Player) target).sendTitle(message, titleData.getOtherLine(), titleData.getFadeIn(), titleData.getStay(), titleData.getFadeOut());
         } else {
-            sender.sendMessage(target, message);
+            target.sendMessage(message);
         }
     };
 
     /**
      * Default implementation for a subtitle message
      */
-    public static MessageChannel<TitleData> SUBTITLE = (message, target, sender, data) -> {
+    public static MessageChannel<TitleData> SUBTITLE = (message, target, data) -> {
+        TitleData titleData = data;
+        if (titleData == null) titleData = TitleData.DEFAULT;
         if (target instanceof Player) {
-            sender.sendTitle((Player) target, "", message, data.getFadeIn(), data.getStay(), data.getFadeOut());
+            ((Player) target).sendTitle(titleData.getOtherLine(), message, titleData.getFadeIn(), titleData.getStay(), titleData.getFadeOut());
         } else {
-            sender.sendMessage(target, message);
+            target.sendMessage(message);
         }
     };
 
     /**
      * Default implementation for a action bar message
      */
-    public static MessageChannel<? extends ChannelData> ACTION_BAR = (message, target, sender, data) -> {
+    public static MessageChannel<? extends ChannelData> ACTION_BAR = (message, target, data) -> {
         if (target instanceof Player) {
-            sender.sendActionBar((Player) target, message);
+            ((Player) target).spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
         } else {
-            sender.sendMessage(target, message);
+            target.sendMessage(message);
         }
     };
 
@@ -90,19 +94,17 @@ public interface MessageChannel<T extends ChannelData> {
      *
      * @param message message to send
      * @param target  target of message
-     * @param sender  message sender instance
      * @param data    Additional data for the channel
      */
-    void sendMessage(String message, CommandSender target, MessageSender sender, T data);
+    void sendMessage(String message, CommandSender target, T data);
 
     /**
      * Send a message via this channel to a target with the delivered message sender instance.
      *
      * @param message message to send
      * @param target  target of message
-     * @param sender  message sender instance
      */
-    default void sendMessage(String message, CommandSender target, MessageSender sender) {
-        sendMessage(message, target, sender, null);
+    default void sendMessage(String message, CommandSender target) {
+        sendMessage(message, target, null);
     }
 }
