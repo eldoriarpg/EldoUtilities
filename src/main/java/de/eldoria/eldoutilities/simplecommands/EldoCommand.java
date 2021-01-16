@@ -3,7 +3,9 @@ package de.eldoria.eldoutilities.simplecommands;
 import de.eldoria.eldoutilities.localization.DummyLocalizer;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
+import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageSender;
+import de.eldoria.eldoutilities.messages.MessageType;
 import de.eldoria.eldoutilities.utils.ArrayUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -148,6 +150,38 @@ public abstract class EldoCommand implements TabExecutor {
      */
     protected boolean argumentsInvalid(CommandSender sender, String[] args, int length, String syntax) {
         return argumentsInvalid(sender, messageSender(), localizer(), args, length, syntax);
+    }
+
+    /**
+     * Returns true if the sender is a player and sends an error message
+     * <p>
+     * Uses the {@code error.notAsPlayer} error code
+     *
+     * @param sender sender to check
+     * @return true if sender is player
+     */
+    protected boolean denyPlayer(CommandSender sender) {
+        if (isPlayer(sender)) {
+            messageSender().sendLocalized(MessageChannel.CHAT, MessageType.ERROR, sender, "error.notAsPlayer");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the sender is a console and sends an error message.
+     * <p>
+     * Uses the {@code error.notAsConsole} error code
+     *
+     * @param sender sender to check
+     * @return true if sender is console
+     */
+    protected boolean denyConsole(CommandSender sender) {
+        if (isConsole(sender)) {
+            messageSender().sendLocalized(MessageChannel.CHAT, MessageType.ERROR, sender, "error.notAsConsole");
+            return true;
+        }
+        return false;
     }
 
     /**
