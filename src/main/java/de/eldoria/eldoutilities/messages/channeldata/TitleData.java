@@ -2,6 +2,7 @@ package de.eldoria.eldoutilities.messages.channeldata;
 
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
+import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageType;
 
 public final class TitleData implements ChannelData {
@@ -29,8 +30,9 @@ public final class TitleData implements ChannelData {
     }
 
     @Override
-    public void forceColor(MessageType type) {
+    public void formatText(MessageType type, MessageChannel<? extends ChannelData> channel, String prefix) {
         type.forceColor(otherLine);
+        otherLine = channel.addPrefix(otherLine, prefix);
     }
 
     private TitleData(int fadeIn, int stay, int fadeOut, String otherLine) {

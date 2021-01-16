@@ -333,6 +333,7 @@ public final class MessageSender {
      * @param sender       target of message
      * @param message      message locale codes
      * @param replacements replacements for messages in locale codes
+     * @param <T>          type of channel data
      * @since 1.2.1
      */
     public <T extends ChannelData> void sendLocalized(MessageChannel<T> channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
@@ -347,6 +348,8 @@ public final class MessageSender {
      * @param sender       target of message
      * @param message      message locale codes
      * @param replacements replacements for messages in locale codes
+     * @param data         additional data for channel
+     * @param <T>          channel data type
      * @since 1.3.0
      */
     public <T extends ChannelData> void sendLocalized(MessageChannel<T> channel, MessageType type, CommandSender sender, String message, @Nullable T data, Replacement... replacements) {
@@ -363,6 +366,7 @@ public final class MessageSender {
      * @param type    type of message
      * @param target  target of message
      * @param message message locale codes
+     * @param <T>     type of channel data
      * @since 1.2.1
      */
     public <T extends ChannelData> void send(MessageChannel<T> channel, MessageType type, CommandSender target, String message) {
@@ -376,15 +380,17 @@ public final class MessageSender {
      * @param type    type of message
      * @param target  target of message
      * @param message message locale codes
+     * @param data    additional data for channel
+     * @param <T>     type of data
      * @since 1.3.0
      */
     public <T extends ChannelData> void send(MessageChannel<T> channel, MessageType type, CommandSender target, String message, @Nullable T data) {
         String coloredMessage = type.forceColor(message);
-        if(data != null){
-            data.forceColor(type);
+        coloredMessage = channel.addPrefix(coloredMessage, prefix);
+        if (data != null) {
+            data.formatText(type, channel, prefix);
         }
-
-        channel.sendMessage(coloredMessage, target, data);
+        channel.sendMessage(coloredMessage, this, target, data);
     }
 
     public boolean isDefault() {
