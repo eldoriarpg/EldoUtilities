@@ -2,9 +2,8 @@ package de.eldoria.eldoutilities.messages;
 
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Replacement;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
+import de.eldoria.eldoutilities.messages.channeldata.ChannelData;
+import de.eldoria.eldoutilities.messages.channeldata.TitleData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -25,23 +24,14 @@ import java.util.Map;
  * @since 1.0.0
  */
 public final class MessageSender {
-    private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "", "", "§c");
+    private static final MessageSender DEFAULT_SENDER = new MessageSender(null, "");
     private static final Map<Class<? extends Plugin>, MessageSender> PLUGIN_SENDER = new HashMap<>();
     private final Class<? extends Plugin> ownerPlugin;
     private String prefix;
-    private String defaultMessageColor;
-    private String defaultErrorColor;
 
     private MessageSender(Class<? extends Plugin> ownerPlugin, String prefix) {
-        this(ownerPlugin, prefix, "", "");
-    }
-
-    @Deprecated
-    private MessageSender(Class<? extends Plugin> ownerPlugin, String prefix, String defaultMessageColor, String defaultErrorColor) {
         this.ownerPlugin = ownerPlugin;
         this.prefix = prefix;
-        this.defaultMessageColor = defaultMessageColor;
-        this.defaultErrorColor = defaultErrorColor;
     }
 
     /**
@@ -100,6 +90,10 @@ public final class MessageSender {
         return create(plugin, prefix);
     }
 
+    public static MessageSender create(Plugin plugin, String prefix) {
+        return create(plugin.getClass(), prefix);
+    }
+
     public static MessageSender create(Class<? extends Plugin> plugin, String prefix) {
         if (plugin == null) return DEFAULT_SENDER;
 
@@ -144,38 +138,7 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendMessage(CommandSender sender, String message) {
-        if (!(sender instanceof Player)) {
-            sendMessage(null, message);
-            return;
-        }
-        sendMessage((Player) sender, message);
-    }
-
-    /**
-     * Send a message to a player
-     *
-     * @param player  receiver of the message
-     * @param message message with optinal color codes
-     */
-    public void sendMessage(Player player, String message) {
-        if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + forceMessageColor(message));
-            return;
-        }
-        player.sendMessage(prefix + forceMessageColor(message));
-    }
-
-    private String forceMessageColor(String message) {
-        return forceColor(message, defaultMessageColor);
-    }
-
-    private String forceErrorColor(String message) {
-        return forceColor(message, defaultErrorColor);
-    }
-
-    private String forceColor(String message, String defaultColor) {
-        String repMessage = message.replaceAll("§r", defaultColor);
-        return defaultColor + repMessage;
+        send(MessageChannel.CHAT, MessageType.NORMAL, sender, message);
     }
 
     /**
@@ -185,25 +148,7 @@ public final class MessageSender {
      * @param message message with optinal color codes
      */
     public void sendError(CommandSender sender, String message) {
-        if (!(sender instanceof Player)) {
-            sendError(null, message);
-            return;
-        }
-        sendError((Player) sender, message);
-    }
-
-    /**
-     * Sends a error to a player
-     *
-     * @param player  receiver of the message
-     * @param message message with optinal color codes
-     */
-    public void sendError(Player player, String message) {
-        if (player == null) {
-            Bukkit.getConsoleSender().sendMessage("[INFO]" + forceErrorColor(message));
-            return;
-        }
-        player.sendMessage(prefix + forceErrorColor(message));
+        send(MessageChannel.CHAT, MessageType.ERROR, sender, message);
     }
 
     /**
@@ -242,16 +187,20 @@ public final class MessageSender {
         sendLocalized(MessageChannel.CHAT, MessageType.ERROR, sender, message, replacements);
     }
 
+    /**
+     * @deprecated flagged for removal. Use {@link #send(MessageChannel, MessageType, CommandSender, String, ChannelData)} instead.
+     */
     @Deprecated
     public void sendTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        String repTitle = title.replaceAll("§r", "§r" + defaultColor);
-        String repSubTitle = subtitle.replaceAll("§r", "§r" + defaultColor);
-        sendTitle(player, repTitle, repSubTitle, fadeIn, stay, fadeOut);
+        send(MessageChannel.TITLE, () -> defaultColor, player, title, TitleData.forFadeAndTime(fadeIn, stay, fadeOut, subtitle));
     }
 
+    /**
+     * @deprecated flagged for removal. Use {@link #send(MessageChannel, MessageType, CommandSender, String, ChannelData)} instead.
+     */
     @Deprecated
     public void sendTitle(Player player, String defaultColor, String title, String subtitle) {
-        sendTitle(player, forceColor(title, defaultColor), forceColor(subtitle, defaultColor));
+        send(MessageChannel.TITLE, () -> defaultColor, player, title, TitleData.forOtherLine(subtitle));
     }
 
     /**
@@ -263,9 +212,11 @@ public final class MessageSender {
      * @param fadeIn   fade in time of title
      * @param stay     stay time of title
      * @param fadeOut  fade out time of title
+     * @deprecated flagged for removal. Use {@link #send(MessageChannel, MessageType, CommandSender, String, ChannelData)} instead.
      */
+    @Deprecated
     public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        send(MessageChannel.TITLE, MessageType.NORMAL, player, title, TitleData.forFadeAndTime(fadeIn, stay, fadeOut, subtitle));
     }
 
     /**
@@ -274,9 +225,11 @@ public final class MessageSender {
      * @param player   player to send
      * @param title    title to send
      * @param subtitle subtitle to send
+     * @deprecated flagged for removal. Use {@link #send(MessageChannel, MessageType, CommandSender, String, ChannelData)} instead.
      */
+    @Deprecated
     public void sendTitle(Player player, String title, String subtitle) {
-        sendTitle(player, title, subtitle, 10, 50, 20);
+        send(MessageChannel.TITLE, MessageType.NORMAL, player, title, TitleData.forOtherLine(subtitle));
     }
 
     /**
@@ -290,11 +243,11 @@ public final class MessageSender {
      * @param stay         stay time of title
      * @param fadeOut      fade out time of title
      * @param replacements replacements for the localized message
-     * @deprecated Default colors should not be used anymore. Use {@link #sendLocalizedTitle(Player, String, String, int, int, int, Replacement...)} instead.
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, ChannelData, Replacement...)} instead.
      */
     @Deprecated
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
-        sendTitle(player, defaultColor, loc().localize(title, replacements), loc().localize(subtitle, replacements), fadeIn, stay, fadeOut);
+        sendLocalized(MessageChannel.TITLE, () -> defaultColor, player, title, TitleData.forFadeAndTime(fadeIn, stay, fadeOut, subtitle), replacements);
     }
 
     /**
@@ -307,9 +260,11 @@ public final class MessageSender {
      * @param stay         stay time of title
      * @param fadeOut      fade out time of title
      * @param replacements replacements for the localized message
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, ChannelData, Replacement...)} instead.
      */
+    @Deprecated
     public void sendLocalizedTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut, Replacement... replacements) {
-        sendTitle(player, loc().localize(title, replacements), loc().localize(subtitle, replacements), fadeIn, stay, fadeOut);
+        sendLocalized(MessageChannel.TITLE, MessageType.NORMAL, player, title, TitleData.forFadeAndTime(fadeIn, stay, fadeOut, subtitle), replacements);
     }
 
     /**
@@ -320,11 +275,11 @@ public final class MessageSender {
      * @param title        title to send
      * @param subtitle     subtitle to send
      * @param replacements replacements for the localized message
-     * @deprecated Default colors should not be used anymore. Use {@link #sendLocalizedTitle(Player, String, String, Replacement...)} instead.
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, ChannelData, Replacement...)} instead.
      */
     @Deprecated
     public void sendLocalizedTitle(Player player, String defaultColor, String title, String subtitle, Replacement... replacements) {
-        sendTitle(player, defaultColor, loc().localize(title, replacements), loc().localize(subtitle, replacements));
+        sendLocalized(MessageChannel.TITLE, () -> defaultColor, player, title, TitleData.forOtherLine(subtitle), replacements);
     }
 
     /**
@@ -334,9 +289,11 @@ public final class MessageSender {
      * @param title        title to send
      * @param subtitle     subtitle to send
      * @param replacements replacements for the localized message
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, ChannelData, Replacement...)} instead.
      */
-    public void sendLocalizedTitle(Player player, @Nullable String title, @Nullable String subtitle, Replacement... replacements) {
-        sendTitle(player, loc().localize(title, replacements), loc().localize(subtitle, replacements));
+    @Deprecated
+    public void sendLocalizedTitle(Player player, String title, String subtitle, Replacement... replacements) {
+        sendLocalized(MessageChannel.TITLE, MessageType.NORMAL, player, title, TitleData.forOtherLine(subtitle), replacements);
     }
 
     /**
@@ -345,9 +302,11 @@ public final class MessageSender {
      * @param player       player to send
      * @param message      message to send
      * @param replacements replacements for the localized message
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, Replacement...)} instead.
      */
+    @Deprecated
     public void sendLocalizedActionBar(Player player, String message, Replacement... replacements) {
-        sendActionBar(player, loc().localize(message, replacements));
+        sendLocalized(MessageChannel.ACTION_BAR, MessageType.NORMAL, player, message, replacements);
     }
 
     /**
@@ -355,9 +314,11 @@ public final class MessageSender {
      *
      * @param player  player to send
      * @param message message to send
+     * @deprecated flagged for removal. Use {@link #sendLocalized(MessageChannel, MessageType, CommandSender, String, Replacement...)} instead.
      */
+    @Deprecated
     public void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(forceMessageColor(message)));
+        send(MessageChannel.ACTION_BAR, MessageType.NORMAL, player, message);
     }
 
     private ILocalizer loc() {
@@ -374,8 +335,25 @@ public final class MessageSender {
      * @param replacements replacements for messages in locale codes
      * @since 1.2.1
      */
-    public void sendLocalized(MessageChannel channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
-        send(channel, type, sender, loc().localize(message, replacements));
+    public <T extends ChannelData> void sendLocalized(MessageChannel<T> channel, MessageType type, CommandSender sender, String message, Replacement... replacements) {
+        sendLocalized(channel, type, sender, message, null, replacements);
+    }
+
+    /**
+     * Send a localized message via a channel.
+     *
+     * @param channel      channel which should be used
+     * @param type         type of message
+     * @param sender       target of message
+     * @param message      message locale codes
+     * @param replacements replacements for messages in locale codes
+     * @since 1.3.0
+     */
+    public <T extends ChannelData> void sendLocalized(MessageChannel<T> channel, MessageType type, CommandSender sender, String message, @Nullable T data, Replacement... replacements) {
+        if (data != null) {
+            data.localized(loc(), replacements);
+        }
+        send(channel, type, sender, loc().localize(message, replacements), data);
     }
 
     /**
@@ -387,10 +365,26 @@ public final class MessageSender {
      * @param message message locale codes
      * @since 1.2.1
      */
-    public void send(MessageChannel channel, MessageType type, CommandSender target, String message) {
-        String coloredMessage = type.forceColor(message);
+    public <T extends ChannelData> void send(MessageChannel<T> channel, MessageType type, CommandSender target, String message) {
+        send(channel, type, target, message, null);
+    }
 
-        channel.sendMessage(coloredMessage, target, this);
+    /**
+     * Sends a message via a channel
+     *
+     * @param channel channel which should be used
+     * @param type    type of message
+     * @param target  target of message
+     * @param message message locale codes
+     * @since 1.3.0
+     */
+    public <T extends ChannelData> void send(MessageChannel<T> channel, MessageType type, CommandSender target, String message, @Nullable T data) {
+        String coloredMessage = type.forceColor(message);
+        if(data != null){
+            data.forceColor(type);
+        }
+
+        channel.sendMessage(coloredMessage, target, data);
     }
 
     public boolean isDefault() {
