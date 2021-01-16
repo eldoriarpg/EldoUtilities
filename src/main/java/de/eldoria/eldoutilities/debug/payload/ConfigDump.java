@@ -11,10 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigDump extends EntryData {
@@ -34,7 +31,7 @@ public class ConfigDump extends EntryData {
 
         EldoConfig mainConfig = EldoConfig.getMainConfig(plugin.getClass());
 
-        Set<String> configs = new HashSet<>();
+        Set<String> configs = new LinkedHashSet<>();
         if (mainConfig != null) {
             mainConfig.save();
             configs.addAll(mainConfig.getConfigs().keySet());
@@ -42,7 +39,7 @@ public class ConfigDump extends EntryData {
             configs.add(Paths.get(plugin.getDataFolder().toPath().toString(), "config.yml").toString());
         }
 
-        List<ConfigDump> dumps = new ArrayList<>();
+        List<ConfigDump> dumps = new LinkedList<>();
         for (String config : configs) {
             File currentConfig = Paths.get(root.toString(), config).toFile();
             String content = "Could not read";
