@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.plugin;
 
+import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.logging.DebugLogger;
 import org.bukkit.command.PluginCommand;
@@ -56,8 +57,13 @@ public class EldoPlugin extends JavaPlugin {
     public Logger getLogger() {
         if (debugLogger == null) {
             debugLogger = new DebugLogger(this, super.getLogger());
+            setLoggerLevel();
         }
         return debugLogger;
+    }
+
+    protected void setLoggerLevel() {
+        getLogger().setLevel(EldoConfig.getLogLevel(getClass()));
     }
 
     public @NotNull EntryData[] getDebugInformations() {
