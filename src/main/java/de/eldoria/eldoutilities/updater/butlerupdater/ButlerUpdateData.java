@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
  * @since 1.1.0
  */
 public class ButlerUpdateData extends UpdateData {
-    public static String HOST = "https://plugins.eldoria.de";
+    public static final String HOST = "https://plugins.eldoria.de";
 
     private final int butlerId;
     private final String host;
