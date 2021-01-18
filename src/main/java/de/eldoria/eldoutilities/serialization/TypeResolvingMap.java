@@ -4,6 +4,7 @@ import de.eldoria.eldoutilities.utils.EnumUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -97,6 +98,29 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
             return getValue(key, valueConverter);
         }
         return defaultValue;
+    }
+
+    /**
+     * Converts a map which was saved with {@link SerializationUtil.Builder#addMap(String, Map, BiFunction)} )} to a map.
+     * These objects will be wrapped into an {@link MapEntry} object.
+     *
+     * @param key             key of map
+     * @param keyOrValueToKey function to map the key or the value to a key
+     * @param <K>             type of key
+     * @param <V>             type of value
+     * @return map
+     * @since 1.3.2
+     */
+    @SuppressWarnings("unchecked")
+    public @NotNull <K, V> Map<K, V> getMap(String key, BiFunction<String, V, K> keyOrValueToKey) {
+        List<MapEntry> mapObjects = getValue(key);
+        HashMap<K, V> results = new HashMap<>();
+        if (mapObjects == null) {
+            return results;
+        }
+
+        mapObjects.stream().forEach(e -> results.put(keyOrValueToKey.apply(e.getKey(), (V) e.getObject()), (V) e.getObject()));
+        return results;
     }
 
     /**

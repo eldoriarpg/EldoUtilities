@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Class which provides utilities for serialization and deserialization.
@@ -164,6 +165,26 @@ public final class SerializationUtil {
 
         public Builder add(String key, Map<?, ?> value) {
             return add(key, new ArrayList<>(value.values()));
+        }
+
+        /**
+         * Serialize a map to a list.
+         * <p>
+         * The entries will be wrapped in a {@link MapEntry} which preserves key and value.
+         * <p>
+         * Serialize via {@link TypeResolvingMap#getMap(String, BiFunction)}
+         *
+         * @param key         key for map
+         * @param map         map to serialize
+         * @param keyToString function to map the key or value to a unique key.
+         * @param <K>         type of key
+         * @param <V>         type of value
+         * @return builder with values changed
+         */
+        public <K, V> Builder addMap(String key, Map<K, V> map, BiFunction<K, V, String> keyToString) {
+            return add(key, map.entrySet().stream()
+                    .map(e -> new MapEntry(keyToString.apply(e.getKey(), e.getValue()), e.getValue()))
+                    .collect(Collectors.toList()));
         }
 
         /**
