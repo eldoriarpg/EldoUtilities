@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.logging;
 
+import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 
 import java.util.logging.Level;
@@ -22,6 +23,8 @@ public class DebugLogger extends Logger {
         // we still want to use our debugger. so we dont really care about what we are doing here.
         super(plugin.getName(), null);
         this.logger = logger;
+        setLevel(EldoConfig.getLogLevel(plugin.getClass()));
+        log(getLevel(), "Debug logger initialized. Log Level: " + getLevel().getName());
     }
 
     @Override
@@ -47,6 +50,21 @@ public class DebugLogger extends Logger {
             }
         }
         logger.log(record);
+    }
+
+    @Override
+    public String getName() {
+        return getParent().getName();
+    }
+
+    @Override
+    public Logger getParent() {
+        return logger.getParent();
+    }
+
+    @Override
+    public void setParent(Logger parent) {
+        logger.setParent(parent);
     }
 
     private void appendPrefix(LogRecord record, String prefix) {
