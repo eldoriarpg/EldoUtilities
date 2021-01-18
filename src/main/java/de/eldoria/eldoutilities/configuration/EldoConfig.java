@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.configuration;
 
+import de.eldoria.eldoutilities.core.EldoUtilities;
 import de.eldoria.eldoutilities.utils.ObjUtil;
 import de.eldoria.eldoutilities.utils.Parser;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,6 +20,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A wrapper class for {@link FileConfiguration}.
@@ -53,17 +57,42 @@ public abstract class EldoConfig {
      * @return true if plugin is in debug state.
      */
     public static Level getLogLevel(Class<? extends Plugin> clazz) {
-        return ObjUtil.nonNull(ObjUtil.nonNull(PLUGIN_MAIN_CONFIGS.get(clazz), i -> {
-            return ObjUtil.nonNull(i.config, c -> {
-                String debug = c.getString("debug", "INFO");
-                Optional<Boolean> aBoolean = Parser.parseBoolean(debug);
-                if (aBoolean.isPresent()) {
-                    c.set("debug", aBoolean.get() ? "DEBUG" : "INFO");
-                    i.save();
+        return ObjUtil.nonNull(EldoUtilities.getInstance(clazz), instance -> {
+            // we probably want to load the config before the plugin is enabled.
+            // Since we use the configuration serializable we cant load the config directly if the plugin is not enabled.
+            String debug;
+            if (!instance.isEnabled()) {
+                File dataFolder = instance.getDataFolder();
+                String config;
+                try {
+                    config = Files.readAllLines(Paths.get(dataFolder.getAbsolutePath(), "config.yml")).stream().collect(Collectors.joining("\n"));
+                } catch (IOException e) {
+                    // We dont know if the logger already exists...
+                    System.out.println("Could not load config file. Using default log level.");
+                    return Level.INFO;
                 }
-                return parseLevel(debug);
-            });
-        }), Level.INFO);
+                Pattern compile = Pattern.compile("^debug:.?([a-zA-Z].*?)$", Pattern.MULTILINE);
+                Matcher matcher = compile.matcher(config);
+                if (matcher.find()) {
+                    debug = matcher.group(1);
+                } else {
+                    debug = "INFO";
+                }
+            } else {
+                debug = instance.getConfig().getString("debug", "INFO");
+                instance.saveConfig();
+            }
+            Optional<Boolean> aBoolean = Parser.parseBoolean(debug);
+            if (aBoolean.isPresent()) {
+                debug = aBoolean.get() ? "DEBUG" : "INFO";
+                if (instance.isEnabled()) {
+                    instance.getConfig().set("debug", debug);
+                    instance.saveConfig();
+                }
+            }
+
+            return parseLevel(debug);
+        });
     }
 
     private static Level parseLevel(String level) {
@@ -83,13 +112,13 @@ public abstract class EldoConfig {
             return Level.CONFIG;
         }
         if ("FINE".equalsIgnoreCase(level)) {
-            return Level.CONFIG;
+            return Level.FINE;
         }
         if ("FINER".equalsIgnoreCase(level)) {
-            return Level.CONFIG;
+            return Level.FINER;
         }
         if ("FINEST".equalsIgnoreCase(level)) {
-            return Level.CONFIG;
+            return Level.FINEST;
         }
         if ("ALL".equalsIgnoreCase(level)) {
             return Level.ALL;
