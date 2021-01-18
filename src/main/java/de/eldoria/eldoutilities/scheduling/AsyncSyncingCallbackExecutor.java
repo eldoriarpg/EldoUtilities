@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -59,9 +58,12 @@ public final class AsyncSyncingCallbackExecutor extends BukkitRunnable {
      */
     public <T> void schedule(Supplier<T> asyncProvider, Consumer<T> syncAction) {
         if (isCancelled()) return;
-        BukkitTask task = scheduler.runTaskAsynchronously(plugin, () -> callbacks.add(new Callback<>(asyncProvider.get(), syncAction)));
+        scheduler.runTaskAsynchronously(plugin, () -> callbacks.add(new Callback<>(asyncProvider.get(), syncAction)));
     }
 
+    /**
+     * Shutdown the callbacks.
+     */
     public void shutdown() {
         cancel();
         for (Callback<?> callback : callbacks) {

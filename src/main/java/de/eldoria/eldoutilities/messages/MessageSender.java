@@ -396,4 +396,12 @@ public final class MessageSender {
     public boolean isDefault() {
         return ownerPlugin == null;
     }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public static MessageSender getDefaultSender() {
+        return DEFAULT_SENDER;
+    }
 }
