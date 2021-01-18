@@ -86,6 +86,12 @@ public class Localizer implements ILocalizer {
                 put("error.notAsConsole", "This command can not be executed from console.");
                 put("error.notAsPlayer", "This input is too long. Max: %MAX% chars.");
                 put("about", "%PLUGIN_NAME% by %AUTHORS%\nVersion: %VERSION%\nSpigot: %WEBSITE%\nSupport: %DISCORD%");
+                put("dialog.accept", "accept");
+                put("dialog.deny", "deny");
+                put("dialog.add", "add");
+                put("dialog.remove", "remove");
+                put("dialog.leftClickChange", "Left click to change");
+                put("dialog.rightClickRemove", "Right click to remove");
             }
         };
         addLocaleCodes(locales);
