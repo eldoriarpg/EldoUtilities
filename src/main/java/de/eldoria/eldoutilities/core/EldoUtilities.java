@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.core;
 
+import de.eldoria.eldoutilities.conversation.ConversationRequester;
 import de.eldoria.eldoutilities.core.commands.EldoDebug;
 import de.eldoria.eldoutilities.inventory.InventoryActionHandler;
 import de.eldoria.eldoutilities.messages.MessageChannel;
@@ -21,6 +22,7 @@ public final class EldoUtilities extends EldoPlugin {
     private static DelayedActions delayedActions = null;
     private static InventoryActionHandler inventoryActionHandler = null;
     private static AsyncSyncingCallbackExecutor asyncSyncingCallbackExecutor = null;
+    private static ConversationRequester conversationRequester = null;
     private Configuration configuration;
 
     public static DelayedActions getDelayedActions() {
@@ -29,6 +31,14 @@ public final class EldoUtilities extends EldoPlugin {
             logger().config("DelayedActions ignited.");
         }
         return delayedActions;
+    }
+
+    public static ConversationRequester getConversationRequester() {
+        if (conversationRequester == null) {
+            conversationRequester = ConversationRequester.start(getInstance(EldoUtilities.class));
+            logger().config("ConversationRequester ignited.");
+        }
+        return conversationRequester;
     }
 
     public static InventoryActionHandler getInventoryActions() {
@@ -90,7 +100,7 @@ public final class EldoUtilities extends EldoPlugin {
         if (delayedActions != null) {
             delayedActions.shutdown();
         }
-        if(asyncSyncingCallbackExecutor!= null){
+        if (asyncSyncingCallbackExecutor != null) {
             asyncSyncingCallbackExecutor.shutdown();
         }
     }
