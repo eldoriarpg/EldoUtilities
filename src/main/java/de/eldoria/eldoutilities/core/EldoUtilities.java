@@ -6,7 +6,7 @@ import de.eldoria.eldoutilities.inventory.InventoryActionHandler;
 import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
-import de.eldoria.eldoutilities.scheduling.AsyncSyncingCallbackExecutor;
+import de.eldoria.eldoutilities.threading.AsyncSyncingCallbackExecutor;
 import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.serialization.MapEntry;
 import de.eldoria.eldoutilities.updater.Updater;

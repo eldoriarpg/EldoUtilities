@@ -1,4 +1,4 @@
-package de.eldoria.eldoutilities.scheduling;
+package de.eldoria.eldoutilities.threading;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
