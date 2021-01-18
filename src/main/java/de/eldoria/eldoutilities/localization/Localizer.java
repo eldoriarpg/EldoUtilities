@@ -337,7 +337,7 @@ public class Localizer implements ILocalizer {
      * @return Replaced Messages
      */
     @Override
-    public String localize(String message, Replacement[] replacements) {
+    public String localize(String message, Replacement... replacements) {
         if (message == null) {
             return null;
         }

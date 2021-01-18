@@ -117,5 +117,5 @@ public interface ILocalizer {
      * @return Replaced Messages
      * @since 1.2.3
      */
-    String localize(String message, Replacement[] replacements);
+    String localize(String message, Replacement... replacements);
 }

@@ -30,7 +30,7 @@ public class DummyLocalizer implements ILocalizer {
     }
 
     @Override
-    public String localize(String message, Replacement[] replacements) {
+    public String localize(String message, Replacement... replacements) {
         return message;
     }
 }
