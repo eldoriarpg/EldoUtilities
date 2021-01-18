@@ -6,8 +6,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public final class DataContainerUtil {
@@ -77,6 +79,72 @@ public final class DataContainerUtil {
         holder.setItemMeta(itemMeta);
         return compute;
     }
+
+    /**
+     * Compute a value in a {@link PersistentDataContainer} if it is not set.
+     *
+     * @param holder holder of the {@link PersistentDataContainer}
+     * @param key    key to compute
+     * @param type   type of key
+     * @param value  value which should be set if the key is not present.
+     * @param <T>    type of value
+     * @param <Z>    type of value
+     * @return the value associated with this key. can be null if holder is null.
+     */
+    @Contract("null, _, _, _ -> null; !null, _, _, _, -> !null")
+    public static @Nullable <T, Z> Z computeIfAbsent(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
+        if (holder == null) return null;
+
+        return compute(holder, key, type, v -> {
+            if (v == null) {
+                return value;
+            }
+            return v;
+        });
+    }
+
+    /**
+     * Compute a value in a {@link PersistentDataContainer} if is set.
+     *
+     * @param holder          holder of the {@link PersistentDataContainer}
+     * @param key             key to compute
+     * @param type            type of key
+     * @param mappingFunction function to map the current value to the new value.
+     * @param <T>             type of value
+     * @param <Z>             type of value
+     * @return the value associated with this key. can be null if holder is null.
+     */
+    @Contract("null, _, _, _ -> null; !null, _, _, _, -> !null")
+    public static @Nullable <T, Z> Z computeIfPresent(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<Z, Z> mappingFunction) {
+        if (holder == null) return null;
+
+        return compute(holder, key, type, v -> {
+            if (v != null) {
+                return mappingFunction.apply(v);
+            }
+            return null;
+        });
+    }
+
+    public static <T, Z> Optional<Z> get(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type) {
+        if (holder == null) return Optional.empty();
+
+        PersistentDataContainer container = holder.getPersistentDataContainer();
+        if (container.has(key, type)) {
+            return Optional.ofNullable(container.get(key, type));
+        }
+        return Optional.empty();
+    }
+
+    public static <T, Z> Z getOrDefault(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z defaultValue) {
+        return get(holder, key, type).orElse(defaultValue);
+    }
+
+    public static <T, Z> void putValue(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
+        if (holder == null) return;
+        compute(holder, key, type, v -> value);
+    }
+
 
     /**
      * Converts a byte to boolean.
