@@ -110,4 +110,9 @@ public final class EldoUtilities extends EldoPlugin {
         inventoryActionHandler = new InventoryActionHandler();
         asyncSyncingCallbackExecutor = AsyncSyncingCallbackExecutor.create(plugin);
     }
+
+    @Override
+    public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
+        return Arrays.asList(MapEntry.class);
+    }
 }
