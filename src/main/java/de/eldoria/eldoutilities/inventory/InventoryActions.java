@@ -4,6 +4,8 @@ import de.eldoria.eldoutilities.utils.ObjUtil;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +49,10 @@ public final class InventoryActions {
     public void addAction(ActionItem action) {
         inventory.setItem(action.getSlot(), action.getItemStack());
         actions.put(action.getSlot(), action);
+    }
+
+    public void addAction(ItemStack itemStack, int slot, Consumer<InventoryClickEvent> onClick, Consumer<@Nullable ItemStack> onClose ) {
+        addAction(new ActionItem(itemStack, slot, onClick, onClose));
     }
 
     public void onInventoryClose(InventoryCloseEvent event) {
