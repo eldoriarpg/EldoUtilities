@@ -20,7 +20,7 @@ public class DefaultDebug extends EldoCommand {
         this.settings = settings;
     }
 
-    public DefaultDebug(EldoPlugin plugin, String permission) {
+    public DefaultDebug(Plugin plugin, String permission) {
         super(plugin);
         this.permission = permission;
         settings = DebugSettings.DEFAULT;
