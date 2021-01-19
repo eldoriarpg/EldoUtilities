@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.threading;
 
+import de.eldoria.eldoutilities.scheduling.QueuingSelfSchedulingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,12 +15,9 @@ import java.util.function.Supplier;
  * Scheduler Service which allows to execute a async call and handle the retrieved data in the main thread.
  * Preserves the main thread from overloading
  */
-public final class AsyncSyncingCallbackExecutor extends BukkitRunnable {
+public final class AsyncSyncingCallbackExecutor extends QueuingSelfSchedulingTask<AsyncSyncingCallbackExecutor.Callback<?>> {
 
-    private static final int MAX_DURATION_TARGET = 50; // assuming 50ms = 1 tick
-    private final Plugin plugin;
     private final BukkitScheduler scheduler;
-    private final Queue<Callback<?>> callbacks = new ArrayDeque<>();
 
     /**
      * Returns a new running executor instance.
@@ -28,25 +26,17 @@ public final class AsyncSyncingCallbackExecutor extends BukkitRunnable {
      * @return running executor instance
      */
     public static AsyncSyncingCallbackExecutor create(Plugin plugin) {
-        AsyncSyncingCallbackExecutor executor = new AsyncSyncingCallbackExecutor(plugin);
-        executor.runTaskTimer(plugin, 0, 1);
-        return executor;
+        return new AsyncSyncingCallbackExecutor(plugin);
     }
 
     private AsyncSyncingCallbackExecutor(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
         scheduler = Bukkit.getScheduler();
     }
 
     @Override
-    public void run() {
-        long start = System.currentTimeMillis();
-        long duration = 0;
-
-        while (!callbacks.isEmpty() && duration < MAX_DURATION_TARGET) {
-            callbacks.poll().invoke();
-            duration = System.currentTimeMillis() - start;
-        }
+    public void execute(Callback<?> object) {
+        object.invoke();
     }
 
     /**
@@ -57,22 +47,11 @@ public final class AsyncSyncingCallbackExecutor extends BukkitRunnable {
      * @param <T>           type of data
      */
     public <T> void schedule(Supplier<T> asyncProvider, Consumer<T> syncAction) {
-        if (isCancelled()) return;
-        scheduler.runTaskAsynchronously(plugin, () -> callbacks.add(new Callback<>(asyncProvider.get(), syncAction)));
+        if (!isActive()) return;
+        scheduler.runTaskAsynchronously(getPlugin(), () -> schedule(new Callback<>(asyncProvider.get(), syncAction)));
     }
 
-    /**
-     * Shutdown the callbacks.
-     */
-    public void shutdown() {
-        cancel();
-        for (Callback<?> callback : callbacks) {
-            callback.invoke();
-        }
-        callbacks.clear();
-    }
-
-    private static class Callback<T> {
+    protected static class Callback<T> {
         private final T data;
         private final Consumer<T> consumer;
 

@@ -1,7 +1,6 @@
 package de.eldoria.eldoutilities.scheduling;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.PriorityQueue;
@@ -12,10 +11,12 @@ import java.util.Queue;
  *
  * @since 1.2.3
  */
-public class DelayedActions extends BukkitRunnable {
-    private static final int MAX_DURATION_TARGET = 50; // assuming 50ms = 1 tick
-    private final Queue<DelayedTask> delayedTasks = new PriorityQueue<>();
+public final class DelayedActions extends QueuingSelfSchedulingTask<DelayedActions.DelayedTask> {
     private int currentTick = 0;
+
+    private DelayedActions(Plugin plugin) {
+        super(plugin);
+    }
 
     /**
      * Start a delayed action scheduler for a plugin.
@@ -28,21 +29,22 @@ public class DelayedActions extends BukkitRunnable {
      * @return new delayed action instance
      */
     public static DelayedActions start(Plugin plugin) {
-        DelayedActions delayedActions = new DelayedActions();
-        delayedActions.runTaskTimer(plugin, 0, 1);
-        return delayedActions;
+        return new DelayedActions(plugin);
     }
 
     @Override
-    public void run() {
-        long start = System.currentTimeMillis();
-        long duration = 0;
+    public void execute(DelayedTask object) {
+        object.invoke();
+    }
 
-        while (!delayedTasks.isEmpty() && delayedTasks.peek().tick <= currentTick && duration < MAX_DURATION_TARGET) {
-            delayedTasks.poll().invoke();
-            duration = System.currentTimeMillis() - start;
-        }
+    @Override
+    public void tick() {
         currentTick++;
+    }
+
+    @Override
+    protected Queue<DelayedTask> getQueueImplementation() {
+        return new PriorityQueue<>();
     }
 
     /**
@@ -52,19 +54,19 @@ public class DelayedActions extends BukkitRunnable {
      * @param delay    delay for execution.
      */
     public void schedule(Runnable runnable, int delay) {
-        if(isCancelled()) return;
-        delayedTasks.add(new DelayedTask(runnable, delay + currentTick));
-    }
-
-    public void shutdown() {
-        cancel();
-        for (DelayedTask delayedTask : delayedTasks) {
-            delayedTask.invoke();
+        if(delay == 0) {
+            runnable.run();
+            return;
         }
-        delayedTasks.clear();
+        schedule(new DelayedTask(runnable, currentTick + delay));
     }
 
-    private static class DelayedTask implements Comparable<DelayedTask> {
+    @Override
+    protected boolean proceed(DelayedTask object) {
+        return object.tick >= currentTick;
+    }
+
+    protected static class DelayedTask implements Comparable<DelayedTask> {
         private final Runnable runnable;
         private final int tick;
 
