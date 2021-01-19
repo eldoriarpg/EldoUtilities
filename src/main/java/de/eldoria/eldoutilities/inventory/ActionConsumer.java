@@ -63,6 +63,50 @@ public final class ActionConsumer {
     }
 
     /**
+     * Get a consumer which allows to raise and lower a value between a range.
+     *
+     * @param key key of value
+     * @param min min value. inclusive.
+     * @param max max value. inclusive.
+     * @return consumer with range
+     */
+    public static Consumer<InventoryClickEvent> getDoubleRange(NamespacedKey key, double min, double max) {
+        return clickEvent -> {
+            double amount = 0;
+            switch (clickEvent.getClick()) {
+                case LEFT:
+                    amount = 0.1;
+                    break;
+                case SHIFT_LEFT:
+                    amount = 1;
+                    break;
+                case RIGHT:
+                    amount = -0.1;
+                    break;
+                case SHIFT_RIGHT:
+                    amount = -1;
+                    break;
+                case WINDOW_BORDER_LEFT:
+                case WINDOW_BORDER_RIGHT:
+                case MIDDLE:
+                case NUMBER_KEY:
+                case DOUBLE_CLICK:
+                case DROP:
+                case CONTROL_DROP:
+                case CREATIVE:
+                case SWAP_OFFHAND:
+                case UNKNOWN:
+                    return;
+            }
+
+            double finalAmount = amount;
+            double curr = DataContainerUtil.compute(clickEvent.getCurrentItem(), key, PersistentDataType.DOUBLE,
+                    integer -> EMath.clamp(min, max, integer + finalAmount));
+            ItemStackBuilder.of(clickEvent.getCurrentItem(), false).withLore(String.valueOf(curr));
+        };
+    }
+
+    /**
      * Gets a consumer which allows to toggle a boolean value. Used for {@link PersistentDataType#BYTE} fields.
      *
      * @param key key of value
