@@ -111,6 +111,9 @@ public abstract class EldoConfig {
         if ("DEBUG".equalsIgnoreCase(level)) {
             return Level.CONFIG;
         }
+        if ("CONFIG".equalsIgnoreCase(level)) {
+            return Level.CONFIG;
+        }
         if ("FINE".equalsIgnoreCase(level)) {
             return Level.FINE;
         }
