@@ -20,6 +20,17 @@ public final class DebugPayload extends DebugPayloadData {
      * @param plugin plugin to create debug data for
      * @return debug payload data
      */
+    public static DebugPayloadData create(Plugin plugin) {
+        return create(plugin, DebugSettings.DEFAULT);
+    }
+
+    /**
+     * Create a new debug payload.
+     *
+     * @param plugin   plugin to create debug data for
+     * @param settings settings for debug sending
+     * @return debug payload data
+     */
     public static DebugPayloadData create(Plugin plugin, DebugSettings settings) {
         PluginMetaData pluginMeta = PluginMeta.create(plugin);
         ServerMetaData serverMeta = ServerMeta.create();

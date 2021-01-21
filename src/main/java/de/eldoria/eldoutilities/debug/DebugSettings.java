@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class DebugSettings {
+public final class DebugSettings {
     public static final List<Filter> DEFAULT_FILTER = new ArrayList<Filter>() {{
         add(new Filter(Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})"), "/127.0.0.1"));
         add(new Filter(Pattern.compile("(password:) .*?$", Pattern.CASE_INSENSITIVE), "$1 *******"));
@@ -20,7 +20,7 @@ public class DebugSettings {
 
     private final List<Filter> filters = new ArrayList<>();
 
-    public DebugSettings(String host, List<Filter> filters) {
+    private DebugSettings(String host, List<Filter> filters) {
         this.host = host;
     }
 
