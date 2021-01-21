@@ -6,10 +6,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
+/**
+ * A self scheduling worker which will schedule itself when getting tasks.
+ *
+ * Will unschedule itself if no tasks are left for some time.
+ *
+ * @param <V> type of collection
+ * @param <T> type of collection implementation
+ *
+ * @since 1.4.0
+ */
 public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends BukkitRunnable {
-    private static final int MAX_DURATION_TARGET = 50; // assuming 50ms = 1 tick
     private final Plugin plugin;
-    private final Collection<V> tasks;
+    private final T tasks;
     private boolean running = false;
     private int idleTicks = 0;
     private int maxIdleTicks = 200;
@@ -70,9 +79,7 @@ public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends B
         tasks.remove(object);
     }
 
-    protected Collection<V> getQueueImplementation() {
-        return new ArrayDeque<>();
-    }
+    protected abstract T getQueueImplementation();
 
     public final void shutdown() {
         cancel();
