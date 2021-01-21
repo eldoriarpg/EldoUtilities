@@ -4,7 +4,7 @@ author: Hadde
 version: ${project.version}
 main: ${project.groupId}.eldoutilities.core.${project.name}
 website: ${project.url}
-api-version: 1.16
+api-version: 1.13
 
 commands:
   eldoDebug:
