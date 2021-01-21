@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class DebugUtil {
@@ -91,11 +91,32 @@ public final class DebugUtil {
      * @return array with meta data. may be empty, but not null.
      */
     public static @NotNull EntryData[] getAdditionalPluginMeta(Plugin plugin) {
-        EntryData[] meta = new EntryData[0];
-        if (plugin instanceof EldoPlugin) {
-            meta = ((EldoPlugin) plugin).getDebugInformations();
+        List<EntryData> meta = new LinkedList<>();
+
+        if (plugin instanceof DebugDataProvider) {
+            Set<DebugDataProvider> debuged = new HashSet<>();
+            Queue<DebugDataProvider> providers = new ArrayDeque<>();
+            providers.add((DebugDataProvider) plugin);
+            debuged.add((DebugDataProvider) plugin);
+            while (!providers.isEmpty()) {
+                DebugDataProvider provider = providers.poll();
+                for (DebugDataProvider nextProvider : provider.getDebugProviders()) {
+                    if (debuged.contains(nextProvider)) {
+                        plugin.getLogger()
+                                .warning("Loop in debug data detected. Instance of class "
+                                        + nextProvider.getClass().getSimpleName()
+                                        + " returns a reference to already debugged instance of "
+                                        + provider.getClass().getSimpleName());
+                        continue;
+                    }
+                    providers.add(nextProvider);
+                    debuged.add(nextProvider);
+                }
+                meta.addAll(Arrays.asList(provider.getDebugInformations()));
+            }
         }
-        return meta;
+
+        return meta.toArray(new EntryData[0]);
     }
 
     private static Optional<DebugResponse> sendDebug(Plugin plugin, DebugPayloadData payload, DebugSettings settings) {
