@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.debug.payload;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
+import de.eldoria.eldoutilities.debug.DebugSettings;
 import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.simplecommands.EldoCommand;
 import org.bukkit.plugin.Plugin;
@@ -11,7 +12,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ConfigDump extends EntryData {
@@ -26,7 +30,7 @@ public class ConfigDump extends EntryData {
      * @param plugin plugin to dump teh configs
      * @return configs as an array.
      */
-    public static EntryData[] create(Plugin plugin) {
+    public static EntryData[] create(Plugin plugin, DebugSettings settings) {
         Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
 
         EldoConfig mainConfig = EldoConfig.getMainConfig(plugin.getClass());
@@ -53,6 +57,8 @@ public class ConfigDump extends EntryData {
             }
             dumps.add(new ConfigDump(config, content));
         }
+
+        dumps.forEach(e -> e.applyFilter(settings));
 
         return dumps.toArray(new ConfigDump[0]);
     }

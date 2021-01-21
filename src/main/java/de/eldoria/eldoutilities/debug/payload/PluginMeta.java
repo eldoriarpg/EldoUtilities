@@ -26,7 +26,13 @@ public final class PluginMeta extends PluginMetaData {
         String[] loadBefore = descr.getLoadBefore().toArray(new String[0]);
         String[] dependencies = descr.getDepend().toArray(new String[0]);
         String[] softDependencies = descr.getSoftDepend().toArray(new String[0]);
-        String[] provides = descr.getProvides().toArray(new String[0]);
+        String[] provides;
+        // TODO: Replace this with proper version detection
+        try {
+            provides = descr.getProvides().toArray(new String[0]);
+        } catch (NoSuchMethodError e) {
+            provides = new String[0];
+        }
         return new PluginMeta(name, version, enabled, main, authors,
                 loadBefore, dependencies, softDependencies, provides);
     }

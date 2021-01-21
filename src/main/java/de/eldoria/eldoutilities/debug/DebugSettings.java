@@ -3,15 +3,67 @@ package de.eldoria.eldoutilities.debug;
 
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+
 public class DebugSettings {
-    public static final DebugSettings DEFAULT = new DebugSettings(ButlerUpdateData.HOST);
+    public static final List<Filter> DEFAULT_FILTER = new ArrayList<Filter>() {{
+        add(new Filter(Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})"), "/127.0.0.1"));
+        add(new Filter(Pattern.compile("(password:) .*?$", Pattern.CASE_INSENSITIVE), "$1 *******"));
+        add(new Filter(Pattern.compile("(user:) .*?", Pattern.CASE_INSENSITIVE), "$1 *****"));
+    }};
+
+    public static final DebugSettings DEFAULT = new DebugSettings(ButlerUpdateData.HOST, DEFAULT_FILTER);
     private final String host;
 
-    public DebugSettings(String host) {
+    private final List<Filter> filters = new ArrayList<>();
+
+    public DebugSettings(String host, List<Filter> filters) {
         this.host = host;
     }
 
     public String getHost() {
         return host;
+    }
+
+    public void addFilter(Filter... filter) {
+        filters.addAll(Arrays.asList(filter));
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public String applyFilter(String text) {
+        for (Filter filter : filters) {
+            text = filter.apply(text);
+        }
+        return text;
+    }
+
+    public static class Builder {
+        private String host = ButlerUpdateData.HOST;
+        private final List<Filter> filters = new ArrayList<>();
+
+        public Builder forHost(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public Builder withFilter(Filter... filter) {
+            this.filters.addAll(Arrays.asList(filter));
+            return this;
+        }
+
+        public Builder withDefaultFilter() {
+            this.filters.addAll(DEFAULT_FILTER);
+            return this;
+        }
+
+        public DebugSettings build() {
+            return new DebugSettings(host, filters);
+        }
     }
 }

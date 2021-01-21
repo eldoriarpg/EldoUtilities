@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.debug.payload;
 
+import de.eldoria.eldoutilities.debug.DebugSettings;
 import de.eldoria.eldoutilities.debug.data.LogData;
 import org.bukkit.plugin.Plugin;
 
@@ -18,13 +19,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LogMeta extends LogData {
-    private static final Pattern IP = Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})");
     private static final Pattern EXCEPTION = Pattern.compile(
-            "^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] (\\[[^\\]]*?(?:ERROR|WARN)]:.*?)^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}]",
+            "[0-9]{2}:[0-9]{2}:[0-9]{2}] (\\[[^\\]]*?(?:ERROR|WARN)]:.*?)^\\[",
             Pattern.DOTALL + Pattern.MULTILINE);
-    private static final String PLUGIN_LOG = "^(\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?name].*?)^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}]";
-            // [time] [channel] [plugin]
-            //"^(\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?{{name}}].*?)^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}]";
+    private static final String PLUGIN_LOG = "([0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?name].*?)^\\[";
+    // [time] [channel] [plugin]
+    //"^(\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?{{name}}].*?)^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}]";
     public static final int MAX_LOG_PART_SIZE = 2500;
     public static final int MAX_LOG_MB = 50;
 
@@ -45,7 +45,7 @@ public class LogMeta extends LogData {
      * @param plugin plugin for pure lazyness and logging purposes
      * @return Log as string.
      */
-    public static LogData create(Plugin plugin) {
+    public static LogData create(Plugin plugin, DebugSettings settings) {
         Path root = plugin.getDataFolder().toPath().toAbsolutePath().getParent().getParent();
         Path logPath = Paths.get(root.toString(), "logs", "latest.log");
         File logFile = logPath.toFile();
@@ -109,9 +109,11 @@ public class LogMeta extends LogData {
                 }
             }
         }
-        latestLog = latestLog.replaceAll(IP.pattern(), "/127.0.0.1");
+        latestLog = settings.applyFilter(latestLog);
+        String pluginlogs = settings.applyFilter(String.join("", pluginLog));
+        exceptionPair.applyFilter(settings);
 
-        return new LogMeta(latestLog, String.join("", pluginLog), exceptionPair.getInternalArray(), exceptionPair.getExternalArray());
+        return new LogMeta(latestLog, pluginlogs, exceptionPair.getInternalArray(), exceptionPair.getExternalArray());
     }
 
     private static Set<String> extractPluginLog(Collection<String> log, Plugin plugin) {
@@ -124,7 +126,7 @@ public class LogMeta extends LogData {
         Matcher matcher = pluginLogPattern.matcher(log);
         while (matcher.find()) {
             String match = matcher.group(1);
-            pluginLog.add(match);
+            pluginLog.add("[" + match);
         }
         return pluginLog;
     }
@@ -152,8 +154,8 @@ public class LogMeta extends LogData {
     }
 
     private static class ExceptionPair {
-        private final Set<String> external;
-        private final Set<String> internal;
+        private Set<String> external;
+        private Set<String> internal;
 
         public ExceptionPair() {
             external = new LinkedHashSet<>();
@@ -184,6 +186,11 @@ public class LogMeta extends LogData {
 
         public String[] getInternalArray() {
             return internal.toArray(new String[0]);
+        }
+
+        public void applyFilter(DebugSettings settings) {
+            external = external.stream().map(settings::applyFilter).collect(Collectors.toSet());
+            internal = internal.stream().map(settings::applyFilter).collect(Collectors.toSet());
         }
     }
 

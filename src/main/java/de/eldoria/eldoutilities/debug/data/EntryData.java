@@ -1,5 +1,7 @@
 package de.eldoria.eldoutilities.debug.data;
 
+import de.eldoria.eldoutilities.debug.DebugSettings;
+
 public class EntryData {
     protected String name;
     protected String content;
@@ -13,5 +15,9 @@ public class EntryData {
     public EntryData(String name, String content) {
         this.name = name;
         this.content = content;
+    }
+
+    public void applyFilter(DebugSettings settings) {
+        content = settings.applyFilter(content);
     }
 }

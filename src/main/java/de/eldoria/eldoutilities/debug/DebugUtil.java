@@ -71,7 +71,7 @@ public final class DebugUtil {
         }
 
         EldoUtilities.getAsyncSyncingCallbackExecutor().schedule(
-                () -> sendDebug(plugin, DebugPayload.create(plugin), settings),
+                () -> sendDebug(plugin, DebugPayload.create(plugin, settings), settings),
                 debugResponse -> {
                     if (debugResponse.isPresent()) {
                         messageSender.send(MessageChannel.CHAT, MessageType.NORMAL, sender,
