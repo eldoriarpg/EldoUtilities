@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public final class DebugSettings {
     public static final List<Filter> DEFAULT_FILTER = new ArrayList<Filter>() {{
         add(new Filter(Pattern.compile("/([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{1,5})"), "/127.0.0.1"));
-        add(new Filter(Pattern.compile("(password:) .*?$", Pattern.CASE_INSENSITIVE), "$1 *******"));
-        add(new Filter(Pattern.compile("(user:) .*?", Pattern.CASE_INSENSITIVE), "$1 *****"));
+        add(new Filter(Pattern.compile("(?i)(password:).*?$", Pattern.MULTILINE), "$1 *******"));
+        add(new Filter(Pattern.compile("(?i)(user:).*?$", Pattern.MULTILINE), "$1 *****"));
     }};
 
     public static final DebugSettings DEFAULT = new DebugSettings(ButlerUpdateData.HOST, DEFAULT_FILTER);
@@ -22,6 +22,7 @@ public final class DebugSettings {
 
     private DebugSettings(String host, List<Filter> filters) {
         this.host = host;
+        this.filters.addAll(filters);
     }
 
     public String getHost() {
