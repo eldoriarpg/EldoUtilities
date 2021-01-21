@@ -1,28 +1,24 @@
 package de.eldoria.eldoutilities.scheduling;
 
+import de.eldoria.eldoutilities.threading.ReschedulingTask;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 
 /**
  * A self scheduling worker which will schedule itself when getting tasks.
- *
+ * <p>
  * Will unschedule itself if no tasks are left for some time.
  *
  * @param <V> type of collection
  * @param <T> type of collection implementation
- *
  * @since 1.4.0
  */
-public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends BukkitRunnable {
-    private final Plugin plugin;
+public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends ReschedulingTask {
     private final T tasks;
-    private boolean running = false;
     private int idleTicks = 0;
     private int maxIdleTicks = 200;
-    private boolean active = true;
 
     public SelfSchedulingWorker(Plugin plugin, int maxIdleTicks) {
         this(plugin);
@@ -30,7 +26,7 @@ public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends B
     }
 
     public SelfSchedulingWorker(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
         tasks = getQueueImplementation();
     }
 
@@ -58,20 +54,16 @@ public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends B
             idleTicks++;
             if (idleTicks >= maxIdleTicks) {
                 cancel();
-                plugin.getLogger().fine(getClass().getSimpleName() + " of " + plugin.getName() + " paused. No tasks left.");
-                running = false;
             }
         }
     }
 
     protected final void register(V object) {
-        if (!active) return;
+        if (!isActive()) return;
         tasks.add(object);
-        if (!running) {
-            runTaskTimer(plugin, 0, 1);
-            running = true;
+        if (!isRunning()) {
+            schedule();
             idleTicks = 0;
-            plugin.getLogger().fine(getClass().getSimpleName() + " of " + plugin.getName() + " started. Processing tasks.");
         }
     }
 
@@ -81,24 +73,12 @@ public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends B
 
     protected abstract T getQueueImplementation();
 
+    @Override
     public final void shutdown() {
-        cancel();
-        active = false;
+        super.shutdown();
         for (V task : tasks) {
             execute(task);
         }
         tasks.clear();
-    }
-
-    public Plugin getPlugin() {
-        return plugin;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 }
