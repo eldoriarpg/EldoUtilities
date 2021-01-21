@@ -1,8 +1,12 @@
 package de.eldoria.eldoutilities.plugin;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
+import de.eldoria.eldoutilities.debug.DebugDataProvider;
 import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.logging.DebugLogger;
+import de.eldoria.eldoutilities.simplecommands.EldoCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -30,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @since 1.1.0
  */
-public class EldoPlugin extends JavaPlugin {
+public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
     private static final Map<Class<? extends EldoPlugin>, EldoPlugin> INSTANCES = new HashMap<>();
     private PluginManager pluginManager = null;
     private BukkitScheduler scheduler = null;
@@ -73,6 +77,7 @@ public class EldoPlugin extends JavaPlugin {
         getLogger().setLevel(EldoConfig.getLogLevel(getClass()));
     }
 
+    @Override
     public @NotNull EntryData[] getDebugInformations() {
         return new EntryData[0];
     }
