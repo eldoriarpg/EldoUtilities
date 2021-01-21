@@ -12,30 +12,52 @@ public abstract class ReschedulingTask {
         this.plugin = plugin;
     }
 
+    /**
+     * Schedules the task if it is not running.
+     */
     public void schedule() {
-        if (task != null) {
-            task = new InternalTask(getClass(), this::run);
+        if (!isActive()) return;
+        if (!isRunning()) {
+            task = new InternalTask(this::run);
             task.runTaskTimer(plugin, 0, 1);
             plugin.getLogger().fine(getClass().getSimpleName() + " of " + plugin.getName() + " started.");
         }
     }
 
+    /**
+     * Cancel the task if it is running.
+     */
     public void cancel() {
-        if (task != null) {
+        if (isRunning()) {
             task.cancel();
             task = null;
             plugin.getLogger().fine(getClass().getSimpleName() + " of " + plugin.getName() + " paused.");
         }
     }
 
+    /**
+     * Shuts down the scheduler. It can be not scheduled again after this.
+     */
     public void shutdown() {
         active = false;
     }
 
+    /**
+     * Check if the task is running.
+     *
+     * @return true if the task is running
+     */
     public boolean isRunning() {
         return task != null;
     }
 
+    /**
+     * Check if the task is active.
+     * <p>
+     * If the task is not active you cant schedule it.
+     *
+     * @return true if active
+     */
     public boolean isActive() {
         return active;
     }
@@ -47,17 +69,14 @@ public abstract class ReschedulingTask {
     }
 
     private static class InternalTask extends BukkitRunnable {
-        private final Class<? extends ReschedulingTask> parent;
         private final Runnable runnable;
 
-        public InternalTask(Class<? extends ReschedulingTask> parent, Runnable runnable) {
-            this.parent = parent;
+        public InternalTask(Runnable runnable) {
             this.runnable = runnable;
         }
 
         @Override
         public void run() {
-            Thread.currentThread().setName("EldoUtils - " + parent.getSimpleName() + " Task.");
             runnable.run();
         }
     }
