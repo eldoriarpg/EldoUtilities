@@ -2,10 +2,10 @@ package de.eldoria.eldoutilities.scheduling;
 
 import de.eldoria.eldoutilities.threading.ReschedulingTask;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Predicate;
 
 public abstract class QueuingSelfSchedulingTask<T> extends ReschedulingTask {
     private static final int MAX_DURATION_TARGET = 50; // assuming 50ms = 1 tick
@@ -85,5 +85,13 @@ public abstract class QueuingSelfSchedulingTask<T> extends ReschedulingTask {
             execute(task);
         }
         tasks.clear();
+    }
+
+    public boolean remove(T o) {
+        return tasks.remove(o);
+    }
+
+    public boolean removeIf(Predicate<? super T> filter) {
+        return tasks.removeIf(filter);
     }
 }
