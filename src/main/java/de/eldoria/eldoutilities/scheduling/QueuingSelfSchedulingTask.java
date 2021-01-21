@@ -87,11 +87,11 @@ public abstract class QueuingSelfSchedulingTask<T> extends ReschedulingTask {
         tasks.clear();
     }
 
-    public boolean remove(T o) {
+    protected boolean remove(T o) {
         return tasks.remove(o);
     }
 
-    public boolean removeIf(Predicate<? super T> filter) {
+    protected boolean removeIf(Predicate<? super T> filter) {
         return tasks.removeIf(filter);
     }
 }
