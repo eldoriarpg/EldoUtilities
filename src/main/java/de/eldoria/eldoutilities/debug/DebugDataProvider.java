@@ -17,6 +17,8 @@ import java.util.List;
  * Your plugin instance is the entry point for debugging. If you want to use this interface your plugin class has to implement it.
  * <p>
  * Instance of {@link EldoPlugin} are already a {@link DebugDataProvider}. Just override the method.
+ *
+ * @since 1.3.4
  */
 public interface DebugDataProvider {
 

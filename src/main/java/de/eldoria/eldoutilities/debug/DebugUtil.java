@@ -25,6 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 
+/**
+ * @since 1.3.2
+ */
 public final class DebugUtil {
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
