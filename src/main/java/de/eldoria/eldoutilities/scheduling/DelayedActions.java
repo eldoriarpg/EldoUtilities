@@ -1,5 +1,6 @@
 package de.eldoria.eldoutilities.scheduling;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +64,7 @@ public final class DelayedActions extends QueuingSelfSchedulingTask<DelayedActio
 
     @Override
     protected boolean proceed(DelayedTask object) {
-        return object.tick >= currentTick;
+        return object.tick <= currentTick;
     }
 
     protected static class DelayedTask implements Comparable<DelayedTask> {
