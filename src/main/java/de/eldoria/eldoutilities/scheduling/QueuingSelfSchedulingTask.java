@@ -70,8 +70,8 @@ public abstract class QueuingSelfSchedulingTask<T> extends ReschedulingTask {
         tasks.add(object);
         if (!isRunning()) {
             schedule();
-            idleTicks = 0;
         }
+        idleTicks = 0;
     }
 
     protected Queue<T> getQueueImplementation() {

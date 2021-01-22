@@ -2,7 +2,6 @@ package de.eldoria.eldoutilities.scheduling;
 
 import de.eldoria.eldoutilities.threading.ReschedulingTask;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 
@@ -63,8 +62,8 @@ public abstract class SelfSchedulingWorker<V, T extends Collection<V>> extends R
         tasks.add(object);
         if (!isRunning()) {
             schedule();
-            idleTicks = 0;
         }
+        idleTicks = 0;
     }
 
     public final void unregister(V object) {
