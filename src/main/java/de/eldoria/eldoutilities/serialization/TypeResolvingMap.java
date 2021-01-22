@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Map for type resolving.
@@ -81,6 +82,21 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
      */
     public <T extends Enum<T>> T getValueOrDefault(String key, T defaultValue, Class<T> clazz) {
         return EnumUtil.parse(getValueOrDefault(key, defaultValue.name()), clazz, defaultValue);
+    }
+
+    /**
+     * Get a value from map.
+     *
+     * @param key          key
+     * @param defaultValue default value if key does not exist
+     * @param clazz        enum clazz to resolve
+     * @param <T>          type of return value
+     * @return value of key or default value
+     */
+    public <T extends Enum<T>> List<T> getValueOrDefault(String key, List<T> defaultValue, Class<T> clazz) {
+        List<String> names = getValue(key);
+        if (names == null) return defaultValue;
+        return names.stream().map(name -> EnumUtil.parse(name, clazz)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**

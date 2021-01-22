@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -249,6 +250,10 @@ public final class SerializationUtil {
                                   BiFunction<K, V, Object> valueFunction) {
             map.forEach((k, v) -> add(keyFunction.apply(k, v), valueFunction.apply(k, v)));
             return this;
+        }
+
+        public <T extends Enum<?>> Builder addEnum(String key, Collection<T> values) {
+            return add(key, values.stream().map(Enum::name).collect(Collectors.toCollection((Supplier<Collection<String>>) ArrayList::new)));
         }
 
         /**
