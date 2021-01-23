@@ -102,7 +102,7 @@ public final class ActionConsumer {
             double finalAmount = amount;
             double curr = DataContainerUtil.compute(clickEvent.getCurrentItem(), key, PersistentDataType.DOUBLE,
                     integer -> EMath.clamp(min, max, integer + finalAmount));
-            ItemStackBuilder.of(clickEvent.getCurrentItem(), false).withLore(String.valueOf(curr));
+            ItemStackBuilder.of(clickEvent.getCurrentItem(), false).withLore(String.format("%.2f", curr));
         };
     }
 
