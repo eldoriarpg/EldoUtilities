@@ -2,6 +2,7 @@ package de.eldoria.eldoutilities.utils;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
@@ -47,7 +48,9 @@ public final class DataContainerUtil {
     public static <T, Z> void setIfAbsent(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
         if (holder == null) return;
 
-        setIfAbsent(holder.getItemMeta(), key, type, value);
+        ItemMeta itemMeta = holder.getItemMeta();
+        setIfAbsent(itemMeta, key, type, value);
+        holder.setItemMeta(itemMeta);
     }
 
     /**
@@ -89,7 +92,10 @@ public final class DataContainerUtil {
     public static @Nullable <T, Z> Z compute(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<Z, Z> map) {
         if (holder == null) return null;
 
-        return compute(holder.getItemMeta(), key, type, map);
+        ItemMeta itemMeta = holder.getItemMeta();
+        Z compute = compute(itemMeta, key, type, map);
+        holder.setItemMeta(itemMeta);
+        return compute;
     }
 
     /**
@@ -129,7 +135,11 @@ public final class DataContainerUtil {
     @Contract("null, _, _, _ -> null; !null, _, _, _, -> !null")
     public static @Nullable <T, Z> Z computeIfAbsent(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
         if (holder == null) return null;
-        return computeIfAbsent(holder.getItemMeta(), key, type, value);
+        ItemMeta itemMeta = holder.getItemMeta();
+        Z z = computeIfAbsent(itemMeta, key, type, value);
+        holder.setItemMeta(itemMeta);
+
+        return z;
     }
 
     /**
@@ -169,7 +179,12 @@ public final class DataContainerUtil {
     @Contract("null, _, _, _ -> null; !null, _, _, _, -> !null")
     public static @Nullable <T, Z> Z computeIfPresent(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Function<Z, Z> mappingFunction) {
         if (holder == null) return null;
-        return computeIfPresent(holder.getItemMeta(), key, type, mappingFunction);
+
+        ItemMeta itemMeta = holder.getItemMeta();
+        Z z = computeIfPresent(itemMeta, key, type, mappingFunction);
+        holder.setItemMeta(itemMeta);
+
+        return z;
     }
 
     public static <T, Z> Optional<Z> get(@Nullable PersistentDataHolder holder, NamespacedKey key, PersistentDataType<T, Z> type) {
@@ -192,7 +207,7 @@ public final class DataContainerUtil {
     }
 
     public static <T, Z> Z getOrDefault(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Z defaultValue) {
-        if(holder == null) return defaultValue;
+        if (holder == null) return defaultValue;
         return getOrDefault(holder.getItemMeta(), key, type, defaultValue);
     }
 
@@ -203,7 +218,9 @@ public final class DataContainerUtil {
 
     public static <T, Z> void putValue(@Nullable ItemStack holder, NamespacedKey key, PersistentDataType<T, Z> type, Z value) {
         if (holder == null) return;
-        putValue(holder, key, type, value);
+        ItemMeta itemMeta = holder.getItemMeta();
+        putValue(itemMeta, key, type, value);
+        holder.setItemMeta(itemMeta);
     }
 
 
@@ -214,9 +231,7 @@ public final class DataContainerUtil {
      * @return byte as boolean. false if null
      */
     public static boolean byteToBoolean(Byte aByte) {
-        if (aByte == null) return false;
-
-        return aByte == (byte) 1;
+        return aByte != null && aByte == (byte) 1;
     }
 
     /**
