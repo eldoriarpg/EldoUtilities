@@ -77,10 +77,22 @@ public class ArmorStandWrapper implements ConfigurationSerializable {
         this.visible = armorStand.isVisible();
     }
 
+    /**
+     * Wraps the armor stand into an serializable object.
+     *
+     * @param armorStand armor stand to wrap
+     * @return wrapped armor stand object.
+     */
     public static ArmorStandWrapper serialize(ArmorStand armorStand) {
         return new ArmorStandWrapper(armorStand);
     }
 
+    /**
+     * Spawns the wrapped armor stand at the requested location
+     *
+     * @param location location of armor stand
+     * @return spawned entity
+     */
     public ArmorStand spawn(Location location) {
         return EntityBuilder.of(EntityType.ARMOR_STAND, location)
                 .withCustomName(customName)

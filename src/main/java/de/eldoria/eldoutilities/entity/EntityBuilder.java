@@ -284,6 +284,30 @@ public final class EntityBuilder {
     }
 
     /**
+     * Applies a consumer on this entity
+     *
+     * @param entityConsumer consumer
+     * @return builder instance
+     */
+    public EntityBuilder with(Consumer<LivingEntity> entityConsumer) {
+        entityConsumer.accept(entity);
+        return this;
+    }
+
+    /**
+     * Applies a consumer on this entity after casting it to the requested type.
+     *
+     * @param clazz          class of entity
+     * @param entityConsumer consumer
+     * @param <T>            type of entity
+     * @return builder instance
+     */
+    public <T extends LivingEntity> EntityBuilder with(Class<T> clazz, Consumer<T> entityConsumer) {
+        entityConsumer.accept((T) entity);
+        return this;
+    }
+
+    /**
      * Set if this entity will be subject to collisions with other entities.
      * <p>
      * Exemptions to this rule can be managed with
