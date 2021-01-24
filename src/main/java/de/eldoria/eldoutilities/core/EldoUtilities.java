@@ -6,9 +6,9 @@ import de.eldoria.eldoutilities.inventory.InventoryActionHandler;
 import de.eldoria.eldoutilities.messages.MessageChannel;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
-import de.eldoria.eldoutilities.threading.AsyncSyncingCallbackExecutor;
 import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.serialization.MapEntry;
+import de.eldoria.eldoutilities.threading.AsyncSyncingCallbackExecutor;
 import de.eldoria.eldoutilities.updater.Updater;
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
 import org.bstats.bukkit.Metrics;
@@ -76,6 +76,7 @@ public final class EldoUtilities extends EldoPlugin {
         Updater.Butler(new ButlerUpdateData(this, "eldoutilities", configuration.isUpdateCheck(),
                 false, 9, ButlerUpdateData.HOST)).start();
         Metrics metrics = new Metrics(this, 9958);
+        metrics.addCustomChart(new Metrics.SimplePie("eldoPluginCount", () -> String.valueOf(EldoPlugin.getEldoPlugins().size() - 1)));
         if (metrics.isEnabled()) {
             getLogger().info("§2Metrics enabled. Thank you <3");
         }
