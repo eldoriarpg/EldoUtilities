@@ -33,7 +33,8 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class Localizer implements ILocalizer {
-    private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
+    private static final Pattern EMBED_LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
+    private static final Pattern LOCALIZATION_CODE = Pattern.compile("([a-zA-Z.]+?)");
 
     private final ResourceBundle fallbackLocaleFile;
     private final Plugin plugin;
@@ -349,12 +350,12 @@ public class Localizer implements ILocalizer {
         }
 
         // If the matcher doesn't find any key we assume its a simple message.
-        if (!LOCALIZATION_CODE.matcher(message).find()) {
+        if (LOCALIZATION_CODE.matcher(message).matches()) {
             return getMessage(message, replacements);
         }
 
         // find locale codes in message
-        Matcher matcher = LOCALIZATION_CODE.matcher(message);
+        Matcher matcher = EMBED_LOCALIZATION_CODE.matcher(message);
         List<String> keys = new ArrayList<>();
         while (matcher.find()) {
             keys.add(matcher.group(1));
