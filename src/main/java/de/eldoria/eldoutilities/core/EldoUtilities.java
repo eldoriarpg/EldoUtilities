@@ -8,6 +8,7 @@ import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.serialization.MapEntry;
+import de.eldoria.eldoutilities.serialization.util.ArmorStandWrapper;
 import de.eldoria.eldoutilities.threading.AsyncSyncingCallbackExecutor;
 import de.eldoria.eldoutilities.updater.Updater;
 import de.eldoria.eldoutilities.updater.butlerupdater.ButlerUpdateData;
@@ -16,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -118,6 +120,6 @@ public final class EldoUtilities extends EldoPlugin {
 
     @Override
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return Arrays.asList(MapEntry.class);
+        return Arrays.asList(MapEntry.class, ArmorStandWrapper.class);
     }
 }
