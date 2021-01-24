@@ -2,7 +2,6 @@ package de.eldoria.eldoutilities.simplecommands.commands;
 
 import de.eldoria.eldoutilities.debug.DebugSettings;
 import de.eldoria.eldoutilities.debug.DebugUtil;
-import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.simplecommands.EldoCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

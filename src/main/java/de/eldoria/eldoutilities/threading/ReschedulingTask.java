@@ -4,8 +4,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class ReschedulingTask {
-    private BukkitRunnable task = null;
     private final Plugin plugin;
+    private BukkitRunnable task = null;
     private boolean active = true;
 
     public ReschedulingTask(Plugin plugin) {

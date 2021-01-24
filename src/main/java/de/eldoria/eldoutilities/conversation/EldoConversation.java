@@ -15,8 +15,8 @@ public class EldoConversation extends Conversation {
     private final ILocalizer localizer;
     private final MessageSender sender;
     private final MessageType messageType;
-    private String userPrefix;
-    private String pluginPrefix;
+    private final String userPrefix;
+    private final String pluginPrefix;
 
     public EldoConversation(@Nullable Plugin plugin, @NotNull Conversable forWhom, @Nullable Prompt firstPrompt,
                             @NotNull Map<Object, Object> initialSessionData, String pluginPrefix, String userPrefix, MessageType messageType) {
@@ -26,6 +26,10 @@ public class EldoConversation extends Conversation {
         sender = MessageSender.getPluginMessageSender(plugin);
         this.pluginPrefix = pluginPrefix == null ? sender.getPrefix() : pluginPrefix;
         this.userPrefix = userPrefix == null ? "" : userPrefix;
+    }
+
+    public static Builder builder(Plugin plugin, Conversable forWhom, Prompt firstPrompt) {
+        return new Builder(plugin, forWhom, firstPrompt);
     }
 
     /**
@@ -85,10 +89,6 @@ public class EldoConversation extends Conversation {
                 outputNextPrompt();
             }
         }
-    }
-
-    public static Builder builder(Plugin plugin, Conversable forWhom, Prompt firstPrompt) {
-        return new Builder(plugin, forWhom, firstPrompt);
     }
 
     public static class Builder {

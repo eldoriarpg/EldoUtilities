@@ -45,11 +45,6 @@ public class ArmorStandWrapper implements ConfigurationSerializable {
         SerializationUtil.mapOnObject(objectMap, this);
     }
 
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return SerializationUtil.objectToMap(this);
-    }
-
     private ArmorStandWrapper(ArmorStand armorStand) {
         this.customName = armorStand.getCustomName();
         this.customNameVisible = armorStand.isCustomNameVisible();
@@ -85,6 +80,19 @@ public class ArmorStandWrapper implements ConfigurationSerializable {
      */
     public static ArmorStandWrapper serialize(ArmorStand armorStand) {
         return new ArmorStandWrapper(armorStand);
+    }
+
+    private static Vector eulerAngleToVector(EulerAngle euler) {
+        return new Vector(euler.getX(), euler.getY(), euler.getZ());
+    }
+
+    private static EulerAngle vectorToEulerAngle(Vector vector) {
+        return new EulerAngle(vector.getX(), vector.getY(), vector.getZ());
+    }
+
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        return SerializationUtil.objectToMap(this);
     }
 
     /**
@@ -124,13 +132,5 @@ public class ArmorStandWrapper implements ConfigurationSerializable {
                     e.setVisible(visible);
                 })
                 .build();
-    }
-
-    private static Vector eulerAngleToVector(EulerAngle euler) {
-        return new Vector(euler.getX(), euler.getY(), euler.getZ());
-    }
-
-    private static EulerAngle vectorToEulerAngle(Vector vector) {
-        return new EulerAngle(vector.getX(), vector.getY(), vector.getZ());
     }
 }

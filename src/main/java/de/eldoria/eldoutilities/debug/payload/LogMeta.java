@@ -19,14 +19,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LogMeta extends LogData {
-    private static final Pattern EXCEPTION = Pattern.compile(
-            "[0-9]{2}:[0-9]{2}:[0-9]{2}] (\\[[^\\]]*?(?:ERROR|WARN)]:.*?)^\\[",
-            Pattern.DOTALL + Pattern.MULTILINE);
-    private static final String PLUGIN_LOG = "([0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?name].*?)^\\[";
     // [time] [channel] [plugin]
     //"^(\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?{{name}}].*?)^\\[[0-9]{2}:[0-9]{2}:[0-9]{2}]";
     public static final int MAX_LOG_PART_SIZE = 2500;
     public static final int MAX_LOG_MB = 50;
+    private static final Pattern EXCEPTION = Pattern.compile(
+            "[0-9]{2}:[0-9]{2}:[0-9]{2}] (\\[[^\\]]*?(?:ERROR|WARN)]:.*?)^\\[",
+            Pattern.DOTALL + Pattern.MULTILINE);
+    private static final String PLUGIN_LOG = "([0-9]{2}:[0-9]{2}:[0-9]{2}] \\[[^\\]]*?]: \\[[^\\]]*?name].*?)^\\[";
 
     public LogMeta(String log, String pluginLog, String[] internalExceptions, String[] exceptions) {
         super(log, pluginLog, internalExceptions, exceptions);

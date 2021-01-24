@@ -125,11 +125,14 @@ public final class MessageSender {
                 : PLUGIN_SENDER.getOrDefault(plugin, DEFAULT_SENDER);
     }
 
+    public static MessageSender getDefaultSender() {
+        return DEFAULT_SENDER;
+    }
+
     private MessageSender update(String prefix) {
         this.prefix = prefix;
         return this;
     }
-
 
     /**
      * Send a message to a sender
@@ -399,9 +402,5 @@ public final class MessageSender {
 
     public String getPrefix() {
         return prefix;
-    }
-
-    public static MessageSender getDefaultSender() {
-        return DEFAULT_SENDER;
     }
 }

@@ -52,7 +52,7 @@ public abstract class EldoCommand implements TabExecutor {
     protected static boolean argumentsInvalid(CommandSender sender, MessageSender messageSender, ILocalizer localizer, String[] args, int length, String syntax) {
         if (args.length < length) {
             messageSender.sendError(sender, localizer.getMessage("error.invalidArguments",
-                    Replacement.create("SYNTAX", localizer.localize(syntax, new Replacement[0])).addFormatting('6')));
+                    Replacement.create("SYNTAX", localizer.localize(syntax)).addFormatting('6')));
             return true;
         }
         return false;

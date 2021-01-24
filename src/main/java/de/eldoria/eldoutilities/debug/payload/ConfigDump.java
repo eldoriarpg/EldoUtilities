@@ -39,8 +39,8 @@ public class ConfigDump extends EntryData {
         Set<String> configs = new LinkedHashSet<>();
         if (mainConfig != null) {
             try {
-            mainConfig.save();
-            }catch (Exception e){
+                mainConfig.save();
+            } catch (Exception e) {
                 plugin.getLogger().log(Level.CONFIG, "something went wrong while saving the config. Skipping", e);
             }
             configs.addAll(mainConfig.getConfigs().keySet());

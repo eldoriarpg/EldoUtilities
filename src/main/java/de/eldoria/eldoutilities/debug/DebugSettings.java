@@ -25,16 +25,16 @@ public final class DebugSettings {
         this.filters.addAll(filters);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public String getHost() {
         return host;
     }
 
     public void addFilter(Filter... filter) {
         filters.addAll(Arrays.asList(filter));
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public String applyFilter(String text) {
@@ -45,8 +45,8 @@ public final class DebugSettings {
     }
 
     public static class Builder {
-        private String host = ButlerUpdateData.HOST;
         private final List<Filter> filters = new ArrayList<>();
+        private String host = ButlerUpdateData.HOST;
 
         public Builder forHost(String host) {
             this.host = host;

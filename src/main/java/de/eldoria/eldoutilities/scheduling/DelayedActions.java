@@ -1,6 +1,5 @@
 package de.eldoria.eldoutilities.scheduling;
 
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +54,7 @@ public final class DelayedActions extends QueuingSelfSchedulingTask<DelayedActio
      * @param delay    delay for execution.
      */
     public void schedule(Runnable runnable, int delay) {
-        if(delay == 0) {
+        if (delay == 0) {
             runnable.run();
             return;
         }

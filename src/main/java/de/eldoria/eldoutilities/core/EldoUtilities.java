@@ -17,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -67,6 +66,12 @@ public final class EldoUtilities extends EldoPlugin {
         return getInstance(EldoUtilities.class).getLogger();
     }
 
+    private static void registerPublicServices(EldoUtilities plugin) {
+        delayedActions = DelayedActions.start(plugin);
+        inventoryActionHandler = new InventoryActionHandler();
+        asyncSyncingCallbackExecutor = AsyncSyncingCallbackExecutor.create(plugin);
+    }
+
     @Override
     public void onLoad() {
     }
@@ -110,12 +115,6 @@ public final class EldoUtilities extends EldoPlugin {
         if (asyncSyncingCallbackExecutor != null) {
             asyncSyncingCallbackExecutor.shutdown();
         }
-    }
-
-    private static void registerPublicServices(EldoUtilities plugin) {
-        delayedActions = DelayedActions.start(plugin);
-        inventoryActionHandler = new InventoryActionHandler();
-        asyncSyncingCallbackExecutor = AsyncSyncingCallbackExecutor.create(plugin);
     }
 
     @Override

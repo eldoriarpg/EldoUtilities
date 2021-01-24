@@ -1,7 +1,6 @@
 package de.eldoria.eldoutilities.utils;
 
 import de.eldoria.eldoutilities.core.EldoUtilities;
-import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;

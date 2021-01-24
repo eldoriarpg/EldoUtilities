@@ -3,11 +3,8 @@ package de.eldoria.eldoutilities.threading;
 import de.eldoria.eldoutilities.scheduling.QueuingSelfSchedulingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -19,6 +16,11 @@ public final class AsyncSyncingCallbackExecutor extends QueuingSelfSchedulingTas
 
     private final BukkitScheduler scheduler;
 
+    private AsyncSyncingCallbackExecutor(Plugin plugin) {
+        super(plugin);
+        scheduler = Bukkit.getScheduler();
+    }
+
     /**
      * Returns a new running executor instance.
      *
@@ -27,11 +29,6 @@ public final class AsyncSyncingCallbackExecutor extends QueuingSelfSchedulingTas
      */
     public static AsyncSyncingCallbackExecutor create(Plugin plugin) {
         return new AsyncSyncingCallbackExecutor(plugin);
-    }
-
-    private AsyncSyncingCallbackExecutor(Plugin plugin) {
-        super(plugin);
-        scheduler = Bukkit.getScheduler();
     }
 
     @Override

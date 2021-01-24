@@ -51,7 +51,7 @@ public final class InventoryActions {
         actions.put(action.getSlot(), action);
     }
 
-    public void addAction(ItemStack itemStack, int slot, Consumer<InventoryClickEvent> onClick, Consumer<@Nullable ItemStack> onClose ) {
+    public void addAction(ItemStack itemStack, int slot, Consumer<InventoryClickEvent> onClick, Consumer<@Nullable ItemStack> onClose) {
         addAction(new ActionItem(itemStack, slot, onClick, onClose));
     }
 

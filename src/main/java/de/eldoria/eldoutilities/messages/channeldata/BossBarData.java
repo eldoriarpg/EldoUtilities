@@ -25,12 +25,12 @@ public final class BossBarData implements ChannelData {
         this.flags = flags;
     }
 
-    public BossBar create(NamespacedKey key, String message) {
-        return Bukkit.createBossBar(key, message, color, style, flags);
-    }
-
     public static Builder builder() {
         return new Builder();
+    }
+
+    public BossBar create(NamespacedKey key, String message) {
+        return Bukkit.createBossBar(key, message, color, style, flags);
     }
 
     public int getDuration() {

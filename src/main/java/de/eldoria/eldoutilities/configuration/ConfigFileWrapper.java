@@ -19,22 +19,8 @@ import java.util.logging.Level;
  */
 public final class ConfigFileWrapper {
     private final File file;
-    private FileConfiguration fileConfiguration;
     private final Plugin plugin;
-
-    public static ConfigFileWrapper forFile(Plugin plugin, String filePath) {
-        return new ConfigFileWrapper(plugin, filePath, null);
-    }
-
-    public static ConfigFileWrapper forFileWithDefaults(Plugin plugin, String filePath, Map<String, Object> defaultMap) {
-        YamlConfiguration defaults = new YamlConfiguration();
-        defaultMap.forEach(defaults::set);
-        return new ConfigFileWrapper(plugin, filePath, defaults);
-    }
-
-    public static ConfigFileWrapper forFileWithDefaults(Plugin plugin, String filePath, @Nullable Configuration defaultConfig) {
-        return new ConfigFileWrapper(plugin, filePath, defaultConfig);
-    }
+    private FileConfiguration fileConfiguration;
 
     private ConfigFileWrapper(Plugin plugin, String filePath, @Nullable Configuration defaultConfig) {
         this.plugin = plugin;
@@ -54,6 +40,20 @@ public final class ConfigFileWrapper {
         }
 
         save();
+    }
+
+    public static ConfigFileWrapper forFile(Plugin plugin, String filePath) {
+        return new ConfigFileWrapper(plugin, filePath, null);
+    }
+
+    public static ConfigFileWrapper forFileWithDefaults(Plugin plugin, String filePath, Map<String, Object> defaultMap) {
+        YamlConfiguration defaults = new YamlConfiguration();
+        defaultMap.forEach(defaults::set);
+        return new ConfigFileWrapper(plugin, filePath, defaults);
+    }
+
+    public static ConfigFileWrapper forFileWithDefaults(Plugin plugin, String filePath, @Nullable Configuration defaultConfig) {
+        return new ConfigFileWrapper(plugin, filePath, defaultConfig);
     }
 
     public FileConfiguration get() {

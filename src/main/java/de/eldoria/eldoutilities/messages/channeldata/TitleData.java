@@ -12,6 +12,13 @@ public final class TitleData implements ChannelData {
     private final int fadeOut;
     private String otherLine;
 
+    private TitleData(int fadeIn, int stay, int fadeOut, String otherLine) {
+        this.fadeIn = fadeIn;
+        this.stay = stay;
+        this.fadeOut = fadeOut;
+        this.otherLine = otherLine;
+    }
+
     public static TitleData forTime(int fadeIn, int stay, int fadeOut) {
         return new TitleData(fadeIn, stay, fadeOut, "");
     }
@@ -33,13 +40,6 @@ public final class TitleData implements ChannelData {
     public void formatText(MessageType type, MessageChannel<? extends ChannelData> channel, String prefix) {
         type.forceColor(otherLine);
         otherLine = channel.addPrefix(otherLine, prefix);
-    }
-
-    private TitleData(int fadeIn, int stay, int fadeOut, String otherLine) {
-        this.fadeIn = fadeIn;
-        this.stay = stay;
-        this.fadeOut = fadeOut;
-        this.otherLine = otherLine;
     }
 
     public int getFadeIn() {

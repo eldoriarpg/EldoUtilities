@@ -16,15 +16,37 @@ import java.util.function.Predicate;
 public class ConversationRequester implements ConversationAbandonedListener, ConversationCanceller {
 
     private final Plugin plugin;
+    private final Map<Player, Long> sessions = new HashMap<>();
 
     private ConversationRequester(Plugin plugin) {
         this.plugin = plugin;
     }
 
-    private Map<Player, Long> sessions = new HashMap<>();
-
     public static ConversationRequester start(Plugin plugin) {
         return new ConversationRequester(plugin);
+    }
+
+    private static Prompt getSimplePromt(String text, Predicate<String> validation, Consumer<String> callback) {
+        return new Prompt() {
+            @Override
+            public @NotNull String getPromptText(@NotNull ConversationContext context) {
+                return text;
+            }
+
+            @Override
+            public boolean blocksForInput(@NotNull ConversationContext context) {
+                return true;
+            }
+
+            @Override
+            public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+                if (validation.test(input)) {
+                    EldoUtilities.getDelayedActions().schedule(() -> callback.accept(input), 0);
+                    return null;
+                }
+                return this;
+            }
+        };
     }
 
     public void requestInput(Player player, String text, Predicate<String> validation, int timeout, Consumer<String> callback) {
@@ -51,29 +73,6 @@ public class ConversationRequester implements ConversationAbandonedListener, Con
                 }
             }, timeout);
         }
-    }
-
-    private static Prompt getSimplePromt(String text, Predicate<String> validation, Consumer<String> callback) {
-        return new Prompt() {
-            @Override
-            public @NotNull String getPromptText(@NotNull ConversationContext context) {
-                return text;
-            }
-
-            @Override
-            public boolean blocksForInput(@NotNull ConversationContext context) {
-                return true;
-            }
-
-            @Override
-            public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
-                if (validation.test(input)) {
-                    EldoUtilities.getDelayedActions().schedule(() -> callback.accept(input), 0);
-                    return null;
-                }
-                return this;
-            }
-        };
     }
 
     @Override
