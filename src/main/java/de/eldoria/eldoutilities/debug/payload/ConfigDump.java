@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class ConfigDump extends EntryData {
@@ -37,7 +38,11 @@ public class ConfigDump extends EntryData {
 
         Set<String> configs = new LinkedHashSet<>();
         if (mainConfig != null) {
+            try {
             mainConfig.save();
+            }catch (Exception e){
+                plugin.getLogger().log(Level.CONFIG, "something went wrong while saving the config. Skipping", e);
+            }
             configs.addAll(mainConfig.getConfigs().keySet());
         } else {
             configs.add(Paths.get(plugin.getDataFolder().toPath().toString(), "config.yml").toString());
