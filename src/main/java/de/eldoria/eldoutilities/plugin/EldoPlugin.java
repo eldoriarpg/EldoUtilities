@@ -4,9 +4,6 @@ import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.eldoutilities.debug.DebugDataProvider;
 import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.logging.DebugLogger;
-import de.eldoria.eldoutilities.simplecommands.EldoCommand;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -21,10 +18,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +52,10 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
 
     public static EldoPlugin getInstance(Class<? extends Plugin> clazz) {
         return INSTANCES.get(clazz);
+    }
+
+    public static Collection<EldoPlugin> getEldoPlugins() {
+        return Collections.unmodifiableCollection(INSTANCES.values());
     }
 
     public static Logger logger(Class<? extends EldoPlugin> plugin) {
@@ -162,6 +160,6 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
     }
 
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-     return Collections.emptyList();
+        return Collections.emptyList();
     }
 }
