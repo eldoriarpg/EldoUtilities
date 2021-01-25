@@ -5,17 +5,30 @@
     <parent>
         <artifactId>EldoUtilities</artifactId>
         <groupId>de.eldoria</groupId>
-        <version>1.5.1</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>EldoUtilititesPlugin</artifactId>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <outputDirectory>..\..\minecraft Testserver\1.16.5\plugins</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>de.eldoria</groupId>
             <artifactId>EldoUtilitiesCore</artifactId>
-            <version>1.5.1</version>
+            <version>${revision}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
