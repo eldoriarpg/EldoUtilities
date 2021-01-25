@@ -7,7 +7,11 @@
     <groupId>de.eldoria</groupId>
     <artifactId>EldoUtilities</artifactId>
     <version>1.5.1</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>EldoUtilitiesCore</module>
+        <module>EldoUtilitiesPlugin</module>
+    </modules>
+    <packaging>pom</packaging>
     <name>EldoUtilities</name>
     <url>https://github.com/eldoriarpg/EldoUtilities/</url>
     <description>A basic library for plugin creation</description>
