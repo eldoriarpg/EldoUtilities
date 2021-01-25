@@ -49,6 +49,7 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
         for (Class<? extends ConfigurationSerializable> clazz : eldoPlugin.getConfigSerialization()) {
             ConfigurationSerialization.registerClass(clazz);
         }
+        EldoUtilities.preWarm(instance);
     }
 
     public static EldoPlugin getInstance() {

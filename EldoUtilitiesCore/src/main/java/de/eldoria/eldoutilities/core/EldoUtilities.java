@@ -68,8 +68,11 @@ public final class EldoUtilities {
         return instanceOwner.getLogger();
     }
 
-    public static void ignite(EldoPlugin eldoPlugin) {
+    public static void preWarm(EldoPlugin eldoPlugin) {
         instanceOwner = eldoPlugin;
+    }
+
+    public static void ignite(EldoPlugin eldoPlugin) {
         Bukkit.getScheduler().runTaskLater(eldoPlugin, EldoUtilities::performLateCleanUp, 5);
         Path plugins = Bukkit.getUpdateFolderFile().toPath().getParent();
         Path eldoUtilconfig = Paths.get(plugins.toString(), "EldoUtilities", "config.yml");
