@@ -1,11 +1,13 @@
 package de.eldoria.eldoutilities.configuration;
 
 import de.eldoria.eldoutilities.core.EldoUtilities;
+import de.eldoria.eldoutilities.serialization.MapEntry;
 import de.eldoria.eldoutilities.utils.ObjUtil;
 import de.eldoria.eldoutilities.utils.Parser;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,10 +45,14 @@ public abstract class EldoConfig {
         pluginData = plugin.getDataFolder().toPath();
         PLUGIN_MAIN_CONFIGS.putIfAbsent(plugin.getClass(), this);
         plugin.saveDefaultConfig();
+        // TODO: This is just here for backwards compatibility reasons after a stupid choice
+        ConfigurationSerialization.registerClass("eldoUtilitiesMapEntry", MapEntry.class);
         if (isMainConfig()) {
             init();
         }
         reload();
+        // TODO: This is just here for backwards compatibility reasons after a stupid choice
+        ConfigurationSerialization.unregisterClass("eldoUtilitiesMapEntry");
         save();
     }
 
@@ -163,7 +169,10 @@ public abstract class EldoConfig {
      * Discards any unsaved changes in the config and reloads the config files
      */
     public final void reload() {
+        // TODO: This is just here for backwards compatibility reasons after a stupid choice
+        ConfigurationSerialization.registerClass("eldoUtilitiesMapEntry", MapEntry.class);
         readConfigs();
+        ConfigurationSerialization.unregisterClass("eldoUtilitiesMapEntry");
         reloadConfigs();
     }
 

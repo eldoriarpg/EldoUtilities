@@ -70,6 +70,10 @@ public final class EldoUtilities {
 
     public static void preWarm(EldoPlugin eldoPlugin) {
         instanceOwner = eldoPlugin;
+        for (Class<? extends ConfigurationSerializable> clazz : getConfigSerialization()) {
+            SerializableAs annotation = clazz.getClass().getAnnotation(SerializableAs.class);
+            ConfigurationSerialization.registerClass(eldoPlugin.getName().toLowerCase() + annotation.value(), clazz);
+        }
     }
 
     public static void ignite(EldoPlugin eldoPlugin) {
