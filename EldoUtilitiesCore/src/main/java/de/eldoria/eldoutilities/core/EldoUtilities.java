@@ -9,18 +9,20 @@ import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.serialization.MapEntry;
 import de.eldoria.eldoutilities.serialization.util.ArmorStandWrapper;
 import de.eldoria.eldoutilities.threading.AsyncSyncingCallbackExecutor;
+import de.eldoria.eldoutilities.utils.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.configuration.serialization.SerializableAs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class EldoUtilities {
@@ -73,6 +75,11 @@ public final class EldoUtilities {
     public static void preWarm(EldoPlugin eldoPlugin) {
         instanceOwner = eldoPlugin;
         for (Class<? extends ConfigurationSerializable> clazz : getConfigSerialization()) {
+            try {
+                ReflectionUtil.changeSerializedName(clazz, s -> s.replace("{plugin}", eldoPlugin.getName().toLowerCase()));
+            } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                eldoPlugin.getLogger().log(Level.WARNING, "Could not change serialized name. possible config corruption");
+            }
             ConfigurationSerialization.registerClass(clazz, eldoPlugin.getName().toLowerCase() + clazz.getSimpleName());
         }
     }

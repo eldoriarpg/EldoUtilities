@@ -17,7 +17,7 @@
     <description>A basic library for plugin creation</description>
 
     <properties>
-        <revision>1.6.8</revision>
+        <revision>1.6.9</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <shade.base>de.eldoria.eldoutilities</shade.base>
@@ -131,7 +131,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>19.0.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- testing -->
         <dependency>
