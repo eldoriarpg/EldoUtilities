@@ -172,8 +172,8 @@ public abstract class EldoConfig {
         // TODO: This is just here for backwards compatibility reasons after a stupid choice
         ConfigurationSerialization.registerClass(MapEntry.class, "eldoUtilitiesMapEntry");
         readConfigs();
-        ConfigurationSerialization.unregisterClass("eldoUtilitiesMapEntry");
         reloadConfigs();
+        ConfigurationSerialization.unregisterClass("eldoUtilitiesMapEntry");
     }
 
     /**
