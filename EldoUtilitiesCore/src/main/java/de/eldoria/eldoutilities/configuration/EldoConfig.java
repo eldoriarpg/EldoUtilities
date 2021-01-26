@@ -46,7 +46,7 @@ public abstract class EldoConfig {
         PLUGIN_MAIN_CONFIGS.putIfAbsent(plugin.getClass(), this);
         plugin.saveDefaultConfig();
         // TODO: This is just here for backwards compatibility reasons after a stupid choice
-        ConfigurationSerialization.registerClass("eldoUtilitiesMapEntry", MapEntry.class);
+        ConfigurationSerialization.registerClass(MapEntry.class, "eldoUtilitiesMapEntry");
         if (isMainConfig()) {
             init();
         }
@@ -170,7 +170,7 @@ public abstract class EldoConfig {
      */
     public final void reload() {
         // TODO: This is just here for backwards compatibility reasons after a stupid choice
-        ConfigurationSerialization.registerClass("eldoUtilitiesMapEntry", MapEntry.class);
+        ConfigurationSerialization.registerClass(MapEntry.class, "eldoUtilitiesMapEntry");
         readConfigs();
         ConfigurationSerialization.unregisterClass("eldoUtilitiesMapEntry");
         reloadConfigs();

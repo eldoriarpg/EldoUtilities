@@ -74,7 +74,7 @@ public final class EldoUtilities {
         instanceOwner = eldoPlugin;
         for (Class<? extends ConfigurationSerializable> clazz : getConfigSerialization()) {
             SerializableAs annotation = clazz.getClass().getAnnotation(SerializableAs.class);
-            ConfigurationSerialization.registerClass(eldoPlugin.getName().toLowerCase() + annotation.value(), clazz);
+            ConfigurationSerialization.registerClass(clazz, eldoPlugin.getName().toLowerCase() + annotation.value());
         }
     }
 
