@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@SerializableAs("MapEntry")
 public class MapEntry implements ConfigurationSerializable {
     private String key;
     private Object object;

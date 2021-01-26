@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@SerializableAs("ArmorStandWrapper")
 public class ArmorStandWrapper implements ConfigurationSerializable {
     // General Entity Data
     private String customName;
