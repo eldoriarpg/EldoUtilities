@@ -17,7 +17,7 @@
     <description>A basic library for plugin creation</description>
 
     <properties>
-        <revision>1.6.7</revision>
+        <revision>1.6.8</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <shade.base>de.eldoria.eldoutilities</shade.base>
