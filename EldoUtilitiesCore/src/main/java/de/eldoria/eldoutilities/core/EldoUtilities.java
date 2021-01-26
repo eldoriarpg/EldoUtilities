@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -79,7 +81,7 @@ public final class EldoUtilities {
     public static void ignite(EldoPlugin eldoPlugin) {
         Bukkit.getScheduler().runTaskLater(eldoPlugin, EldoUtilities::performLateCleanUp, 5);
         Path plugins = Bukkit.getUpdateFolderFile().toPath().getParent();
-        Path eldoUtilconfig = Paths.get("..","EldoUtilities", "config.yml");
+        Path eldoUtilconfig = Paths.get("..", "EldoUtilities", "config.yml");
         configuration = ConfigFileWrapper.forFile(instanceOwner, eldoUtilconfig.toString());
     }
 
