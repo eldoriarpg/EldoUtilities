@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.inventory;
 
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +36,10 @@ public class InventoryActionHandler implements Listener {
         this.onClose = onClose;
     }
 
-    public static InventoryActionHandler create(EldoPlugin plugin) {
+    public static InventoryActionHandler create(Plugin plugin) {
         return PLUGIN_HANDLER.computeIfAbsent(plugin.getClass(), k -> {
             InventoryActionHandler handler = new InventoryActionHandler();
-            plugin.registerListener(handler);
+            Bukkit.getPluginManager().registerEvents(handler, plugin);
             return handler;
         });
 

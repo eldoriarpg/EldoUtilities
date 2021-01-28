@@ -15,6 +15,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ public final class EldoUtilities {
     private static AsyncSyncingCallbackExecutor asyncSyncingCallbackExecutor = null;
     private static ConversationRequester conversationRequester = null;
     private static ConfigFileWrapper configuration;
-    private static EldoPlugin instanceOwner;
+    private static Plugin instanceOwner;
 
     private EldoUtilities() {
     }
@@ -72,7 +73,7 @@ public final class EldoUtilities {
         return instanceOwner.getLogger();
     }
 
-    public static void preWarm(EldoPlugin eldoPlugin) {
+    public static void preWarm(Plugin eldoPlugin) {
         instanceOwner = eldoPlugin;
         for (Class<? extends ConfigurationSerializable> clazz : getConfigSerialization()) {
             try {
@@ -84,7 +85,7 @@ public final class EldoUtilities {
         }
     }
 
-    public static void ignite(EldoPlugin eldoPlugin) {
+    public static void ignite(Plugin eldoPlugin) {
         Bukkit.getScheduler().runTaskLater(eldoPlugin, EldoUtilities::performLateCleanUp, 5);
         Path plugins = Bukkit.getUpdateFolderFile().toPath().getParent();
         Path eldoUtilconfig = Paths.get("..", "EldoUtilities", "config.yml");
@@ -130,7 +131,7 @@ public final class EldoUtilities {
         return configuration;
     }
 
-    public static EldoPlugin getInstanceOwner() {
+    public static Plugin getInstanceOwner() {
         return instanceOwner;
     }
 }

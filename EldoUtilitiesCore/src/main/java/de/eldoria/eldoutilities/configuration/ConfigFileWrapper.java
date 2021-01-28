@@ -29,6 +29,7 @@ public final class ConfigFileWrapper {
 
         if (!file.exists()) {
             try {
+                Files.createDirectories(path.getParent());
                 Files.createFile(path);
             } catch (IOException e) {
                 plugin.getLogger().log(Level.SEVERE, "Could not create config at " + path.toString(), e);

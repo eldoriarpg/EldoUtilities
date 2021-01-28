@@ -17,7 +17,6 @@ public final class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-
     public static void changeSerializedName(Class<?> targetClass, Function<String, String> map)
             throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SerializableAs serializable = targetClass.getAnnotation(SerializableAs.class);
