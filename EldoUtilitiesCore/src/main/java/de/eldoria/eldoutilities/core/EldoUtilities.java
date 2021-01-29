@@ -2,9 +2,10 @@ package de.eldoria.eldoutilities.core;
 
 import de.eldoria.eldoutilities.configuration.ConfigFileWrapper;
 import de.eldoria.eldoutilities.conversation.ConversationRequester;
+import de.eldoria.eldoutilities.crossversion.ServerVersion;
+import de.eldoria.eldoutilities.crossversion.functionbuilder.VersionFunctionBuilder;
 import de.eldoria.eldoutilities.inventory.InventoryActionHandler;
 import de.eldoria.eldoutilities.messages.MessageChannel;
-import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.scheduling.DelayedActions;
 import de.eldoria.eldoutilities.serialization.MapEntry;
 import de.eldoria.eldoutilities.serialization.util.ArmorStandWrapper;
@@ -86,7 +87,12 @@ public final class EldoUtilities {
     }
 
     public static void ignite(Plugin eldoPlugin) {
-        Bukkit.getScheduler().runTaskLater(eldoPlugin, EldoUtilities::performLateCleanUp, 5);
+        VersionFunctionBuilder.functionBuilder(null, null)
+                .addVersionFunctionBetween(ServerVersion.MC_1_13, ServerVersion.MC_1_17,
+                        a -> {
+                            Bukkit.getScheduler().runTaskLater(eldoPlugin, EldoUtilities::performLateCleanUp, 5);
+                            return null;
+                        });
         Path plugins = Bukkit.getUpdateFolderFile().toPath().getParent();
         Path eldoUtilconfig = Paths.get("..", "EldoUtilities", "config.yml");
         configuration = ConfigFileWrapper.forFile(instanceOwner, eldoUtilconfig.toString());
