@@ -17,7 +17,7 @@
     <description>A basic library for plugin creation</description>
 
     <properties>
-        <revision>1.7.2</revision>
+        <revision>1.7.3</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <shade.base>de.eldoria.eldoutilities</shade.base>
@@ -80,6 +80,7 @@
                 <version>${javadoc.version}</version>
                 <configuration>
                     <source>${java.version}</source>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
                 </configuration>
                 <executions>
                     <execution>
