@@ -16,7 +16,7 @@
         <dependency>
             <groupId>de.eldoria</groupId>
             <artifactId>EldoUtilitiesCore</artifactId>
-            <version>1.7.4</version>
+            <version>1.7.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
