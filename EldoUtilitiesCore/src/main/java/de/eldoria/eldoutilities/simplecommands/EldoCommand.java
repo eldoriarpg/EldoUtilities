@@ -38,6 +38,7 @@ public abstract class EldoCommand implements TabExecutor {
         this.plugin = plugin;
     }
 
+
     /**
      * Checks if the provided arguments are invalid.
      *

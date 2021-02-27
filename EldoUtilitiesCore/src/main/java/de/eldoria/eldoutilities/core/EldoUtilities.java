@@ -80,7 +80,7 @@ public final class EldoUtilities {
             try {
                 ReflectionUtil.changeSerializedName(clazz, s -> s.replace("{plugin}", eldoPlugin.getName().toLowerCase()));
             } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                eldoPlugin.getLogger().log(Level.WARNING, "Could not change serialized name. possible config corruption");
+                eldoPlugin.getLogger().log(Level.WARNING, "Could not change serialized name. possible config corruption", e);
             }
             ConfigurationSerialization.registerClass(clazz, eldoPlugin.getName().toLowerCase() + clazz.getSimpleName());
         }
@@ -94,8 +94,8 @@ public final class EldoUtilities {
                             return null;
                         });
         Path plugins = Bukkit.getUpdateFolderFile().toPath().getParent();
-        Path eldoUtilconfig = Paths.get("..", "EldoUtilities", "config.yml");
-        configuration = ConfigFileWrapper.forFile(instanceOwner, eldoUtilconfig.toString());
+        Path eldoUtilconfig = Paths.get(plugins.toString(), "EldoUtilities", "config.yml");
+        configuration = ConfigFileWrapper.forFile(eldoPlugin, eldoUtilconfig.toString());
     }
 
     private static void performLateCleanUp() {
