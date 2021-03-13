@@ -65,8 +65,7 @@ public final class DebugUtil {
                     + "§2This is a one time opt in.\n"
                     + "You can opt out again in the EldoUtilities config file.";
             messageSender.send(MessageChannel.CHAT, () -> "§6", sender, message);
-            config.get().set("debugConsens", true);
-            config.save();
+            config.write(c -> c.set("debugConsens", true));
             return;
         }
 
