@@ -5,6 +5,9 @@ import de.eldoria.eldoutilities.core.EldoUtilities;
 import de.eldoria.eldoutilities.debug.DebugDataProvider;
 import de.eldoria.eldoutilities.debug.data.EntryData;
 import de.eldoria.eldoutilities.logging.DebugLogger;
+import de.eldoria.eldoutilities.simplecommands.commands.FailsaveCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -14,12 +17,14 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -34,6 +39,7 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
     private BukkitScheduler scheduler = null;
     private DebugLogger debugLogger = null;
     private static EldoPlugin instance;
+    private FailsaveCommand failcmd;
 
     public EldoPlugin() {
         registerSelf(this);
@@ -50,6 +56,7 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
             ConfigurationSerialization.registerClass(clazz);
         }
         EldoUtilities.preWarm(instance);
+        instance.failcmd = new FailsaveCommand(instance, instance.getDescription().getFullName().toLowerCase());
     }
 
     public static EldoPlugin getInstance() {
@@ -159,23 +166,66 @@ public class EldoPlugin extends JavaPlugin implements DebugDataProvider {
     @Override
     public final void onEnable() {
         EldoUtilities.ignite(instance);
-        onPluginEnable();
+        try {
+            onPluginEnable();
+        } catch (Throwable e) {
+            logger().log(Level.SEVERE, "Plugin failed to load. Initializing failsave mode.", e);
+            for (String cmd : getDescription().getCommands().keySet()) {
+                try {
+                    registerCommand(cmd, failcmd);
+                } catch (Throwable ex) {
+                    logger().log(Level.WARNING, "Failed to initialize failsafe command", ex);
+                }
+            }
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    onPostStart();
+                } catch (Throwable e) {
+                    logger().log(Level.SEVERE, "Plugin post start failed. Initializing failsave mode.", e);
+                    FailsaveCommand failcmd = new FailsaveCommand(instance, getDescription().getFullName().toLowerCase());
+                    for (String cmd : getDescription().getCommands().keySet()) {
+                        try {
+                            if (getCommand(cmd) != null && getCommand(cmd).getExecutor() == null) {
+                                registerCommand(cmd, failcmd);
+                            }
+                        } catch (Throwable ex) {
+                            logger().log(Level.WARNING, "Failed to initialize failsafe command", ex);
+                        }
+                    }
+                }
+            }
+        }.runTaskLater(this, 1);
     }
 
-    public void onPluginEnable(){
+    public void onPostStart() {
+    }
+
+    public void onPluginEnable() {
     }
 
     @Override
     public final void onDisable() {
         EldoUtilities.shutdown();
-        onPluginDisable();
+        try {
+            onPluginDisable();
+        } catch (Throwable e) {
+            logger().log(Level.SEVERE, "Plugin failed to shutdown correct.", e);
+        }
     }
 
-    public void onPluginDisable(){
+    public void onPluginDisable() {
     }
 
     @Override
     public @NotNull EntryData[] getDebugInformations() {
         return new EntryData[0];
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return failcmd.onCommand(sender, command, label, args);
     }
 }
