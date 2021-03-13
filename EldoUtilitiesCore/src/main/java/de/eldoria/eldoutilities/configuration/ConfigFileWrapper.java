@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**
@@ -27,14 +28,8 @@ public final class ConfigFileWrapper {
         Path path = Paths.get(plugin.getDataFolder().toString(), filePath);
         file = path.toFile();
 
-        if (!file.exists()) {
-            try {
-                Files.createDirectories(path.getParent());
-                Files.createFile(path);
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Could not create config at " + path.toString(), e);
-            }
-        }
+        createIfAbsent();
+
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
         if (defaultConfig != null) {
             fileConfiguration.addDefaults(defaultConfig);
@@ -62,7 +57,13 @@ public final class ConfigFileWrapper {
         return fileConfiguration;
     }
 
+    public void write(Consumer<FileConfiguration> consumer) {
+        consumer.accept(fileConfiguration);
+        save();
+    }
+
     public void save() {
+        createIfAbsent();
         try {
             fileConfiguration.save(file);
         } catch (IOException e) {
@@ -74,5 +75,19 @@ public final class ConfigFileWrapper {
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
     }
 
+    private void createIfAbsent() {
+        if (!file.exists()) {
+            try {
+                Files.createDirectories(file.toPath().getParent());
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not create directory at " + file.toPath().toString(), e);
+            }
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not create config at " + file.toPath().toString(), e);
+            }
+        }
+    }
 
 }
