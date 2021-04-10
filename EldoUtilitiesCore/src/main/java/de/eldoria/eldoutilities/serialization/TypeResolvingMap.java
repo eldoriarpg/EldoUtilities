@@ -1,6 +1,7 @@
 package de.eldoria.eldoutilities.serialization;
 
 import de.eldoria.eldoutilities.utils.EnumUtil;
+import jdk.javadoc.internal.doclets.formats.html.EnumConstantWriterImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -17,7 +18,8 @@ public final class TypeResolvingMap extends AbstractMap<String, Object> {
     private final Map<String, Object> delegate;
 
     TypeResolvingMap(Map<String, Object> delegate) {
-        this.delegate = delegate;
+        this.delegate = new LinkedHashMap<>(delegate);
+        delegate.entrySet().removeIf(e -> e.getValue() == null);
     }
 
     @NotNull

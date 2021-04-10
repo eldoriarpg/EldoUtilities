@@ -6,20 +6,27 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
-public final class BukkitAsyncCallbackAction<T> {
+public final class BukkitAsyncAction<T> {
     private final Plugin plugin;
     private final Supplier<T> supplier;
-    private Consumer<T> consumer = t -> {
-    };
-    private Consumer<Throwable> consumerError = Throwable::printStackTrace;
+    private Consumer<T> consumer;
+    private Consumer<Throwable> consumerError;
     private final Consumer<Throwable> supplierError;
     private final BukkitScheduler scheduler = Bukkit.getScheduler();
 
-    private BukkitAsyncCallbackAction(Plugin plugin, Supplier<T> supplier, Consumer<Throwable> supplierError) {
+    private BukkitAsyncAction(Plugin plugin, Supplier<T> supplier, Consumer<Throwable> supplierError) {
         this.supplier = supplier;
         this.plugin = plugin;
         this.supplierError = supplierError;
+        this.consumer = e -> {
+        };
+        this.consumerError = getDefaultLogger(plugin);
+    }
+
+    protected static Consumer<Throwable> getDefaultLogger(Plugin plugin) {
+        return e -> plugin.getLogger().log(Level.SEVERE, "An error occured in an backsyncing Task.", e);
     }
 
     /**
@@ -30,8 +37,8 @@ public final class BukkitAsyncCallbackAction<T> {
      * @param <T>    type of call
      * @return new Bukkit action
      */
-    public static <T> BukkitAsyncCallbackAction<T> call(Plugin plugin, Supplier<T> call) {
-        return new BukkitAsyncCallbackAction<>(plugin, call, Throwable::printStackTrace);
+    public static <T> BukkitAsyncAction<T> call(Plugin plugin, Supplier<T> call) {
+        return new BukkitAsyncAction<>(plugin, call, getDefaultLogger(plugin));
     }
 
     /**
@@ -43,8 +50,8 @@ public final class BukkitAsyncCallbackAction<T> {
      * @param <T>           type of call
      * @return new Bukkit action
      */
-    public static <T> BukkitAsyncCallbackAction<T> call(Plugin plugin, Supplier<T> call, Consumer<Throwable> supplierError) {
-        return new BukkitAsyncCallbackAction<>(plugin, call, supplierError);
+    public static <T> BukkitAsyncAction<T> call(Plugin plugin, Supplier<T> call, Consumer<Throwable> supplierError) {
+        return new BukkitAsyncAction<>(plugin, call, supplierError);
     }
 
     /**
@@ -53,7 +60,7 @@ public final class BukkitAsyncCallbackAction<T> {
      * @param consumer consumer
      * @return current instance with added consumer
      */
-    public BukkitAsyncCallbackAction<T> accept(Consumer<T> consumer) {
+    public BukkitAsyncAction<T> accept(Consumer<T> consumer) {
         this.consumer = consumer;
         return this;
     }
@@ -65,7 +72,7 @@ public final class BukkitAsyncCallbackAction<T> {
      * @param error    error handler for consumer
      * @return current instance with added consumers
      */
-    public BukkitAsyncCallbackAction<T> accept(Consumer<T> consumer, Consumer<Throwable> error) {
+    public BukkitAsyncAction<T> accept(Consumer<T> consumer, Consumer<Throwable> error) {
         this.consumer = consumer;
         this.consumerError = error;
         return this;
@@ -96,7 +103,8 @@ public final class BukkitAsyncCallbackAction<T> {
 
     /**
      * Queue the action async
-     * @param consumer synced consumer which accepts the results
+     *
+     * @param consumer      synced consumer which accepts the results
      * @param consumerError error handler
      */
     public void queue(Consumer<T> consumer, Consumer<Throwable> consumerError) {
@@ -105,6 +113,7 @@ public final class BukkitAsyncCallbackAction<T> {
 
     /**
      * Queue the action async
+     *
      * @param consumer synced consumer which accepts the results
      */
     public void queue(Consumer<T> consumer) {
