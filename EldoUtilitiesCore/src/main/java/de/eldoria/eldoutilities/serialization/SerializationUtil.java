@@ -62,7 +62,6 @@ public final class SerializationUtil {
      * @return type resolving map
      */
     public static TypeResolvingMap mapOf(Map<String, Object> serialized) {
-        serialized.entrySet().removeIf(entry -> entry.getValue() == null);
         return new TypeResolvingMap(serialized);
     }
 
