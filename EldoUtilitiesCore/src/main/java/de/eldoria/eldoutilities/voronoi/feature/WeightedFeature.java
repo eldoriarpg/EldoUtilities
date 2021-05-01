@@ -7,8 +7,8 @@ public final class WeightedFeature<Dim, FeatureType extends Feature<Dim>> implem
     private final double distance;
     private final FeatureType feature;
 
-    private WeightedFeature(FeatureType featzure, double distance) {
-        this.feature = featzure;
+    private WeightedFeature(FeatureType feature, double distance) {
+        this.feature = feature;
         this.distance = distance;
     }
 

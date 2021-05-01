@@ -6,7 +6,7 @@ import org.bukkit.util.Vector;
 
 public class VectorDimensionAdapter implements DimensionAdapter<Vector> {
     @Override
-    public Vector plus(Vector pos, int x, int z) {
+    public Vector plus(Vector pos, double x, double z) {
         return pos.clone().add(new Vector(x, 0, z));
     }
 

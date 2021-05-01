@@ -2,7 +2,6 @@ package de.eldoria.eldoutilities.voronoi;
 
 import de.eldoria.eldoutilities.voronoi.feature.Feature;
 import de.eldoria.eldoutilities.voronoi.untis.Fragment;
-import de.eldoria.eldoutilities.voronoi.untis.VoronoiUnit;
 import de.eldoria.eldoutilities.voronoi.util.DimensionAdapter;
 import de.eldoria.eldoutilities.voronoi.util.VoronoiSettings;
 

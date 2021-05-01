@@ -13,13 +13,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Fragment<Dim, FeatureType extends Feature<Dim>> extends VoronoiUnit<Dim, FeatureType> {
+    private final VoronoiSettings<Dim> settings;
     private VoronoiUnit<Dim, FeatureType> upperLeftSector;
     private VoronoiUnit<Dim, FeatureType> upperRightSector;
     private VoronoiUnit<Dim, FeatureType> lowerLeftSector;
     private VoronoiUnit<Dim, FeatureType> lowerRightSector;
-    private final VoronoiSettings<Dim> settings;
 
-    public Fragment(VoronoiUnit<Dim, FeatureType> parent, Dim center, int size, VoronoiSettings<Dim> settings,
+    public Fragment(VoronoiUnit<Dim, FeatureType> parent, Dim center, double size, VoronoiSettings<Dim> settings,
                     DimensionAdapter<Dim> dimensionAdapter) {
         super(parent, center, size, dimensionAdapter);
         this.settings = settings;
@@ -110,7 +110,7 @@ public class Fragment<Dim, FeatureType extends Feature<Dim>> extends VoronoiUnit
     public WeightedFeature<Dim, FeatureType> getClosestFeature(Dim pos) {
         // lets check if we can still reduce the total features
         VoronoiUnit<Dim, FeatureType> sector = getSector(pos);
-        if (sector.getFeatureCount() < 2) {
+        if (sector.getFeatureCount() < 5) {
             return super.getClosestFeature(pos);
         }
         return sector.getClosestFeature(pos);
@@ -145,9 +145,9 @@ public class Fragment<Dim, FeatureType extends Feature<Dim>> extends VoronoiUnit
         return lowerRightSector;
     }
 
-    private VoronoiUnit<Dim, FeatureType> buildFragmentOrChunk(Function<Integer, Dim> newCenter) {
-        int newHalf = size / 2;
-        Dim center = newCenter.apply(newHalf / 2);
+    private VoronoiUnit<Dim, FeatureType> buildFragmentOrChunk(Function<Double, Dim> newCenter) {
+        double newHalf = size / 2;
+        Dim center = newCenter.apply(newHalf / 2d);
         if (size <= settings.getMinFragmentSize()) {
             return new Chunk<>(this, center, newHalf, dimensionAdapter);
         } else {
@@ -155,8 +155,8 @@ public class Fragment<Dim, FeatureType extends Feature<Dim>> extends VoronoiUnit
         }
     }
 
-    public VoronoiUnit<Dim, FeatureType> getEmptyIfAbsent(Supplier<VoronoiUnit<Dim, FeatureType>> supplier, Function<Integer, Dim> newCenter) {
-        int newSize = size / 2;
+    public VoronoiUnit<Dim, FeatureType> getEmptyIfAbsent(Supplier<VoronoiUnit<Dim, FeatureType>> supplier, Function<Double, Dim> newCenter) {
+        double newSize = size / 2;
         Dim center = newCenter.apply(newSize / 2);
         if (supplier.get() == null) {
             return VoronoiUnit.getEmpty(this, center, newSize, dimensionAdapter);

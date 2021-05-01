@@ -1,9 +1,9 @@
 package de.eldoria.eldoutilities.voronoi.util;
 
 public class VoronoiSettings<Dim> {
-    private int radius;
-    private Dim center;
-    private int minFragmentSize;
+    private final int radius;
+    private final Dim center;
+    private final int minFragmentSize;
 
     public VoronoiSettings(int radius, Dim center, int minFragmentSize) {
         this.radius = radius;

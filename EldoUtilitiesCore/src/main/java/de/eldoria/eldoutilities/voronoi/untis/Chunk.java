@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Chunk<Dim, FeatureType extends Feature<Dim>> extends VoronoiUnit<Dim, FeatureType> {
-    private List<FeatureType> features = new ArrayList<>();
+    private final List<FeatureType> features = new ArrayList<>();
 
-    public Chunk(VoronoiUnit<Dim, FeatureType> parent, Dim center, int size, DimensionAdapter<Dim> dimensionAdapter) {
+    public Chunk(VoronoiUnit<Dim, FeatureType> parent, Dim center, double size, DimensionAdapter<Dim> dimensionAdapter) {
         super(parent, center, size, dimensionAdapter);
     }
 

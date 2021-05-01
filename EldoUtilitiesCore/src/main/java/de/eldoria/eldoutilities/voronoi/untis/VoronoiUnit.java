@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
     protected final VoronoiUnit<Dim, FeatureType> parent;
     protected final Dim center;
-    protected final int size;
+    protected final double size;
     protected final DimensionAdapter<Dim> dimensionAdapter;
     private final double northBorder;
     private final double eastBorder;
@@ -24,46 +24,22 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
     private Dim upperLeft;
     private Dim lowerRight;
 
-    public VoronoiUnit(VoronoiUnit<Dim, FeatureType> parent, Dim center, int size, DimensionAdapter<Dim> dimensionAdapter) {
+    public VoronoiUnit(VoronoiUnit<Dim, FeatureType> parent, Dim center, double size, DimensionAdapter<Dim> dimensionAdapter) {
         this.parent = parent;
         this.center = center;
         this.size = size;
         this.dimensionAdapter = dimensionAdapter;
         double centerZ = dimensionAdapter.getZ(center);
         double centerX = dimensionAdapter.getX(center);
-        int borderOffset = size / 2;
+        double borderOffset = size / 2d;
         this.northBorder = centerZ + borderOffset;
         this.eastBorder = centerX + borderOffset;
         this.southBorder = centerZ - borderOffset;
         this.westBorder = centerX - borderOffset;
-
     }
-
-    public Dim getUpperLeft() {
-        if (upperLeft == null) {
-            upperLeft = dimensionAdapter.construct(westBorder, northBorder);
-
-        }
-        return upperLeft;
-    }
-
-    public Dim getLowerRight() {
-        if (lowerRight == null) {
-            lowerRight = dimensionAdapter.construct(eastBorder, southBorder);
-        }
-        return lowerRight;
-    }
-
-    public abstract boolean isEmpty();
-
-    public abstract int getFeatureCount();
-
-    public abstract void addFeature(FeatureType feature);
-
-    public abstract Collection<FeatureType> getFeatures();
 
     public static <Dim, FeatureType extends Feature<Dim>> VoronoiUnit<Dim, FeatureType>
-    getEmpty(VoronoiUnit<Dim, FeatureType> parent, Dim center, int size, DimensionAdapter<Dim> dimensionAdapter) {
+    getEmpty(VoronoiUnit<Dim, FeatureType> parent, Dim center, double size, DimensionAdapter<Dim> dimensionAdapter) {
         return new VoronoiUnit<Dim, FeatureType>(parent, center, size, dimensionAdapter) {
 
             @Override
@@ -108,6 +84,29 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
         };
     }
 
+    public Dim getUpperLeft() {
+        if (upperLeft == null) {
+            upperLeft = dimensionAdapter.construct(westBorder, northBorder);
+
+        }
+        return upperLeft;
+    }
+
+    public Dim getLowerRight() {
+        if (lowerRight == null) {
+            lowerRight = dimensionAdapter.construct(eastBorder, southBorder);
+        }
+        return lowerRight;
+    }
+
+    public abstract boolean isEmpty();
+
+    public abstract int getFeatureCount();
+
+    public abstract void addFeature(FeatureType feature);
+
+    public abstract Collection<FeatureType> getFeatures();
+
     /**
      * Get the chunk for the position.
      * This will create the chunk if it is not presen.
@@ -147,16 +146,13 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
             return false;
         }
 
-        if (posZ < dimensionAdapter.getZ(lowerRight) || posZ >= dimensionAdapter.getZ(upperLeft)) {
-            return false;
-        }
-        return true;
+        return !(posZ < dimensionAdapter.getZ(lowerRight)) && !(posZ >= dimensionAdapter.getZ(upperLeft));
     }
 
     /**
      * Retrieve the boundaries of this unit.
      * <p>
-     * The right and upper boundaries are considered as exclusive. {@link #isInside(Dim)} will return false for them
+     * The right and upper boundaries are considered as exclusive. {@link VoronoiUnit#isInside(Dim)} will return false for them
      *
      * @return A pair with the both corners. first is the upper left and second the lower right corner.
      */
@@ -232,21 +228,21 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
     protected VoronoiUnit<Dim, FeatureType> getNeightbour(Border border) {
         switch (border) {
             case NORTH:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 0, 1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 0, 2), 0);
             case NORTH_EAST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 1, 1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 2, 2), 0);
             case EAST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 1, 0), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 2, 0), 0);
             case SOUTH_EAST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 1, -1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 2, -2), 0);
             case SOUTH:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 0, -1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), 0, -2), 0);
             case SOUTH_WEST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -1, -1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -2, -2), 0);
             case WEST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -1, 0), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -2, 0), 0);
             case NORTH_WEST:
-                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -1, 1), 0);
+                return retrievePositionOnLayer(dimensionAdapter.plus(getBorder(border), -2, 2), 0);
             default:
                 throw new IllegalStateException("Unexpected value: " + border);
         }
@@ -256,7 +252,7 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
         if (isInside(point)) {
             return retrieveLayerUnit(point, layer);
         }
-        return parent.retrieveLayerUnit(point, layer + 1);
+        return parent.retrievePositionOnLayer(point, layer + 1);
     }
 
     public WeightedFeature<Dim, FeatureType> getClosestFeature(Dim pos) {
@@ -271,6 +267,7 @@ public abstract class VoronoiUnit<Dim, FeatureType extends Feature<Dim>> {
         Collection<Border> bordersCloserThan = getBordersCloserThan(closestFeature.getFeature().getPos(), closestFeature.getDistance());
 
         List<FeatureType> neighborFeatures = new ArrayList<>();
+
         for (Border border : bordersCloserThan) {
             VoronoiUnit<Dim, FeatureType> neightbour = getNeightbour(border);
             neighborFeatures.addAll(neightbour.getFeatures());

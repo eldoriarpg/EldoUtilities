@@ -1,7 +1,7 @@
 package de.eldoria.eldoutilities.voronoi.util;
 
 public interface DimensionAdapter<Dim> {
-    Dim plus(Dim pos, int x, int z);
+    Dim plus(Dim pos, double x, double z);
 
     /**
      * Get the distance from a point to a point.
@@ -24,6 +24,7 @@ public interface DimensionAdapter<Dim> {
     /**
      * Compares x position of the feature.
      *
+     * @param ref position
      * @param pos pos of the other position
      * @return the value {@code 0} if {@code pos} is
      * numerically equal to this feature; A value less than
@@ -37,6 +38,7 @@ public interface DimensionAdapter<Dim> {
     /**
      * Compares z position of the dimensions.
      *
+     * @param ref position
      * @param pos pos of the other position
      * @return the value {@code 0} if {@code pos} is
      * numerically equal to this feature; A value less than
@@ -66,7 +68,7 @@ public interface DimensionAdapter<Dim> {
     /**
      * Set the z value of dimension
      *
-     * @param pos dimension
+     * @param pos   dimension
      * @param value value of z
      * @return the new dimension with z set
      */
@@ -75,7 +77,7 @@ public interface DimensionAdapter<Dim> {
     /**
      * Get the x value of dimension
      *
-     * @param pos dimension
+     * @param pos   dimension
      * @param value value of x
      * @return the new dimension with x set
      */
